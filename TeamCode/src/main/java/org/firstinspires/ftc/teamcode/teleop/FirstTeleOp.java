@@ -9,15 +9,17 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.parts.Intake;
 import org.firstinspires.ftc.teamcode.parts.Kicker;
 import org.firstinspires.ftc.teamcode.parts.Mortar;
+import org.firstinspires.ftc.teamcode.parts.Turntable;
 
 
 @TeleOp(name = "FirstTeleOp")
 public class FirstTeleOp extends LinearOpMode {
 
-    public DcMotor turn;
+
     @Override
     public void runOpMode() throws InterruptedException {
 
+        Turntable turntable = new Turntable();
         Kicker kicker = new Kicker(hardwareMap);
         //Drivetrain drivetrain = new Drivetrain(hardwareMap, "frontLeft", "backLeft", "frontRight", "frontLeft"); // TODO: Fix this if gonna use
         Mortar flywheel = new Mortar(hardwareMap);
@@ -28,9 +30,11 @@ public class FirstTeleOp extends LinearOpMode {
         DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         DcMotor backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
 
+        waitForStart();
+
         while(opModeIsActive()) {
             boolean on = false;
-            //add turntable code here if needed
+            turntable.loop();
 
             //moving using game pad one
             double y = gamepad1.left_stick_y;
@@ -65,11 +69,11 @@ public class FirstTeleOp extends LinearOpMode {
             else if(gamepad2.bWasPressed() && on) {
                 intake.setIntakeSpeed(0);
             }
-            TurnTable();
+
         }
     }
 
-    public void TurnTable() {
+    /*public void TurnTable() {
         MecanumDrive drive;
         double ticksPerRad;
 
@@ -84,7 +88,7 @@ public class FirstTeleOp extends LinearOpMode {
         double heading = pose.heading.toDouble();
 
         double turretHeading = Math.atan2(y, -x) - heading; //I think this is right, you will know when you test
-        turn.setTargetPosition((int)(turretHeading * ticksPerRad + 0.5));
-    }
+        turret.setTargetPosition((int)(turretHeading * ticksPerRad + 0.5));
+    }*/
 
 }

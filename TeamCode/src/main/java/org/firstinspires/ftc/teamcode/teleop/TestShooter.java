@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 //import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.parts.Mortar;
 
 @TeleOp
+@Config
 public class TestShooter extends LinearOpMode {
     public static double spinRate = 1.0;
 
@@ -36,6 +38,12 @@ public class TestShooter extends LinearOpMode {
             }
             if(gamepad1.dpad_up) {
                 flywheel.flyMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+            }
+            if(gamepad1.dpad_left){
+                spinRate -= 0.25;
+            }
+            if(gamepad1.dpad_right){
+                spinRate += 0.25;
             }
             if(startSpin) {
                 flywheel.flyMotor.setPower(spinRate);
