@@ -4,8 +4,10 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.parts.Drivetrain;
 import org.firstinspires.ftc.teamcode.parts.Intake;
 import org.firstinspires.ftc.teamcode.parts.Kicker;
 import org.firstinspires.ftc.teamcode.parts.Mortar;
@@ -30,10 +32,16 @@ public class FirstTeleOp extends LinearOpMode {
         DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         DcMotor backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
 
+        turntable.init();
+
+        double intakeSpeed = 0.5;
+        double shootSpeed = 1.0;
+        double reverseSpeed = -0.3;
+
         waitForStart();
 
         while(opModeIsActive()) {
-            boolean on = false;
+            boolean intakeMode = false;
             turntable.loop();
 
             //moving using game pad one
@@ -54,7 +62,7 @@ public class FirstTeleOp extends LinearOpMode {
 
             //empties only one
             if(gamepad2.rightBumperWasPressed()) {
-                flywheel.setFlyMotorSpeed(1.0);
+                flywheel.setFlyMotorSpeed(shootSpeed);
                 kicker.setKickerPositon(0.5);
                 kicker.setKickerPositon(0);
             }
@@ -62,13 +70,17 @@ public class FirstTeleOp extends LinearOpMode {
                 flywheel.setFlyMotorSpeed(0);
             }
 
-            if(gamepad2.bWasPressed()) {
-                intake.setIntakeSpeed(1.0);
-                on = true;
+            if(gamepad2.bWasPressed() && !intakeMode) {
+                intake.setIntakeSpeed(intakeSpeed);
+                flywheel.setFlyMotorSpeed(reverseSpeed);
+                intakeMode = true;
             }
-            else if(gamepad2.bWasPressed() && on) {
+
+            if(gamepad2.bWasPressed() && intakeMode) {
                 intake.setIntakeSpeed(0);
+                intakeMode = false;
             }
+
 
         }
     }
