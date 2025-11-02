@@ -1,27 +1,27 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode.parts.Drivetrain;
 import org.firstinspires.ftc.teamcode.parts.Intake;
 import org.firstinspires.ftc.teamcode.parts.Kicker;
 import org.firstinspires.ftc.teamcode.parts.Mortar;
-import org.firstinspires.ftc.teamcode.parts.Turntable;
+import org.firstinspires.ftc.teamcode.parts.Turret;
 
 
 @TeleOp(name = "FirstTeleOp")
 public class FirstTeleOp extends LinearOpMode {
-
+    public double intakeSpeed = 0.5;
+    public double shootSpeed = 1.0;
+    public double reverseSpeed = -0.3;
+    public double speedMult = 1;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Turntable turntable = new Turntable();
+        Turret turret = new Turret(hardwareMap);
         Kicker kicker = new Kicker(hardwareMap);
         //Drivetrain drivetrain = new Drivetrain(hardwareMap, "frontLeft", "backLeft", "frontRight", "frontLeft"); // TODO: Fix this if gonna use
         Mortar flywheel = new Mortar(hardwareMap);
@@ -32,28 +32,32 @@ public class FirstTeleOp extends LinearOpMode {
         DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         DcMotor backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
 
-        turntable.init();
+        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        double intakeSpeed = 0.5;
-        double shootSpeed = 1.0;
-        double reverseSpeed = -0.3;
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        turret.init();
 
         waitForStart();
 
         while(opModeIsActive()) {
             boolean intakeMode = false;
-            turntable.loop();
+            turret.loop();
 
             //moving using game pad one
             double y = gamepad1.left_stick_y;
-            double x = gamepad1.left_stick_x;
+            double x = -gamepad1.left_stick_x;
             double rx = -gamepad1.right_stick_x;
 
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double frontLeftPower = (y + x + rx) / denominator;
-            double backLeftPower = (y - x + rx) / denominator;
-            double frontRightPower = (y + x - rx) / denominator;
-            double backRightPower = (y - x - rx) / denominator;
+            double frontLeftPower = ((y + x + rx) / denominator)*speedMult;
+            double backLeftPower = ((y - x + rx) / denominator)*speedMult;
+            double frontRightPower = ((y - x - rx) / denominator)*speedMult;
+            double backRightPower = ((y + x - rx) / denominator)*speedMult;
 
             frontLeftMotor.setPower(frontLeftPower);
             backLeftMotor.setPower(backLeftPower);
@@ -63,25 +67,24 @@ public class FirstTeleOp extends LinearOpMode {
             //empties only one
             if(gamepad2.rightBumperWasPressed()) {
                 flywheel.setFlyMotorSpeed(shootSpeed);
-                kicker.setKickerPositon(0.5);
-                kicker.setKickerPositon(0);
             }
             if(gamepad2.leftBumperWasPressed()) {
                 flywheel.setFlyMotorSpeed(0);
             }
+            if(gamepad2.xWasPressed()) {
+                kicker.setKickerPositon(0.5);
+                kicker.setKickerPositon(0);
+            }
 
-            if(gamepad2.bWasPressed() && !intakeMode) {
+            if(gamepad1.bWasPressed()) {
                 intake.setIntakeSpeed(intakeSpeed);
                 flywheel.setFlyMotorSpeed(reverseSpeed);
-                intakeMode = true;
             }
 
-            if(gamepad2.bWasPressed() && intakeMode) {
+            if(gamepad1.aWasPressed()) {
                 intake.setIntakeSpeed(0);
-                intakeMode = false;
+                flywheel.setFlyMotorSpeed(0);
             }
-
-
         }
     }
 

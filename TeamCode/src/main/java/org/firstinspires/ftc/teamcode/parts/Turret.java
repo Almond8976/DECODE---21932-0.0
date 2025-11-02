@@ -10,21 +10,23 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 @TeleOp
 @Config
-public class Turntable extends OpMode {
+public class Turret extends OpMode {
 
     public DcMotor turret;
-    MecanumDrive drive;
+    public MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
+
     public double ticksPerRad;
 
-    public void Turret(HardwareMap hardwareMap) {
+    public double rotationLimit;
+
+    public Turret(HardwareMap hardwareMap) {
         turret = hardwareMap.get(DcMotor.class, "turret");
         turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
     @Override
     public void init() {
-
-        drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
         ticksPerRad = (384.5*((double)85/25)) / (2*Math.PI);
+        rotationLimit = 3.14159 * 208;
     }
 
 
@@ -39,6 +41,12 @@ public class Turntable extends OpMode {
         double heading = pose.heading.toDouble();
 
         double turretHeading = Math.atan2(y, -x) - heading; //TODO: Make sure this is right when testing
-        turret.setTargetPosition((int)(turretHeading * ticksPerRad + 0.5));
+
+        if(turret.getTargetPosition() > rotationLimit) {
+            turret.setTargetPosition((int)((turretHeading * ticksPerRad + 0.5)-rotationLimit));
+        }
+        else {
+            turret.setTargetPosition((int)(turretHeading * ticksPerRad + 0.5));
+        }
     }
 }
