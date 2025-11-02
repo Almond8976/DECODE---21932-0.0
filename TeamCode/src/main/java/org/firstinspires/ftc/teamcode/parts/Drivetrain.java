@@ -18,10 +18,10 @@ public class Drivetrain {
 
     public static double flMult = 1, blMult = 1, frMult = 1, brMult = 1;
     public Drivetrain(HardwareMap hwMap, HashMap<String, String> config) {
-        frontLeft = hwMap.dcMotor.get(config.get("frontLeft"));
-        backLeft = hwMap.dcMotor.get(config.get("backLeft"));
-        frontRight = hwMap.dcMotor.get(config.get("frontRight"));
-        backRight = hwMap.dcMotor.get(config.get("backRight"));
+        frontLeft = hwMap.dcMotor.get(config.get("frontLeftMotor"));
+        backLeft = hwMap.dcMotor.get(config.get("backLeftMotor"));
+        frontRight = hwMap.dcMotor.get(config.get("frontRightMotor"));
+        backRight = hwMap.dcMotor.get(config.get("backRightMotor"));
 
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);

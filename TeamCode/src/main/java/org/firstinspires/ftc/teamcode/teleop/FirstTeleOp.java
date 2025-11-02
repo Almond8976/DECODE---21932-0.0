@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,20 +11,20 @@ import org.firstinspires.ftc.teamcode.parts.Kicker;
 import org.firstinspires.ftc.teamcode.parts.Mortar;
 import org.firstinspires.ftc.teamcode.parts.Turret;
 
-
+@Config
 @TeleOp(name = "FirstTeleOp")
 public class FirstTeleOp extends LinearOpMode {
-    public double intakeSpeed = 0.5;
-    public double shootSpeed = 1.0;
-    public double reverseSpeed = -0.3;
+    public double shootSpeed = 0.6;
     public double speedMult = 1;
+    public double rotationMult = 0.7;
+
+    public boolean intakeMode = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         Turret turret = new Turret(hardwareMap);
         Kicker kicker = new Kicker(hardwareMap);
-        //Drivetrain drivetrain = new Drivetrain(hardwareMap, "frontLeft", "backLeft", "frontRight", "frontLeft"); // TODO: Fix this if gonna use
         Mortar flywheel = new Mortar(hardwareMap);
         Intake intake = new Intake(hardwareMap);
 
@@ -45,13 +46,12 @@ public class FirstTeleOp extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()) {
-            boolean intakeMode = false;
-            turret.loop();
+            turret.update();
 
             //moving using game pad one
             double y = gamepad1.left_stick_y;
             double x = -gamepad1.left_stick_x;
-            double rx = -gamepad1.right_stick_x;
+            double rx = -gamepad1.right_stick_x*rotationMult;
 
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
             double frontLeftPower = ((y + x + rx) / denominator)*speedMult;
@@ -64,46 +64,32 @@ public class FirstTeleOp extends LinearOpMode {
             frontRightMotor.setPower(frontRightPower);
             backRightMotor.setPower(backRightPower);
 
-            //empties only one
-            if(gamepad2.rightBumperWasPressed()) {
+
+            if(gamepad1.right_bumper) {
                 flywheel.setFlyMotorSpeed(shootSpeed);
+                //intake.setIntakeSpeed(0.1);
             }
-            if(gamepad2.leftBumperWasPressed()) {
+            if(gamepad1.left_bumper) {
                 flywheel.setFlyMotorSpeed(0);
+                intake.setIntakeSpeed(0);
             }
-            if(gamepad2.xWasPressed()) {
-                kicker.setKickerPositon(0.5);
-                kicker.setKickerPositon(0);
+            if(gamepad2.x) {
+                kicker.setKickerPositon(1);
             }
-
-            if(gamepad1.bWasPressed()) {
-                intake.setIntakeSpeed(intakeSpeed);
-                flywheel.setFlyMotorSpeed(reverseSpeed);
+            if(gamepad2.y) {
+                kicker.setKickerPositon(0.75);
             }
 
-            if(gamepad1.aWasPressed()) {
+            if(gamepad2.right_bumper) {
+                intake.setIntakeSpeed(1.0);
+                intakeMode = true;
+            }
+
+            if(gamepad2.left_bumper) {
                 intake.setIntakeSpeed(0);
                 flywheel.setFlyMotorSpeed(0);
+                intakeMode = false;
             }
         }
     }
-
-    /*public void TurnTable() {
-        MecanumDrive drive;
-        double ticksPerRad;
-
-        drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
-        ticksPerRad = (384.5*((double)85/25)) / (2*Math.PI);
-
-        drive.updatePoseEstimate();
-
-        Pose2d pose = drive.localizer.getPose();
-        double x = pose.position.x;
-        double y = pose.position.y;
-        double heading = pose.heading.toDouble();
-
-        double turretHeading = Math.atan2(y, -x) - heading; //I think this is right, you will know when you test
-        turret.setTargetPosition((int)(turretHeading * ticksPerRad + 0.5));
-    }*/
-
 }

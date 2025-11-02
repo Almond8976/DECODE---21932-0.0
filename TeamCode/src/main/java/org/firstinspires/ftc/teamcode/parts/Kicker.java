@@ -16,6 +16,6 @@ public class Kicker {
     }
 
     public void setKickerPositon(double kickerPositon){
-        setKickerPositon(kickerPositon);
+        kicker.setPosition(kickerPositon);
     }
 }

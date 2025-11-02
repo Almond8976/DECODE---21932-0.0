@@ -14,7 +14,7 @@ public class TestTurret extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
-            turret.loop();
+            turret.update();
         }
     }
 }
