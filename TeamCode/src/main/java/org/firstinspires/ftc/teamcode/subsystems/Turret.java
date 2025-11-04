@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -21,7 +22,9 @@ public class Turret {
 
     private double x, y, heading, turretHeading;
 
-    private boolean tracking;
+    private boolean tracking = true;
+
+    private Pose2d pose;
 
     public Turret(HardwareMap hardwareMap, HashMap<String, String> config) {
         drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0)); // TODO: set this to whatever position auton will end at
@@ -42,12 +45,16 @@ public class Turret {
         tracking = !tracking;
     }
 
+    public Pose2d getPose() {
+        return pose;
+    }
+
 
     public void update() {
         if (tracking) {
             drive.updatePoseEstimate();
 
-            Pose2d pose = drive.localizer.getPose();
+            pose = drive.localizer.getPose();
             x = pose.position.x;
             y = pose.position.y;
             heading = pose.heading.toDouble();

@@ -11,7 +11,7 @@ public class Kicker {
     private Servo kicker;
 
     // TODO: find actual positions with servotest
-    public double DOWN = 0, UP = 0.5;
+    public static double DOWN = 0, UP = 0.5;
     private double position;
 
     public Kicker(HardwareMap hardwareMap, HashMap<String, String> config) {

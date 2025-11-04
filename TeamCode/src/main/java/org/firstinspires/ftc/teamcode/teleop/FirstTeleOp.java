@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -29,6 +30,8 @@ public class FirstTeleOp extends LinearOpMode {
         Turret turret = new Turret(hardwareMap, util.deviceConf);
         Mortar shooter = new Mortar(hardwareMap, util.deviceConf);
         Kicker kicker = new Kicker(hardwareMap, util.deviceConf);
+
+        Pose2d pose;
 
         waitForStart();
 
@@ -73,6 +76,13 @@ public class FirstTeleOp extends LinearOpMode {
             turret.update();
             shooter.update();
             kicker.update();
+
+            pose = turret.getPose();
+
+            telemetry.addData("pose x", pose.position.x);
+            telemetry.addData("pose y", pose.position.y);
+            telemetry.addData("pose heading", pose.heading);
+            telemetry.update();
 
         }
     }
