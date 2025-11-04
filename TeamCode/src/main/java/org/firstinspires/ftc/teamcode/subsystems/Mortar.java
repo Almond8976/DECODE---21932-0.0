@@ -23,6 +23,10 @@ public class Mortar {
         power = motorPower;
     }
 
+    public double getPower() {
+        return power;
+    }
+
     public void update() {
         flyMotor.setPower(power);
     }
