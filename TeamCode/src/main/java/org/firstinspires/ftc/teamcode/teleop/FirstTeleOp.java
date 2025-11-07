@@ -37,11 +37,10 @@ public class FirstTeleOp extends LinearOpMode {
 
         while(opModeIsActive()) {
 
-            drive.getXYZ(gamepad1.left_stick_x, gamepad1.left_stick_y, -gamepad1.right_stick_x);
 
             if (gamepad1.right_bumper) {
                 shooter.setPower(shooter.NORMAL);
-                //intake.setIntakePowe(0.1);
+
             }
             if (gamepad1.left_bumper) {
                 shooter.setPower(shooter.OFF);
@@ -66,12 +65,8 @@ public class FirstTeleOp extends LinearOpMode {
                 intakeMode = false;
             }
 
-            if (gamepad1.a) {
-                turret.toggleTracking();
-            }
-
             // update all systems
-            drive.update();
+            drive.update(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
             intake.update();
             turret.update();
             shooter.update();
@@ -82,6 +77,8 @@ public class FirstTeleOp extends LinearOpMode {
             telemetry.addData("pose x", pose.position.x);
             telemetry.addData("pose y", pose.position.y);
             telemetry.addData("pose heading", pose.heading);
+            telemetry.addData("Kicker pos", kicker.getPosition());
+            telemetry.addData("Turret target", turret.getTurretHeading());
             telemetry.update();
 
         }

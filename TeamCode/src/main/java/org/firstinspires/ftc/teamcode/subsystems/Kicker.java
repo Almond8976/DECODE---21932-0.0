@@ -10,9 +10,8 @@ import java.util.HashMap;
 public class Kicker {
     private Servo kicker;
 
-    // TODO: find actual positions with servotest
-    public static double DOWN = 0, UP = 0.5;
-    private double position;
+    public static double DOWN = 0.75, UP = 1.0;
+    private double position = DOWN;
 
     public Kicker(HardwareMap hardwareMap, HashMap<String, String> config) {
         kicker = hardwareMap.get(Servo.class, config.get("kicker"));
@@ -24,5 +23,9 @@ public class Kicker {
 
     public void update() {
         kicker.setPosition(position);
+    }
+
+    public double getPosition() {
+        return kicker.getPosition();
     }
 }

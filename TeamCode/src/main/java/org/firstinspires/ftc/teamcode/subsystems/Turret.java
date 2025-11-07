@@ -31,44 +31,36 @@ public class Turret {
         turret = hardwareMap.get(DcMotor.class, config.get("turretMotor"));
 
         turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public void enableTracking() {
-        tracking = true;
-    }
-
-    public void disableTracking() {
-        tracking = false;
-    }
-
-    public void toggleTracking() {
-        tracking = !tracking;
+        turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public Pose2d getPose() {
         return pose;
     }
+    public double getTurretHeading() {
+        return turretHeading;
+    }
 
 
     public void update() {
-        if (tracking) {
-            drive.updatePoseEstimate();
 
-            pose = drive.localizer.getPose();
-            x = pose.position.x;
-            y = pose.position.y;
-            heading = pose.heading.toDouble();
+        drive.updatePoseEstimate();
 
-            turretHeading = Math.atan2(y, -x) - heading; //TODO: find a function that given the robots position will find the angle to the basket (assume basket is at 0, 0)
+        pose = drive.localizer.getPose();
+        x = pose.position.x;
+        y = pose.position.y;
+        heading = pose.heading.toDouble();
 
-            if (turret.getTargetPosition() > rotationLimit) {
-                turret.setTargetPosition((int) ((turretHeading * ticksPerRad + 0.5) - (rotationLimit * 2)));
-            } else if (turret.getTargetPosition() < -rotationLimit) {
-                turret.setTargetPosition((int) ((turretHeading * ticksPerRad + 0.5) + (rotationLimit * 2)));
-            } else {
-                turret.setTargetPosition((int) ((turretHeading * ticksPerRad + 0.5)));
-            }
-            turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        turretHeading = Math.atan2(y, -x) - heading; //TODO: find a function that given the robots position will find the angle to the basket (assume basket is at 0, 0)
+
+        if (turret.getTargetPosition() > rotationLimit) {
+            turret.setTargetPosition((int) ((turretHeading * ticksPerRad + 0.5) - (rotationLimit * 2)));
+        } else if (turret.getTargetPosition() < -rotationLimit) {
+            turret.setTargetPosition((int) ((turretHeading * ticksPerRad + 0.5) + (rotationLimit * 2)));
+        } else {
+            turret.setTargetPosition((int) ((turretHeading * ticksPerRad + 0.5)));
         }
+        turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
     }
 }
