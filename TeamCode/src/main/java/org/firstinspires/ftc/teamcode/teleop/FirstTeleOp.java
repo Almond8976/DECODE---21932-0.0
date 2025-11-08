@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.subsystems.Util;
 @Config
 @TeleOp(name = "FirstTeleOp")
 public class FirstTeleOp extends LinearOpMode {
-    public boolean intakeMode = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -56,13 +55,11 @@ public class FirstTeleOp extends LinearOpMode {
 
             if(gamepad2.right_bumper) {
                 intake.setIntakePower(1.0);
-                intakeMode = true;
             }
 
             if(gamepad2.left_bumper) {
                 intake.setIntakePower(0);
                 shooter.setPower(shooter.OFF);
-                intakeMode = false;
             }
 
             // update all systems
@@ -77,7 +74,6 @@ public class FirstTeleOp extends LinearOpMode {
             telemetry.addData("pose x", pose.position.x);
             telemetry.addData("pose y", pose.position.y);
             telemetry.addData("pose heading", pose.heading);
-            telemetry.addData("Kicker pos", kicker.getPosition());
             telemetry.addData("Turret target", turret.getTurretHeading());
             telemetry.update();
 
