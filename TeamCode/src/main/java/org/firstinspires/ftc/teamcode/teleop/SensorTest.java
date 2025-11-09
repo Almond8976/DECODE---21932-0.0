@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -10,11 +13,16 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Mortar;
 import org.firstinspires.ftc.teamcode.subsystems.Sparky;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
+
+@Config
 @TeleOp(name = "SensorTest")
 public class SensorTest extends LinearOpMode {
+    public int ballCount = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
         Util util = new Util();
         Sparky color = new Sparky();
         Intake intake = new Intake(hardwareMap, util.deviceConf);
@@ -24,6 +32,8 @@ public class SensorTest extends LinearOpMode {
         color.init(hardwareMap);
 
         boolean intaking = false;
+
+        boolean metThreshold = false;
 
         waitForStart();
 
@@ -37,9 +47,13 @@ public class SensorTest extends LinearOpMode {
                 intake.setRollerPower(0);
             }
 
+            if(!metThreshold && color.getDetectedColor()>.055) {
+                ballCount++;
+            }
+            metThreshold = color.getDetectedColor()>.055;
 
             if(intaking) {
-                switch (color.ballCount) {
+                switch (ballCount) {
                     case 0 :
                     case 1 : intake.setIntakePower(1); intake.setRollerPower(1); break;
                     case 2 : intake.setIntakePower(1); intake.setRollerPower(0); break;
@@ -49,16 +63,16 @@ public class SensorTest extends LinearOpMode {
 
             if(gamepad1.a) {
                 shooter.setPower(1);
-                color.ballCount = 0;
+                ballCount = 0;
             }
-
 
             drive.update(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
             intake.update();
             shooter.update();
-            color.getDetectedColor(telemetry);
 
-            telemetry.addData("Ball Count", color.ballCount);
+
+            telemetry.addData("Ball Count", ballCount);
+            telemetry.addData("Blue", color.getDetectedColor());
             telemetry.update();
         }
     }
