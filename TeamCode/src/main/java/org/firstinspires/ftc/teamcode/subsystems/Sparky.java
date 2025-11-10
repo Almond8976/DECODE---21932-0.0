@@ -14,7 +14,7 @@ public class Sparky {
     NormalizedColorSensor colorSensor;
 
     public void init(HardwareMap hwMap) {
-        RevColorSensorV3 colorSensor = hardwareMap.get(RevColorSensorV3.class, "colorSensor");
+        RevColorSensorV3 colorSensor = hwMap.get(RevColorSensorV3.class, "colorSensor");
         colorSensor.setGain(6);
     }
 

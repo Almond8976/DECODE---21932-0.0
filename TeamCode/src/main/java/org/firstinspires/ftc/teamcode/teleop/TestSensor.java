@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.subsystems.Sensor;
 
-public class TestDistance extends LinearOpMode {
+public class TestSensor extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Sensor sensor = new Sensor();

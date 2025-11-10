@@ -33,6 +33,11 @@ public class Intake {
         rollerPower = power;
     }
 
+    public void setAllPower(double power) {
+        intakePower = power;
+        rollerPower = power;
+    }
+
     public void update() {
         intake.setPower(intakePower);
         rollers.setPower(rollerPower);
