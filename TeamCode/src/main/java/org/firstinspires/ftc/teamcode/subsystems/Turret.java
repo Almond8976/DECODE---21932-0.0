@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -29,8 +30,10 @@ public class Turret {
 
     private Pose2d pose;
 
+    public static Vector2d basket = new Vector2d(-72,-72);
+
     public Turret(HardwareMap hardwareMap, HashMap<String, String> config) {
-        drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0)); // TODO: set this to whatever position auton will end at
+        drive = new MecanumDrive(hardwareMap, new Pose2d(24,-48,Math.PI/2)); // TODO: set this to whatever position auton will end at
         turret = hardwareMap.get(DcMotor.class, config.get("turretMotor"));
 
         turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -54,21 +57,24 @@ public class Turret {
         y = pose.position.y;
         heading = pose.heading.toDouble();
 
-        turretHeading = Math.atan2(y, -x) - heading; //TODO: find a function that given the robots position will find the angle to the basket (assume basket is at 0, 0)
+        turretHeading = Math.atan2(basket.y -y , -(x-basket.x)) - heading; //TODO: find a function that given the robots position will find the angle to the basket (assume basket is at 0, 0)
 
-        if (turret.getTargetPosition() > rotationLimit) {
-            turret.setTargetPosition((int) ((turretHeading * ticksPerRad + 0.5) - (rotationLimit * 2)));
+        /*if (turret.getTargetPosition() > rotationLimit) {
+            turret.setTargetPosition((int) ((turretHeading * ticksPerRad) - (rotationLimit * 2)));
             turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             turret.setPower(rotationSpeed);
         } else if (turret.getTargetPosition() < -rotationLimit) {
-            turret.setTargetPosition((int) ((turretHeading * ticksPerRad + 0.5) + (rotationLimit * 2)));
+            turret.setTargetPosition((int) ((turretHeading * ticksPerRad) + (rotationLimit * 2)));
             turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             turret.setPower(rotationSpeed);
         } else {
-            turret.setTargetPosition((int) ((turretHeading * ticksPerRad + 0.5)));
+            turret.setTargetPosition((int) ((turretHeading * ticksPerRad)));
             turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             turret.setPower(rotationSpeed);
-        }
+        }*/
+        turret.setTargetPosition((int) ((turretHeading * ticksPerRad)));
+        turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        turret.setPower(rotationSpeed);
 
 
     }
