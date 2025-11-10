@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
+import android.graphics.Color;
+
 import com.qualcomm.hardware.lynx.LynxI2cDeviceSynch;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -11,20 +13,24 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Sparky {
 
-    NormalizedColorSensor colorSensor;
+    private ColorRangefinder colorSensor;
+    private NormalizedRGBA colors;
+    private double distance;
 
-    public void init(HardwareMap hwMap) {
-        RevColorSensorV3 colorSensor = hwMap.get(RevColorSensorV3.class, "colorSensor");
-        colorSensor.setGain(6);
+    public Sparky(HardwareMap hwMap) {
+        colorSensor = new ColorRangefinder(hwMap.get(RevColorSensorV3.class, "colorSensor"));
+        //colorSensor.setGain(6);
     }
 
-    public float getDetectedColor() {
-        NormalizedRGBA colors = colorSensor.getNormalizedColors();
-        float normGreen, normRed, normBlue;
-        normGreen = colors.green / colors.alpha;
-        normRed = colors.red / colors.alpha;
-        normBlue = colors.blue / colors.alpha;
+    public NormalizedRGBA getDetectedColors() {
+        colors = colorSensor.emulator.getNormalizedColors();
 
-        return normBlue;
+        return colors;
+    }
+
+    public double getDistance() {
+        distance = colorSensor.readDistance();
+
+        return distance;
     }
 }

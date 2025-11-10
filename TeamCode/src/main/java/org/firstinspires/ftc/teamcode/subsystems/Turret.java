@@ -57,7 +57,7 @@ public class Turret {
         y = pose.position.y;
         heading = pose.heading.toDouble();
 
-        turretHeading = Math.atan2(basket.y -y , -(x-basket.x)) - heading; //TODO: find a function that given the robots position will find the angle to the basket (assume basket is at 0, 0)
+        turretHeading = Math.atan2(basket.y-y, basket.x-x) - heading; //TODO: find a function that given the robots position will find the angle to the basket (assume basket is at 0, 0)
 
         /*if (turret.getTargetPosition() > rotationLimit) {
             turret.setTargetPosition((int) ((turretHeading * ticksPerRad) - (rotationLimit * 2)));
