@@ -99,7 +99,7 @@ public class FirstTeleOp extends LinearOpMode {
             // update all systems
             drive.update(gamepad1.left_stick_x, -gamepad1.left_stick_y, -gamepad1.right_stick_x);
             intake.update();
-            turret.update();
+            //turret.update();
             shooter.update();
             kicker.update();
 

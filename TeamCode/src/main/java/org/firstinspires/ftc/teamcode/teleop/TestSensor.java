@@ -8,9 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.subsystems.Sensor;
 import org.firstinspires.ftc.teamcode.subsystems.Sparky;
-
-@TeleOp
 @Config
+@TeleOp(name = "TestSensor")
 public class TestSensor extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
