@@ -23,6 +23,7 @@ public class ConfigureColorRangefinder extends LinearOpMode {
         crf.setPin0DigitalMaxDistance(ColorRangefinder.DigitalMode.HSV, 1); // 10mm or closer requirement
         crf.setPin1Digital(ColorRangefinder.DigitalMode.HSV, 110 / 360.0 * 255, 140 / 360.0 * 255); // green
         crf.setPin1DigitalMaxDistance(ColorRangefinder.DigitalMode.HSV, 1); // 10mm or closer requirement
+        crf.setLedBrightness(20);
 
         DigitalChannel pin0 = hardwareMap.digitalChannel.get("digital0");
         DigitalChannel pin1 = hardwareMap.digitalChannel.get("digital1");

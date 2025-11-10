@@ -45,7 +45,7 @@ public class FirstTeleOp extends LinearOpMode {
                 shooter.setPower(Mortar.NORMAL);
                 shooting = true;
             }
-            if (gamepad1.left_bumper) {
+            if (gamepad1.dpad_left) {
                 shooter.setPower(Mortar.OFF);
                 intake.setIntakePower(0);
                 shooting = false;
@@ -86,6 +86,15 @@ public class FirstTeleOp extends LinearOpMode {
             if(gamepad1.dpad_down) {
                 ballCount--;
             }
+
+            if(gamepad1.left_bumper) {
+                drive.parkMode();
+            }
+
+            if(!gamepad1.left_bumper) {
+                drive.speedMode();
+            }
+
 
             // update all systems
             drive.update(gamepad1.left_stick_x, -gamepad1.left_stick_y, -gamepad1.right_stick_x);

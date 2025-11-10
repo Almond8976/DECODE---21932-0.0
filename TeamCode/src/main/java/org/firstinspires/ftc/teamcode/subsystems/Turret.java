@@ -30,10 +30,11 @@ public class Turret {
 
     private Pose2d pose;
 
-    public static Vector2d basket = new Vector2d(-72,-72);
+    public static Vector2d blueBasket = new Vector2d(-66,-66);
+    public static Vector2d redBasket = new Vector2d(-66, 66);
 
     public Turret(HardwareMap hardwareMap, HashMap<String, String> config) {
-        drive = new MecanumDrive(hardwareMap, new Pose2d(24,-48,Math.PI/2)); // TODO: set this to whatever position auton will end at
+        drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0)); // TODO: set this to whatever position auton will end at
         turret = hardwareMap.get(DcMotor.class, config.get("turretMotor"));
 
         turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -57,7 +58,7 @@ public class Turret {
         y = pose.position.y;
         heading = pose.heading.toDouble();
 
-        turretHeading = Math.atan2(basket.y-y, basket.x-x) - heading; //TODO: find a function that given the robots position will find the angle to the basket (assume basket is at 0, 0)
+        turretHeading = Math.atan2(redBasket.y-y, redBasket.x-x) - heading; //TODO: find a function that given the robots position will find the angle to the basket (assume basket is at 0, 0)
 
         /*if (turret.getTargetPosition() > rotationLimit) {
             turret.setTargetPosition((int) ((turretHeading * ticksPerRad) - (rotationLimit * 2)));
