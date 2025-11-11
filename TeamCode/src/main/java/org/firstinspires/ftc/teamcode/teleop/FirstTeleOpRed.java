@@ -79,6 +79,9 @@ public class FirstTeleOpRed extends LinearOpMode {
             if (gamepad1.y) {
                 kicker.setPosition(Kicker.UP);
             }
+            if(kicker.getPosition() > Kicker.DOWN) {
+                intake.setAllPower(0);
+            }
 
             if(gamepad2.right_bumper) {
                 intake.setIntakePower(1.0);
