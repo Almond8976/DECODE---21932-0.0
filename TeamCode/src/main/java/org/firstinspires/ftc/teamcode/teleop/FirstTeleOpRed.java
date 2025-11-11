@@ -58,24 +58,25 @@ public class FirstTeleOpRed extends LinearOpMode {
                 turret.tracking = false;
                 shooting = false;
             }
-            if(shooting && shooter.getVelocity() > shooterTargetSpeed - 60) {
+            if(shooting && shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH) {
                 switch(ballCount) {
-                    case 0: intake.setAllPower(0); shooting = false; shooter.setPower(Mortar.OFF); turret.tracking = false; break;
+                    case 0: intake.setAllPower(0); shooting = false; shooter.setVelocity(Mortar.OFF); turret.tracking = false; break;
                     case 1:
                     case 2:
                     case 3: intake.setAllPower(1); break;
                 }
             }
 
-            if(shooting && shooter.getVelocity() <= shooterTargetSpeed - 60 && metShooterThresh) {
+            if(shooting && shooter.getVelocity() <= shooterTargetSpeed - Mortar.THRESH && metShooterThresh) {
                 ballCount--;
+                intake.setAllPower(0);
             }
-            metShooterThresh = shooter.getVelocity() > shooterTargetSpeed - 60;
+            metShooterThresh = shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH;
 
-            if (gamepad2.x) {
+            if (gamepad1.x) {
                 kicker.setPosition(Kicker.DOWN);
             }
-            if (gamepad2.y) {
+            if (gamepad1.y) {
                 kicker.setPosition(Kicker.UP);
             }
 
@@ -141,7 +142,8 @@ public class FirstTeleOpRed extends LinearOpMode {
             telemetry.addData("Turret target", turret.getTurretHeading());
             telemetry.addData("Shooter vel", shooter.getVelocity());
             telemetry.addData("Shooter target vel", shooter.getTargetVelocity());
-            telemetry.addData("ball count", ballCount);
+            telemetry.addData("Ball Count", ballCount);
+            telemetry.addData("Turret Manual Override", turretOverride);
             telemetry.update();
 
         }
