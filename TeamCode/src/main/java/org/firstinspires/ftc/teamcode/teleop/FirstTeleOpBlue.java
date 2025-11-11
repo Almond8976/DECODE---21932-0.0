@@ -14,8 +14,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 
 @Config
-@TeleOp(name = "FirstTeleOp")
-public class FirstTeleOp extends LinearOpMode {
+@TeleOp(name = "FirstTeleOpBlue")
+public class FirstTeleOpBlue extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -24,14 +24,14 @@ public class FirstTeleOp extends LinearOpMode {
         Drivetrain drive = new Drivetrain(hardwareMap, util.deviceConf);
 
         Intake intake = new Intake(hardwareMap, util.deviceConf);
-        Turret turret = new Turret(hardwareMap, util.deviceConf);
+        Turret turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(0,0,0));
         Mortar shooter = new Mortar(hardwareMap, util.deviceConf);
         Kicker kicker = new Kicker(hardwareMap, util.deviceConf);
 
-        Pose2d pose = new Pose2d(0,0,0);
-
         ElapsedTime time1 = new ElapsedTime();
+        Pose2d pose;
 
+        turret.setBasketPos(turret.blueBasket);
         waitForStart();
 
         boolean shooting = false, metShooterThresh = false;
@@ -40,8 +40,12 @@ public class FirstTeleOp extends LinearOpMode {
 
         while(opModeIsActive()) {
 
+            pose = turret.getPose();
+
             if (gamepad1.right_bumper) {
-                shooter.setVelocity(shooter.calcVelocity(Math.sqrt((pose.position.x * pose.position.x) + (pose.position.y * pose.position.y))));
+                shooter.setVelocity(shooter.calcVelocity(Math.sqrt(
+                        (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)
+                )));
                 shooting = true;
             }
             if (gamepad1.dpad_left) {
@@ -102,6 +106,10 @@ public class FirstTeleOp extends LinearOpMode {
                 drive.speedMode();
             }
 
+            if(gamepad2.dpadUpWasPressed()) {
+                turret.tracking = !turret.tracking;
+            }
+
 
 
             // update all systems
@@ -110,8 +118,6 @@ public class FirstTeleOp extends LinearOpMode {
             turret.update();
             shooter.update();
             kicker.update();
-            pose = turret.getPose();
-
 
             telemetry.addData("pose x", pose.position.x);
             telemetry.addData("pose y", pose.position.y);
@@ -120,6 +126,7 @@ public class FirstTeleOp extends LinearOpMode {
             telemetry.addData("Turret target", turret.getTurretHeading());
             telemetry.addData("Shooter vel", shooter.getVelocity());
             telemetry.addData("Shooter target vel", shooter.getTargetVelocity());
+            telemetry.addData("ball count", ballCount);
             telemetry.update();
 
         }

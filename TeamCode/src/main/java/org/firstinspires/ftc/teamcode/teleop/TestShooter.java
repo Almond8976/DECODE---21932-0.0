@@ -23,7 +23,7 @@ public class TestShooter extends LinearOpMode {
         Util util = new Util();
         Mortar shooter = new Mortar(hardwareMap, util.deviceConf);
         Kicker kicker = new Kicker(hardwareMap, util.deviceConf);
-        Turret turret = new Turret(hardwareMap, util.deviceConf);
+        Turret turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(0,0,0));
         turret.tracking = false;
 
         Pose2d pose;
