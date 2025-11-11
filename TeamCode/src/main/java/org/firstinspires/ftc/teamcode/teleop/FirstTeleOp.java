@@ -28,7 +28,7 @@ public class FirstTeleOp extends LinearOpMode {
         Mortar shooter = new Mortar(hardwareMap, util.deviceConf);
         Kicker kicker = new Kicker(hardwareMap, util.deviceConf);
 
-        Pose2d pose;
+        Pose2d pose = new Pose2d(0,0,0);
 
         ElapsedTime time1 = new ElapsedTime();
 
@@ -39,10 +39,9 @@ public class FirstTeleOp extends LinearOpMode {
         int ballCount = 0;
 
         while(opModeIsActive()) {
-            pose = turret.getPose();
 
             if (gamepad1.right_bumper) {
-                shooter.setVelocity(Math.sqrt((pose.position.x * pose.position.x) + (pose.position.y * pose.position.y)));
+                shooter.setVelocity(shooter.calcVelocity(Math.sqrt((pose.position.x * pose.position.x) + (pose.position.y * pose.position.y))));
                 shooting = true;
             }
             if (gamepad1.dpad_left) {
@@ -77,13 +76,21 @@ public class FirstTeleOp extends LinearOpMode {
 
             if(gamepad2.left_bumper) {
                 intake.setIntakePower(0);
-                shooter.setVelocity(0);
+                //shooter.setVelocity(0);
             }
 
-            if(gamepad1.dpad_up) {
+            if(gamepad2.a) {
+                intake.setRollerPower(1);
+            }
+
+            if(gamepad2.b) {
+                intake.setRollerPower(1);
+            }
+
+            if(gamepad1.dpadUpWasPressed()) {
                 ballCount++;
             }
-            if(gamepad1.dpad_down) {
+            if(gamepad1.dpadDownWasPressed()) {
                 ballCount--;
             }
 
@@ -96,12 +103,15 @@ public class FirstTeleOp extends LinearOpMode {
             }
 
 
+
             // update all systems
             drive.update(gamepad1.left_stick_x, -gamepad1.left_stick_y, -gamepad1.right_stick_x);
             intake.update();
             turret.update();
             shooter.update();
             kicker.update();
+            pose = turret.getPose();
+
 
             telemetry.addData("pose x", pose.position.x);
             telemetry.addData("pose y", pose.position.y);
