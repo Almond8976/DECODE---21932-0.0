@@ -18,7 +18,17 @@ public class TestSensor extends LinearOpMode {
 
         waitForStart();
 
+        int ball = 0;
+
+        boolean metDistanceSensorThresh = false;
+
         while (opModeIsActive()) {
+            if(metDistanceSensorThresh && sensor.getDistance() < 50) {
+                ball++;
+
+            }
+            metDistanceSensorThresh = sensor.getDistance() > 50;
+
             telemetry.addData("RED:", sensor.getDetectedColors().red);
             telemetry.addData("GREEN:", sensor.getDetectedColors().blue);
             telemetry.addData("BLUE:", sensor.getDetectedColors().green);

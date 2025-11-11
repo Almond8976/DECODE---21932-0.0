@@ -70,7 +70,7 @@ public class Turret {
         heading = pose.heading.toDouble();
 
         turretHeadingRelative = Math.atan2(curBasket.y-y, curBasket.x-x);
-        turretHeading = turretHeadingRelative - heading; //TODO: find a function that given the robots position will find the angle to the basket (assume basket is at 0, 0)
+        turretHeading = turretHeadingRelative - heading;
 
 
         turretHeading %= 2*Math.PI;
