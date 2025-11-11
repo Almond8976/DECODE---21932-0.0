@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Util;
 @Config
 @TeleOp(name = "TestShooter")
 public class TestShooter extends LinearOpMode {
-
+    public static double vel = 0;
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -22,7 +22,7 @@ public class TestShooter extends LinearOpMode {
         Mortar shooter = new Mortar(hardwareMap, util.deviceConf);
         Kicker kicker = new Kicker(hardwareMap, util.deviceConf);
 
-        double vel = 0;
+
 
         waitForStart();
 
