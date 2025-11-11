@@ -39,14 +39,14 @@ public class FirstTeleOp extends LinearOpMode {
         int ballCount = 0;
 
         while(opModeIsActive()) {
-
+            pose = turret.getPose();
 
             if (gamepad1.right_bumper) {
-                shooter.setPower(Mortar.NORMAL);
+                shooter.setVelocity(Math.sqrt((pose.position.x * pose.position.x) + (pose.position.y * pose.position.y)));
                 shooting = true;
             }
             if (gamepad1.dpad_left) {
-                shooter.setPower(Mortar.OFF);
+                shooter.setVelocity(0);
                 intake.setIntakePower(0);
                 shooting = false;
             }
@@ -77,7 +77,7 @@ public class FirstTeleOp extends LinearOpMode {
 
             if(gamepad2.left_bumper) {
                 intake.setIntakePower(0);
-                shooter.setPower(Mortar.OFF);
+                shooter.setVelocity(0);
             }
 
             if(gamepad1.dpad_up) {
@@ -103,14 +103,13 @@ public class FirstTeleOp extends LinearOpMode {
             shooter.update();
             kicker.update();
 
-            pose = turret.getPose();
-
             telemetry.addData("pose x", pose.position.x);
             telemetry.addData("pose y", pose.position.y);
             telemetry.addData("pose heading", pose.heading.toDouble());
             telemetry.addData("Turret Heading relative", turret.getTurretHeadingRelative());
             telemetry.addData("Turret target", turret.getTurretHeading());
-            telemetry.addData("Shooter speed", shooter.getVelocity());
+            telemetry.addData("Shooter vel", shooter.getVelocity());
+            telemetry.addData("Shooter target vel", shooter.getTargetVelocity());
             telemetry.update();
 
         }
