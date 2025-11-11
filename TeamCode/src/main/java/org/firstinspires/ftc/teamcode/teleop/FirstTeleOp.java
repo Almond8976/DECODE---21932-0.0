@@ -99,7 +99,7 @@ public class FirstTeleOp extends LinearOpMode {
             // update all systems
             drive.update(gamepad1.left_stick_x, -gamepad1.left_stick_y, -gamepad1.right_stick_x);
             intake.update();
-            //turret.update();
+            turret.update();
             shooter.update();
             kicker.update();
 
@@ -107,7 +107,8 @@ public class FirstTeleOp extends LinearOpMode {
 
             telemetry.addData("pose x", pose.position.x);
             telemetry.addData("pose y", pose.position.y);
-            telemetry.addData("pose heading", pose.heading);
+            telemetry.addData("pose heading", pose.heading.toDouble());
+            telemetry.addData("Turret Heading relative", turret.getTurretHeadingRelative());
             telemetry.addData("Turret target", turret.getTurretHeading());
             telemetry.addData("Shooter speed", shooter.getVelocity());
             telemetry.update();

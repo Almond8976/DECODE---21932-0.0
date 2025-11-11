@@ -23,8 +23,8 @@ public class Turret {
 
     private double rotationLimit = Math.PI * 208;;
 
-    private double rotationSpeed = .2;
-    private double x, y, heading, turretHeading;
+    public static double rotationSpeed = 1;
+    private double x, y, heading, turretHeading, turretHeadingRelative;
 
     private boolean tracking = true;
 
@@ -48,6 +48,8 @@ public class Turret {
         return turretHeading;
     }
 
+    public double getTurretHeadingRelative() { return turretHeadingRelative; }
+
 
     public void update() {
 
@@ -58,8 +60,17 @@ public class Turret {
         y = pose.position.y;
         heading = pose.heading.toDouble();
 
-        turretHeading = Math.atan2(redBasket.y-y, redBasket.x-x) - heading; //TODO: find a function that given the robots position will find the angle to the basket (assume basket is at 0, 0)
+        turretHeadingRelative = Math.atan2(redBasket.y-y, redBasket.x-x);
+        turretHeading = turretHeadingRelative - heading; //TODO: find a function that given the robots position will find the angle to the basket (assume basket is at 0, 0)
 
+
+        turretHeading %= 2*Math.PI;
+        if(turretHeading>Math.PI) {
+            turretHeading -= 2*Math.PI;
+        }
+        else if(turretHeading<-Math.PI) {
+            turretHeading += 2*Math.PI;
+        }
         /*if (turret.getTargetPosition() > rotationLimit) {
             turret.setTargetPosition((int) ((turretHeading * ticksPerRad) - (rotationLimit * 2)));
             turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
