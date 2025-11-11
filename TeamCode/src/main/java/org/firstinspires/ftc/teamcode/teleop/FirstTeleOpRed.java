@@ -34,38 +34,43 @@ public class FirstTeleOpRed extends LinearOpMode {
         turret.setBasketPos(turret.redBasket);
         waitForStart();
 
-        boolean shooting = false, metShooterThresh = false;
+        boolean shooting = false, metShooterThresh = false, turretOverride = false;
 
         int ballCount = 0;
+        int shooterTargetSpeed = 0;
 
         while(opModeIsActive()) {
 
             pose = turret.getPose();
+            shooterTargetSpeed = shooter.calcVelocity(Math.sqrt(
+                    (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)));
 
-            if (gamepad1.right_bumper) {
-                shooter.setVelocity(shooter.calcVelocity(Math.sqrt(
-                        (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)
-                )));
+            if (gamepad1.right_bumper || shooting) {
+                if(!turretOverride) {
+                    turret.tracking = true;
+                }
+                shooter.setVelocity(shooterTargetSpeed);
                 shooting = true;
             }
-            if (gamepad1.dpad_left) {
-                shooter.setVelocity(0);
-                intake.setIntakePower(0);
+            if (gamepad1.left_bumper) {
+                shooter.setVelocity(Mortar.OFF);
+                intake.setAllPower(0);
+                turret.tracking = false;
                 shooting = false;
             }
-            if(shooting && shooter.getVelocity() > Mortar.THRESH) {
+            if(shooting && shooter.getVelocity() > shooterTargetSpeed - 60) {
                 switch(ballCount) {
-                    case 0: intake.setAllPower(0); shooting = false; shooter.setPower(Mortar.OFF); break;
+                    case 0: intake.setAllPower(0); shooting = false; shooter.setPower(Mortar.OFF); turret.tracking = false; break;
                     case 1:
                     case 2:
                     case 3: intake.setAllPower(1); break;
                 }
             }
 
-            if(shooting && shooter.getVelocity() <= Mortar.THRESH && metShooterThresh) {
+            if(shooting && shooter.getVelocity() <= shooterTargetSpeed - 60 && metShooterThresh) {
                 ballCount--;
             }
-            metShooterThresh = shooter.getVelocity() > Mortar.THRESH;
+            metShooterThresh = shooter.getVelocity() > shooterTargetSpeed - 60;
 
             if (gamepad2.x) {
                 kicker.setPosition(Kicker.DOWN);
@@ -80,7 +85,6 @@ public class FirstTeleOpRed extends LinearOpMode {
 
             if(gamepad2.left_bumper) {
                 intake.setIntakePower(0);
-                //shooter.setVelocity(0);
             }
 
             if(gamepad2.a) {
@@ -88,7 +92,7 @@ public class FirstTeleOpRed extends LinearOpMode {
             }
 
             if(gamepad2.b) {
-                intake.setRollerPower(1);
+                intake.setRollerPower(0);
             }
 
             if(gamepad1.dpadUpWasPressed()) {
@@ -98,16 +102,27 @@ public class FirstTeleOpRed extends LinearOpMode {
                 ballCount--;
             }
 
-            if(gamepad1.left_bumper) {
+            if(gamepad1.left_trigger>.1) {
                 drive.parkMode();
             }
 
-            if(!gamepad1.left_bumper) {
+            if(gamepad1.left_trigger<=.1) {
                 drive.speedMode();
             }
 
             if(gamepad2.dpadUpWasPressed()) {
-                turret.tracking = !turret.tracking;
+                turretOverride = !turretOverride;
+                if(turretOverride) {
+                    turret.tracking = false;
+                }
+            }
+
+            if(ballCount<0) {
+                ballCount = 0;
+            }
+
+            if(ballCount>3) {
+                ballCount = 3;
             }
 
 

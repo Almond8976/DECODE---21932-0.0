@@ -26,7 +26,7 @@ public class Turret {
     public static double rotationSpeed = 1;
     private double x, y, heading, turretHeading, turretHeadingRelative;
 
-    public static boolean tracking = true;
+    public static boolean tracking = false;
 
     private Pose2d pose;
 
@@ -95,6 +95,11 @@ public class Turret {
         }*/
         if (tracking) {
             turret.setTargetPosition((int) ((turretHeading * ticksPerRad)));
+            turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            turret.setPower(rotationSpeed);
+        }
+        else {
+            turret.setTargetPosition((int) (0));
             turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             turret.setPower(rotationSpeed);
         }
