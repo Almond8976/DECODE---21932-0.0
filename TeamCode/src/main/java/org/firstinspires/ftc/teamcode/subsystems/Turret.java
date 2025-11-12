@@ -62,7 +62,7 @@ public class Turret {
     }
 
     public void setPosition(int ticks) {
-        ticks = pos;
+        pos = ticks;
     }
 
     public void resetEncoder() {
