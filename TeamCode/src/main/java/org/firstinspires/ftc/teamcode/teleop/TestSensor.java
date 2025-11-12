@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Sparky;
 @Config
 @TeleOp(name = "TestSensor")
 public class TestSensor extends LinearOpMode {
+    public static int brightness = 50;
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -22,6 +23,7 @@ public class TestSensor extends LinearOpMode {
         boolean metDistanceSensorThresh = false;
 
         while (opModeIsActive()) {
+            sensor.setLEDBrightness(brightness);
             if(metDistanceSensorThresh && sensor.getDistance() < 50) {
                 ball++;
 

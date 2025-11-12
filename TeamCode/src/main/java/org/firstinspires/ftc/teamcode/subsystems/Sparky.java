@@ -33,4 +33,8 @@ public class Sparky {
 
         return distance;
     }
+
+    public void setLEDBrightness(int val) {
+        colorSensor.setLedBrightness(val);
+    }
 }
