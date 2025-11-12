@@ -22,6 +22,8 @@ public class FirstTeleOpRed extends LinearOpMode {
 
     public static int sensorThresh = 40;
 
+    public static int brightness = 50;
+
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -36,9 +38,13 @@ public class FirstTeleOpRed extends LinearOpMode {
         Sparky sensor = new Sparky(hardwareMap);
 
         ElapsedTime time1 = new ElapsedTime();
+        ElapsedTime time2 = new ElapsedTime();
         Pose2d pose;
 
         turret.setBasketPos(Turret.redBasket);
+
+        sensor.setLEDBrightness(brightness);
+
         waitForStart();
 
         boolean shooting = false, metShooterThresh = false, turretOverride = false, metDistanceSensorThresh = false;
@@ -71,9 +77,9 @@ public class FirstTeleOpRed extends LinearOpMode {
             if(shooting && shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH) {
                 switch(ballCount) {
                     case 0: intake.setAllPower(0); shooting = false; shooter.setVelocity(Mortar.OFF); Turret.tracking = false; break;
-                    case 1:
+                    case 1: intake.setAllPower(1); break;
                     case 2:
-                    case 3: intake.setAllPower(1); break;
+                    case 3: intake.setIntakePower(1); intake.setRollerPower(0); break;
                 }
             }
 
@@ -111,11 +117,11 @@ public class FirstTeleOpRed extends LinearOpMode {
                 intake.setRollerPower(0);
             }
 //SENSOR
-            if(metDistanceSensorThresh && sensor.getDistance() < sensorThresh) {
-                ballCount++;
-
-            }
-            metDistanceSensorThresh = sensor.getDistance() > sensorThresh;
+//            if(metDistanceSensorThresh && sensor.getDistance() < sensorThresh) {
+//                ballCount++;
+//
+//            }
+//            metDistanceSensorThresh = sensor.getDistance() > sensorThresh;
 
 
 //DRIVE

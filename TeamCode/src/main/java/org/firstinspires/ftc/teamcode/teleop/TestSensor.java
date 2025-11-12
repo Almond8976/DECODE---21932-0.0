@@ -26,8 +26,8 @@ public class TestSensor extends LinearOpMode {
             sensor.setLEDBrightness(brightness);
             if(metDistanceSensorThresh && sensor.getDistance() < 50) {
                 ball++;
-
             }
+
             metDistanceSensorThresh = sensor.getDistance() > 50;
 
             telemetry.addData("RED:", sensor.getDetectedColors().red);
