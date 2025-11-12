@@ -85,6 +85,7 @@ public class FirstTeleOpRed extends LinearOpMode {
 
             if(shooting && shooter.getVelocity() <= shooterTargetSpeed - Mortar.THRESH && metShooterThresh) {
                 ballCount--;
+                intake.setAllPower(0);
             }
             metShooterThresh = shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH;
 //KICKER
