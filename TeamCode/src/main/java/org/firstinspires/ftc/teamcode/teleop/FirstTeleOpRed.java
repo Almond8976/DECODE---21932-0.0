@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -18,8 +20,11 @@ import org.firstinspires.ftc.teamcode.subsystems.Util;
 @TeleOp(name = "FirstTeleOpRed")
 public class FirstTeleOpRed extends LinearOpMode {
 
+    public static int sensorThresh = 40;
+
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         Util util = new Util();
 
         Drivetrain drive = new Drivetrain(hardwareMap, util.deviceConf);
@@ -41,6 +46,8 @@ public class FirstTeleOpRed extends LinearOpMode {
         int ballCount = 0;
 
         int shooterTargetSpeed = 0;
+
+
 
         while(opModeIsActive()) {
 //SHOOTER
@@ -104,11 +111,11 @@ public class FirstTeleOpRed extends LinearOpMode {
                 intake.setRollerPower(0);
             }
 //SENSOR
-            if(metDistanceSensorThresh && sensor.getDistance() < 50) {
+            if(metDistanceSensorThresh && sensor.getDistance() < sensorThresh) {
                 ballCount++;
 
             }
-            metDistanceSensorThresh = sensor.getDistance() > 50;
+            metDistanceSensorThresh = sensor.getDistance() > sensorThresh;
 
 
 //DRIVE
