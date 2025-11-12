@@ -28,6 +28,8 @@ public class Turret {
 
     public static boolean tracking = false;
 
+    private int pos;
+
     private Pose2d pose;
 
     public static Vector2d blueBasket = new Vector2d(-66,-66);
@@ -59,6 +61,17 @@ public class Turret {
         return new Vector2d(curBasket.y-y, curBasket.x-x);
     }
 
+    public void setPosition(int ticks) {
+        ticks = pos;
+    }
+
+    public void resetEncoder() {
+        turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    public int getTargetPosition() {
+        return turret.getTargetPosition();
+    }
 
     public void update() {
 
@@ -99,7 +112,7 @@ public class Turret {
             turret.setPower(rotationSpeed);
         }
         else {
-            turret.setTargetPosition((int) (0));
+            turret.setTargetPosition(pos);
             turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             turret.setPower(rotationSpeed);
         }
