@@ -55,15 +55,15 @@ public class FirstAuto extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        trajPreload.build()
-                        Launch();
+                        trajPreload.build(),
+                        Launch()
                 )
         );
     }
     // Define all functions here (if you call subsystems movements from here it wont be parallel)
     public void Launch() {
+        turret.tracking = true;
         shooter.setPower(1);
-
     }
     public void intake() {
         intake.setAllPower(1);
