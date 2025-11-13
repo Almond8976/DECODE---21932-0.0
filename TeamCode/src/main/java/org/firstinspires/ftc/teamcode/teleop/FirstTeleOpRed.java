@@ -24,7 +24,7 @@ public class FirstTeleOpRed extends LinearOpMode {
 
     public static int brightness = 50;
 
-    public static int maxTurretChange = 100;
+    public static int maxTurretChange = 20;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -49,7 +49,7 @@ public class FirstTeleOpRed extends LinearOpMode {
 
         waitForStart();
 
-        boolean shooting = false, metShooterThresh = false, turretOverride = false, metDistanceSensorThresh = false;
+        boolean shooting = false, metShooterThresh = false, turretOverride = false, intaking = false, metDistanceSensorThresh = false;
 
         int ballCount = 0;
 
@@ -79,9 +79,9 @@ public class FirstTeleOpRed extends LinearOpMode {
             if(shooting && shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH) {
                 switch(ballCount) {
                     case 0: intake.setAllPower(0); shooting = false; shooter.setVelocity(Mortar.OFF); Turret.tracking = false; break;
-                    case 1: intake.setAllPower(1); break;
+                    case 1:
                     case 2:
-                    case 3: intake.setIntakePower(1); intake.setRollerPower(0); break;
+                    case 3: intake.setAllPower(1); break;
                 }
             }
 
@@ -105,20 +105,46 @@ public class FirstTeleOpRed extends LinearOpMode {
             }
             // INTAKE
             if(gamepad2.right_bumper) {
-                intake.setIntakePower(1.0);
+                intaking = true;
             }
 
             if(gamepad2.left_bumper) {
-                intake.setIntakePower(0);
+                intaking = false;
+                intake.setAllPower(0);
+            }
+
+            if(intaking) {
+                switch (ballCount) {
+                    case 0:
+                    case 1:
+                    case 2: intake.setIntakePower(1); break;
+                    case 3: intake.setAllPower(0); intaking = false; break;
+                }
             }
 
             if(gamepad2.a) {
-                intake.setRollerPower(1);
+                shooter.setVelocity(-700);
+                intake.setAllPower(-.5);
             }
+            if(!gamepad2.a && !shooting && !intaking) {
+                shooter.setVelocity(0);
+                intake.setAllPower(0);
+            }
+//            if(gamepad2.right_bumper) {
+//                intake.setIntakePower(1.0);
+//            }
+//
+//            if(gamepad2.left_bumper) {
+//                intake.setIntakePower(0);
+//            }
 
-            if(gamepad2.b) {
-                intake.setRollerPower(0);
-            }
+//            if(gamepad2.a) {
+//                intake.setRollerPower(1);
+//            }
+//
+//            if(gamepad2.b) {
+//                intake.setRollerPower(0);
+//            }
             // SENSOR
 //            if(metDistanceSensorThresh && sensor.getDistance() < sensorThresh) {
 //                ballCount++;
@@ -149,7 +175,7 @@ public class FirstTeleOpRed extends LinearOpMode {
             }
 
             if (turretOverride) {
-                turret.setPosition((int) (turret.getTargetPosition() + (maxTurretChange * gamepad2.right_stick_x)));
+                turret.setPosition((int) (turret.getTargetPosition() + (maxTurretChange * -gamepad2.right_stick_x)));
             }
 
             if (gamepad2.y && gamepad2.dpad_left) {
