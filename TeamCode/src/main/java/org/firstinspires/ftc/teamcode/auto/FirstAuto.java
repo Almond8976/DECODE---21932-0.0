@@ -1,4 +1,3 @@
-/*
 package org.firstinspires.ftc.teamcode.auto;
 
 
@@ -45,7 +44,7 @@ public class FirstAuto extends LinearOpMode {
 
         TrajectoryActionBuilder trajPreload = drive.actionBuilder(startPose)
                 .strafeToConstantHeading(new Vector2d(-41.1914631184, 13.6936191855));
-                Launch();
+        Launch();
 
 
         turret.update();
@@ -57,12 +56,7 @@ public class FirstAuto extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-<<<<<<< Updated upstream
-                        trajPreload.build(),
-                        //Launch()
-=======
                         trajPreload.build()
->>>>>>> Stashed changes
                 )
         );
     }
@@ -75,4 +69,3 @@ public class FirstAuto extends LinearOpMode {
         intake.setAllPower(1);
     }
 }
-*/
