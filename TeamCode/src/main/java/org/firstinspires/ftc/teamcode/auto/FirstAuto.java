@@ -62,8 +62,14 @@ public class FirstAuto extends LinearOpMode {
     }
     // Define all functions here (if you call subsystems movements from here it wont be parallel)
     public void Launch() {
-        turret.tracking = true;
-        shooter.setPower(1);
+        int shooterTargetSpeed = shooter.calcVelocity(Math.sqrt(
+                (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)));
+        Turret.tracking = true;
+        shooter.setVelocity(shooterTargetSpeed);
+        time1.reset();
+        if(time1.seconds() >= 5) {
+            shooter.setPower(Mortar.OFF);
+        }
     }
     public void intake() {
         intake.setAllPower(1);
