@@ -69,6 +69,10 @@ public class Turret {
         turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
+    public void resetRobotPose(Pose2d newPos) {
+        drive.localizer.setPose(newPos);
+    }
+
     public int getTargetPosition() {
         return turret.getTargetPosition();
     }

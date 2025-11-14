@@ -25,6 +25,7 @@ public class FirstTeleOpRed extends LinearOpMode {
     public static int brightness = 50;
 
     public static int maxTurretChange = 20;
+    public static Pose2d resetPose = new Pose2d(0,0,Math.PI);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -178,8 +179,9 @@ public class FirstTeleOpRed extends LinearOpMode {
                 turret.setPosition((int) (turret.getTargetPosition() + (maxTurretChange * -gamepad2.right_stick_x)));
             }
 
-            if (gamepad2.y && gamepad2.dpad_left) {
+            if (gamepad1.y && gamepad1.dpad_left) {
                 turret.resetEncoder();
+                turret.resetRobotPose(resetPose);
             }
             // BALL COUNT
             if(gamepad2.dpadUpWasPressed()) {
