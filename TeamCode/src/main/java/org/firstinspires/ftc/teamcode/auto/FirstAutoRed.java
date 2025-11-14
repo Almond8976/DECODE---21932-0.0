@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.rr_wrappers.TurretWrapper;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Kicker;
 import org.firstinspires.ftc.teamcode.subsystems.Mortar;
@@ -70,44 +71,13 @@ public class FirstAutoRed extends LinearOpMode{
         Actions.runBlocking(
                 new SequentialAction(
                         trajPreload.build(),
-                        Launch(),
+                        Actions.runBlocking(TurretWrapper.Launch);
                         trajLeave.build()
                 )
         );
     }
     // Define all functions here (if you call subsystems movements from here it wont be parallel)
-    public Action Launch() {
 
-            boolean metShooterThresh = false;
-            int shooterTargetSpeed = shooter.calcVelocity(Math.sqrt(
-                    (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)));
-            Turret.tracking = true;
-            shooter.setVelocity(shooterTargetSpeed);
-            time1.reset();
-
-            while (ballCount > 0 && time1.seconds() < 5 && opModeIsActive()) {
-                if (shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH) {
-                    switch (ballCount) {
-                        case 0:
-                            intake.setAllPower(0);
-                            shooter.setVelocity(Mortar.OFF);
-                            Turret.tracking = false;
-                            break;
-                        case 1:
-                        case 2:
-                        case 3:
-                            intake.setAllPower(1);
-                            break;
-                    }
-                } else if (shooter.getVelocity() <= shooterTargetSpeed - Mortar.THRESH && metShooterThresh) {
-                    ballCount--;
-                    intake.setAllPower(0);
-                }
-                metShooterThresh = shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH;
-
-            }
-        return new TodoAction;
-    }
 
     public void updateAll(Turret turret, Mortar shooter, Kicker kicker){
         while (opModeIsActive()) {

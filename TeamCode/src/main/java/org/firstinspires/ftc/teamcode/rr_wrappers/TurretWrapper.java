@@ -1,11 +1,37 @@
 package org.firstinspires.ftc.teamcode.rr_wrappers;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.Mortar;
+import org.firstinspires.ftc.teamcode.subsystems.Turret;
+import org.firstinspires.ftc.teamcode.subsystems.Util;
+
+import java.util.HashMap;
 
 public class TurretWrapper {
+    private Mortar shooter;
+    private Turret turret;
+    private Intake intake;
+
+    private int ballCount = 3;
+    ElapsedTime time1 = new ElapsedTime();
+
+    public TurretWrapper(HardwareMap hwMap, HashMap<String, String> config) {
+        Util util = new Util();
+        shooter = new Mortar(hwMap, config);
+        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.78, 45.6439, Math.toRadians(128.188)));
+        intake = new Intake(hwMap, config);
+
+    }
     public class Launch implements Action {
         private boolean initialized = false;
 
@@ -16,10 +42,38 @@ public class TurretWrapper {
             }
 
             // function to call when action is ran
-            shooter.setPower(power);
-            double pow = shooter.getPower();
-            packet.put("shooter power", pow);
+            boolean metShooterThresh = false;
+            int shooterTargetSpeed = shooter.calcVelocity(Math.sqrt(
+                    (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)));
+            Turret.tracking = true;
+            shooter.setVelocity(shooterTargetSpeed);
+            time1.reset();
+
+            while (ballCount > 0 && time1.seconds() < 5) {
+                if (shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH) {
+                    switch (ballCount) {
+                        case 0:
+                            intake.setAllPower(0);
+                            shooter.setVelocity(Mortar.OFF);
+                            Turret.tracking = false;
+                            break;
+                        case 1:
+                        case 2:
+                        case 3:
+                            intake.setAllPower(1);
+                            break;
+                    }
+                } else if (shooter.getVelocity() <= shooterTargetSpeed - Mortar.THRESH && metShooterThresh) {
+                    ballCount--;
+                    intake.setAllPower(0);
+                }
+                metShooterThresh = shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH;
+
+            }
             return true;
+        }
+        public Action launch(){
+            return new Launch();
         }
     }
 }
