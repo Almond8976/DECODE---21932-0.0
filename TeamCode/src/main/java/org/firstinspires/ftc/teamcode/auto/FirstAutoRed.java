@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.auto;
 
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
@@ -21,7 +22,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Util;
 
 @Config
 @Autonomous(name = "FirstAutoRed")
-public class FirstAutoRed extends LinearOpMode {
+public class FirstAutoRed extends LinearOpMode{
 
     Util util;
     Kicker kicker;
@@ -52,7 +53,8 @@ public class FirstAutoRed extends LinearOpMode {
         kicker.setPosition(Kicker.DOWN);
         TrajectoryActionBuilder trajPreload = drive.actionBuilder(startPose)
                 .strafeToConstantHeading(new Vector2d(-41.1914631184, 13.6936191855));
-        Launch();
+
+
 
         TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-41.1914631184, 13.6936191855), Math.toRadians(128.188)))//TODO: find ending pose
                 .lineToY(55);
@@ -68,39 +70,45 @@ public class FirstAutoRed extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         trajPreload.build(),
+                        Launch(),
                         trajLeave.build()
                 )
         );
     }
     // Define all functions here (if you call subsystems movements from here it wont be parallel)
-    public void Launch() {
-        boolean metShooterThresh = false;
-        int shooterTargetSpeed = shooter.calcVelocity(Math.sqrt(
-                (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)));
-        Turret.tracking = true;
-        shooter.setVelocity(shooterTargetSpeed);
-        time1.reset();
+    public Action Launch() {
 
-        while(ballCount > 0 && time1.seconds() < 5 && opModeIsActive()) {
-            if(shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH) {
-                switch(ballCount) {
-                    case 0: intake.setAllPower(0); shooter.setVelocity(Mortar.OFF); Turret.tracking = false; break;
-                    case 1:
-                    case 2:
-                    case 3: intake.setAllPower(1); break;
+            boolean metShooterThresh = false;
+            int shooterTargetSpeed = shooter.calcVelocity(Math.sqrt(
+                    (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)));
+            Turret.tracking = true;
+            shooter.setVelocity(shooterTargetSpeed);
+            time1.reset();
+
+            while (ballCount > 0 && time1.seconds() < 5 && opModeIsActive()) {
+                if (shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH) {
+                    switch (ballCount) {
+                        case 0:
+                            intake.setAllPower(0);
+                            shooter.setVelocity(Mortar.OFF);
+                            Turret.tracking = false;
+                            break;
+                        case 1:
+                        case 2:
+                        case 3:
+                            intake.setAllPower(1);
+                            break;
+                    }
+                } else if (shooter.getVelocity() <= shooterTargetSpeed - Mortar.THRESH && metShooterThresh) {
+                    ballCount--;
+                    intake.setAllPower(0);
                 }
-            }
-            else if(shooter.getVelocity() <= shooterTargetSpeed - Mortar.THRESH && metShooterThresh) {
-                ballCount--;
-                intake.setAllPower(0);
-            }
-            metShooterThresh = shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH;
+                metShooterThresh = shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH;
 
-        }
+            }
+        return new TodoAction;
     }
-    public void intake() {
-        intake.setAllPower(1);
-    }
+
     public void updateAll(Turret turret, Mortar shooter, Kicker kicker){
         while (opModeIsActive()) {
             turret.update();
