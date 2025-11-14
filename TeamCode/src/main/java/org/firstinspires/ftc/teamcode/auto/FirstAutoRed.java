@@ -28,7 +28,7 @@ public class FirstAutoRed extends LinearOpMode{
     Util util;
     Kicker kicker;
     Mortar shooter;
-    Turret turret;
+    TurretWrapper turret;
     Intake intake;
 
     private int ballCount = 3;
@@ -41,7 +41,7 @@ public class FirstAutoRed extends LinearOpMode{
         util = new Util();
         kicker = new Kicker(hardwareMap, util.deviceConf);
         shooter = new Mortar(hardwareMap, util.deviceConf);
-        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.78, 45.6439, Math.toRadians(128.188)));
+        turret = new TurretWrapper(hardwareMap, util.deviceConf, new Pose2d(-57.78, 45.6439, Math.toRadians(128.188)));
         intake = new Intake(hardwareMap, util.deviceConf);
 
 
@@ -71,7 +71,7 @@ public class FirstAutoRed extends LinearOpMode{
         Actions.runBlocking(
                 new SequentialAction(
                         trajPreload.build(),
-                        Actions.runBlocking(TurretWrapper.Launch);
+                        turret.launch(),
                         trajLeave.build()
                 )
         );
@@ -79,7 +79,7 @@ public class FirstAutoRed extends LinearOpMode{
     // Define all functions here (if you call subsystems movements from here it wont be parallel)
 
 
-    public void updateAll(Turret turret, Mortar shooter, Kicker kicker){
+    public void updateAll(TurretWrapper turret, Mortar shooter, Kicker kicker){
         while (opModeIsActive()) {
             turret.update();
             shooter.update();

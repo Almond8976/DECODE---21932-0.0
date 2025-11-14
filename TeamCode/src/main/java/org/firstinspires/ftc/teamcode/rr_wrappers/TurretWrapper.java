@@ -25,10 +25,9 @@ public class TurretWrapper {
     private int ballCount = 3;
     ElapsedTime time1 = new ElapsedTime();
 
-    public TurretWrapper(HardwareMap hwMap, HashMap<String, String> config) {
-        Util util = new Util();
+    public TurretWrapper(HardwareMap hwMap,HashMap<String, String> config ,Pose2d startPos) {
         shooter = new Mortar(hwMap, config);
-        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.78, 45.6439, Math.toRadians(128.188)));
+        turret = new Turret(hardwareMap, config, startPos);
         intake = new Intake(hwMap, config);
 
     }
@@ -72,8 +71,9 @@ public class TurretWrapper {
             }
             return true;
         }
-        public Action launch(){
-            return new Launch();
-        }
+
+    }
+    public Action launch(){
+        return new Launch();
     }
 }
