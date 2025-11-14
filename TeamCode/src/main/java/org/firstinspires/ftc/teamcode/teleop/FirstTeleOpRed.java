@@ -25,7 +25,7 @@ public class FirstTeleOpRed extends LinearOpMode {
     public static int brightness = 50;
 
     public static int maxTurretChange = 20;
-    public static Pose2d resetPose = new Pose2d(0,0,Math.PI);
+    public static Pose2d resetPose = new Pose2d(62.4652,64.94,Math.PI);
 
     @Override
     public void runOpMode() throws InterruptedException {

@@ -1,3 +1,4 @@
+/*
 package org.firstinspires.ftc.teamcode.auto;
 
 
@@ -56,7 +57,7 @@ public class FirstAuto extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         trajPreload.build(),
-                        Launch()
+                        //Launch()
                 )
         );
     }
@@ -69,3 +70,4 @@ public class FirstAuto extends LinearOpMode {
         intake.setAllPower(1);
     }
 }
+*/
