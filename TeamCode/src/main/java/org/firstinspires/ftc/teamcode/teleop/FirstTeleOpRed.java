@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Util;
 @TeleOp(name = "FirstTeleOpRed")
 public class FirstTeleOpRed extends LinearOpMode {
 
-    public static int sensorThresh = 40;
+    public static int sensorThresh = 20;
 
     public static int brightness = 50;
 
@@ -147,11 +147,11 @@ public class FirstTeleOpRed extends LinearOpMode {
 //                intake.setRollerPower(0);
 //            }
             // SENSOR
-//            if(metDistanceSensorThresh && sensor.getDistance() < sensorThresh) {
-//                ballCount++;
-//
-//            }
-//            metDistanceSensorThresh = sensor.getDistance() > sensorThresh;
+            if(intaking && metDistanceSensorThresh && sensor.getDistance() < sensorThresh) {
+                ballCount++;
+
+            }
+            metDistanceSensorThresh = sensor.getDistance() > sensorThresh;
 
 
             // DRIVE
