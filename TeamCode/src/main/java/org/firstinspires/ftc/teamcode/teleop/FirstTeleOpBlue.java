@@ -27,7 +27,7 @@ public class FirstTeleOpBlue extends LinearOpMode {
     public static int maxTurretChange = 20;
     public static Pose2d resetPose = new Pose2d(62.4652,64.94,Math.PI);
 
-    public static int shooterTimeThresh = 35;
+    public static int shooterTimeThresh = 40;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -37,7 +37,7 @@ public class FirstTeleOpBlue extends LinearOpMode {
         Drivetrain drive = new Drivetrain(hardwareMap, util.deviceConf);
 
         Intake intake = new Intake(hardwareMap, util.deviceConf);
-        Turret turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(0,0,0));
+        Turret turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.78, -45.6439, Math.toRadians(-128.188)));
         Mortar shooter = new Mortar(hardwareMap, util.deviceConf);
         Kicker kicker = new Kicker(hardwareMap, util.deviceConf);
         Sparky sensor = new Sparky(hardwareMap);
@@ -61,6 +61,7 @@ public class FirstTeleOpBlue extends LinearOpMode {
         int shooterTargetSpeed = 0;
 
 
+        turret.tracking =false;
 
         while(opModeIsActive()) {
             // SHOOTER
@@ -90,14 +91,20 @@ public class FirstTeleOpBlue extends LinearOpMode {
                 }
             }
 
-            if(time2.milliseconds()>shooterTimeThresh) {
-                if(shooting && shooter.getVelocity()-prevShooterVel <-Mortar.THRESH) {
-                    ballCount--;
-                    intake.setAllPower(0);
-                }
-                prevShooterVel = (int)shooter.getVelocity();
-                time2.reset();
+            if(shooting && shooter.getVelocity()-prevShooterVel <-Mortar.THRESH && prevShooterVel>shooterTargetSpeed-Mortar.THRESH) {
+                ballCount--;
+                intake.setAllPower(0);
             }
+            prevShooterVel = (int)shooter.getVelocity();
+
+//            if(time2.milliseconds()>shooterTimeThresh) {
+//                if(shooting && shooter.getVelocity()-prevShooterVel <-Mortar.THRESH) {
+//                    ballCount--;
+//                    intake.setAllPower(0);
+//                }
+//                prevShooterVel = (int)shooter.getVelocity();
+//                time2.reset();
+//            }
 
             // KICKER
             if (gamepad1.aWasPressed()) {

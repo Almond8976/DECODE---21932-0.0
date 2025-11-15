@@ -34,7 +34,7 @@ public class FirstAutoBlue extends LinearOpMode{
 
     private MecanumDrive drive;
 
-    private int ballCount = 3;
+    private int ballCount = 3, shooterTargetSpeed;
 
     ElapsedTime time1 = new ElapsedTime();
 
@@ -50,13 +50,13 @@ public class FirstAutoBlue extends LinearOpMode{
 
 
         // define startpose, in, in, rad
-        Pose2d startPose = new Pose2d(-57.78, -45.6439, Math.toRadians(128.188));
+        Pose2d startPose = new Pose2d(-57.78, -45.6439, Math.toRadians(-128.188));
         drive = new MecanumDrive(hardwareMap, startPose);
         turret.setBasketPos(Turret.blueBasket);
 
         kicker.setPosition(Kicker.DOWN);
         TrajectoryActionBuilder trajPreload = drive.actionBuilder(startPose)
-                .strafeToConstantHeading(new Vector2d(-41.1914631184, 13.6936191855));
+                .strafeToConstantHeading(new Vector2d(-41.1914631184, -13.6936191855));
 
 
 
@@ -80,6 +80,43 @@ public class FirstAutoBlue extends LinearOpMode{
                         //trajLeave.build()
                 )
         );
+        turret.tracking = true;
+        shooterTargetSpeed = shooter.calcVelocity(
+                Math.sqrt(
+                        (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)
+                )
+        );
+        shooter.setVelocity(shooterTargetSpeed);
+
+        sleep(1500);
+        intake.setAllPower(1);
+
+        for(int i = 3; i >= 1; i--) {
+            time1.reset();
+            shooter.setVelocity(shooterTargetSpeed);
+            while ((Math.abs(shooter.getVelocity() - shooterTargetSpeed) > Mortar.THRESH) && time1.milliseconds() < 5000) {}; // wait until shooter velocity is with THRESH of target or shooter has been spinning for over 5s
+            switch(i) {
+                case 1:
+                case 2: intake.setAllPower(1); break;
+                case 3: intake.setIntakePower(1); break;
+            }
+
+            sleep(1000);
+            intake.setIntakePower(0);
+            kicker.setPosition(kicker.UP);
+            sleep(500);
+            kicker.setPosition(kicker.DOWN);
+            sleep(500);
+        }
+        turret.tracking = false;
+
+        turret.setPosition(0);
+        sleep(1000);
+        shooter.setPower(0);
+        intake.setAllPower(0);
+
+        turret.update();
+
     }
     // Define all functions here (if you call subsystems movements from here it wont be parallel)
 
@@ -87,7 +124,10 @@ public class FirstAutoBlue extends LinearOpMode{
     public void updateAll(Turret turret, Mortar shooter, Kicker kicker, Intake intake){
         while (opModeInInit() || opModeIsActive())
         {
-
+            shooter.update();
+            kicker.update();
+            turret.update();
+            intake.update();
             telemetry.update();
         }
     }
