@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.auto;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
@@ -83,10 +84,16 @@ public class FirstAutoRed extends LinearOpMode{
 
 
     public void updateAll(TurretWrapper turret, Mortar shooter, Kicker kicker){
-        while (opModeIsActive()) {
-            turret.update();
-            shooter.update();
-            kicker.update();
+        while (opModeInInit() || opModeIsActive())
+        {
+
+
+            Actions.runBlocking(
+                    new ParallelAction(
+                            turret.update()
+                            )
+            );
+            telemetry.update();
         }
     }
 }

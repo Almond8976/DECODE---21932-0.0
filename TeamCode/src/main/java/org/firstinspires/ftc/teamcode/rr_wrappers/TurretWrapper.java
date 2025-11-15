@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.Kicker;
 import org.firstinspires.ftc.teamcode.subsystems.Mortar;
 import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
@@ -22,6 +23,7 @@ public class TurretWrapper {
     private Mortar shooter;
     private Turret turret;
     private Intake intake;
+    private Kicker kicker;
 
     private int ballCount;
     ElapsedTime time1 = new ElapsedTime();
@@ -30,6 +32,7 @@ public class TurretWrapper {
         shooter = new Mortar(hwMap, config);
         turret = new Turret(hwMap, config, startPos);
         intake = new Intake(hwMap, config);
+        kicker = new Kicker(hwMap, config);
 
     }
 
@@ -68,7 +71,7 @@ public class TurretWrapper {
                             shooter.setVelocity(Mortar.OFF);
                             Turret.tracking = false;
                             break;
-                        case 1:
+                        case 1: kicker.setPosition(Kicker.UP);
                         case 2:
                         case 3:
                             intake.setAllPower(1);
@@ -81,6 +84,8 @@ public class TurretWrapper {
                 metShooterThresh = shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH;
 
             }
+            kicker.setPosition(Kicker.DOWN);
+            shooter.setPower(0);
             return false;
         }
     }
