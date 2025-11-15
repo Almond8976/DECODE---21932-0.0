@@ -31,6 +31,8 @@ public class FirstAutoRed extends LinearOpMode{
     TurretWrapper turret;
     Intake intake;
 
+    private MecanumDrive drive;
+
     private int ballCount = 3;
 
     ElapsedTime time1 = new ElapsedTime();
@@ -48,7 +50,7 @@ public class FirstAutoRed extends LinearOpMode{
 
         // define startpose, in, in, rad
         Pose2d startPose = new Pose2d(-57.78, 45.6439, Math.toRadians(128.188));
-        MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
+        drive = new MecanumDrive(hardwareMap, startPose);
         turret.setBasketPos(Turret.redBasket);
 
         kicker.setPosition(Kicker.DOWN);
