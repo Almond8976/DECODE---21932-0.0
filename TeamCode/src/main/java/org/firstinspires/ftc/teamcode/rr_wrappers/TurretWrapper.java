@@ -82,9 +82,16 @@ public class TurretWrapper {
     public Action launch(){
         return new Launch();
     }
+<<<<<<< HEAD
     public class Update implements Action {
         private boolean initialized = false;
 
+=======
+
+    public class Update implements Action{
+        private boolean initialized = false;
+
+>>>>>>> f839e74476c3cf78f4cfb547f94a5bed0814848d
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             if (!initialized) {
@@ -93,9 +100,16 @@ public class TurretWrapper {
 
             turret.update();
             shooter.update();
+<<<<<<< HEAD
             return false;
         }
     }
+=======
+            intake.update();
+            return false;
+       }
+   }
+>>>>>>> f839e74476c3cf78f4cfb547f94a5bed0814848d
 
     public Action update() {
         return new Update();
