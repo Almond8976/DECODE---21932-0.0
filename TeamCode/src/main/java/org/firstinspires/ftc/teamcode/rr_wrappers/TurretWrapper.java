@@ -51,13 +51,9 @@ public class TurretWrapper {
             }
 
             // function to call when action is ran
-            time1.reset();
-            time1.startTime();
-            while(time1.seconds() < 5) {
-                shooter.setPower(1);
-            }
-            return true;
-            /*boolean metShooterThresh = false;
+
+
+            boolean metShooterThresh = false;
             int shooterTargetSpeed = shooter.calcVelocity(Math.sqrt(
                     (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)));
             Turret.tracking = true;
@@ -85,7 +81,7 @@ public class TurretWrapper {
                 metShooterThresh = shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH;
 
             }
-            return true;*/
+            return false;
         }
     }
     public Action launch(){
