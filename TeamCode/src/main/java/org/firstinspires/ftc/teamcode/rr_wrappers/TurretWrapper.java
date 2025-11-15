@@ -28,7 +28,7 @@ public class TurretWrapper {
 
     public TurretWrapper(HardwareMap hwMap,HashMap<String, String> config ,Pose2d startPos) {
         shooter = new Mortar(hwMap, config);
-        turret = new Turret(hardwareMap, config, startPos);
+        turret = new Turret(hwMap, config, startPos);
         intake = new Intake(hwMap, config);
 
     }
