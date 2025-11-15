@@ -34,31 +34,28 @@ public class FirstAutoRed extends LinearOpMode{
 
     private MecanumDrive drive;
 
-    private int ballCount = 3;
+    private int ballCount = 3, shooterTargetSpeed;
 
     ElapsedTime time1 = new ElapsedTime();
 
     @Override
     public void runOpMode() throws InterruptedException {
         // init all subsystems (switch to using wrappers if you want parallel movement)
+        // define startpose, in, in, rad
+        Pose2d startPose = new Pose2d(-57.78, 45.6439, Math.toRadians(128.188));
+
         util = new Util();
         kicker = new Kicker(hardwareMap, util.deviceConf);
         shooter = new Mortar(hardwareMap, util.deviceConf);
         intake = new Intake(hardwareMap, util.deviceConf);
-        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.78, 45.6439, Math.toRadians(128.188)));
-
-        //new Pose2d(-57.78, 45.6439, Math.toRadians(128.188))
-
-        // define startpose, in, in, rad
-        Pose2d startPose = new Pose2d(-57.78, 45.6439, Math.toRadians(128.188));
+        turret = new Turret(hardwareMap, util.deviceConf, startPose);
         drive = new MecanumDrive(hardwareMap, startPose);
-        turret.setBasketPos(Turret.redBasket);
 
+        turret.setBasketPos(Turret.redBasket);
         kicker.setPosition(Kicker.DOWN);
+
         TrajectoryActionBuilder trajPreload = drive.actionBuilder(startPose)
                 .strafeToConstantHeading(new Vector2d(-41.1914631184, 13.6936191855));
-
-
 
         TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-41.1914631184, 13.6936191855), Math.toRadians(128.188)))//TODO: find ending pose
                 .strafeToSplineHeading(new Vector2d(-13, 20), Math.toRadians(90))
@@ -66,12 +63,12 @@ public class FirstAutoRed extends LinearOpMode{
 
         Thread update = new Thread( ()-> updateAll(turret, shooter, kicker, intake));
 
+        turret.tracking = false;
+        update.start();
         // TODO: move everything to start position (after init, before program start)
 
-
-
         waitForStart();
-        update.start();
+
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -80,14 +77,32 @@ public class FirstAutoRed extends LinearOpMode{
                         //trajLeave.build()
                 )
         );
+
         turret.tracking = true;
-        shooter.setVelocity(shooter.calcVelocity((Math.sqrt(
-                (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)))));
+        shooterTargetSpeed = shooter.calcVelocity(
+                Math.sqrt(
+                        (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)
+                )
+        );
+        shooter.setVelocity(shooterTargetSpeed);
+
         sleep(1500);
         intake.setAllPower(1);
-        for(int i = 1; i < 3; i++) {
+
+        for(int i = 3; i >= 1; i--) {
             time1.reset();
+            shooter.setVelocity(shooterTargetSpeed);
+            while ((Math.abs(shooter.getVelocity() - shooterTargetSpeed) > Mortar.THRESH) && time1.milliseconds() < 5000) {}; // wait until shooter velocity is with THRESH of target or shooter has been spinning for over 5s
+            switch(i) {
+                case 1:
+                case 2: intake.setAllPower(1); break;
+                case 3: intake.setIntakePower(1); break;
+            }
             
+            kicker.setPosition(kicker.UP);
+            sleep(500);
+            kicker.setPosition(kicker.DOWN);
+            sleep(500);
         }
 
         turret.setPosition(0);
