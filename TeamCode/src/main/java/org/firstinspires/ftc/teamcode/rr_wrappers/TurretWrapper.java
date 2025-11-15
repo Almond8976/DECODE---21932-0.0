@@ -79,7 +79,7 @@ public class TurretWrapper {
                             Turret.tracking = false;
                             break;
                         case 1: intake.setAllPower(1); kicker.sweep(); break;
-                        case 2: intake.setAllPower(0); Thread.sleep(2000); kicker.sweep(); break;
+                        case 2: intake.setAllPower(0); Thread.sleep(20000); kicker.sweep(); break;
                         case 3:
                             intake.setAllPower(1);
                             break;
