@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.rr_wrappers;
-
+/*
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.teamcode.teleop.FirstTeleOpRed.shooterTimeThresh;
 
@@ -73,16 +73,10 @@ public class TurretWrapper {
             while (ballCount > 0 && time1.seconds() < 5) {
                 if (shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH) {
                     switch (ballCount) {
-                        case 0:
-                            intake.setAllPower(0);
-                            shooter.setVelocity(Mortar.OFF);
-                            Turret.tracking = false;
-                            break;
-                        case 1: intake.setAllPower(1); kicker.sweep(); break;
-                        case 2: intake.setAllPower(0); Thread.sleep(20000); kicker.sweep(); break;
-                        case 3:
-                            intake.setAllPower(1);
-                            break;
+                        case 0: intake.setAllPower(0); shooter.setVelocity(Mortar.OFF); Turret.tracking = false; break;
+                        case 1: intake.setAllPower(1); sleep(2000); kicker.sweep(); break;
+                        case 2: intake.setAllPower(0); sleep(2000); kicker.sweep(); break;
+                        case 3: intake.setAllPower(1); break;
                     }
                 } else if(time2.milliseconds()>shooterTimeThresh) {
                     if(shooter.getVelocity()-prevShooterVel <-Mortar.THRESH) {
@@ -104,7 +98,7 @@ public class TurretWrapper {
     public Action launch(){
         return new Launch(3);
     }
-    public class Update implements Action{
+    private class Update implements Action{
         private boolean initialized = false;
 
         @Override
@@ -116,6 +110,7 @@ public class TurretWrapper {
             turret.update();
             shooter.update();
             intake.update();
+            kicker.update();
             return false;
        }
    }
@@ -123,4 +118,12 @@ public class TurretWrapper {
     public Action update() {
         return new Update();
     }
-}
+    public void sleep(int t) {
+        try {
+            Thread.sleep(t); // Wait for 1 millisecond
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // Restore interrupted status
+            // Optionally, log or handle the interruption
+        }
+    }
+}*/

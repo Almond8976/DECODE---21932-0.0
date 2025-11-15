@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 
 @Config
-@Autonomous(name = "FirstAutoRed")
-public class FirstAutoRed extends LinearOpMode{
+@Autonomous(name = "FirstAutoBlue")
+public class FirstAutoBlue extends LinearOpMode{
 
     Util util;
     Kicker kicker;
@@ -44,15 +44,15 @@ public class FirstAutoRed extends LinearOpMode{
         util = new Util();
         kicker = new Kicker(hardwareMap, util.deviceConf);
         shooter = new Mortar(hardwareMap, util.deviceConf);
+        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.78, -45.6439, Math.toRadians(-128.188)));
         intake = new Intake(hardwareMap, util.deviceConf);
-        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.78, 45.6439, Math.toRadians(128.188)));
 
-        //new Pose2d(-57.78, 45.6439, Math.toRadians(128.188))
+
 
         // define startpose, in, in, rad
-        Pose2d startPose = new Pose2d(-57.78, 45.6439, Math.toRadians(128.188));
+        Pose2d startPose = new Pose2d(-57.78, -45.6439, Math.toRadians(128.188));
         drive = new MecanumDrive(hardwareMap, startPose);
-        turret.setBasketPos(Turret.redBasket);
+        turret.setBasketPos(Turret.blueBasket);
 
         kicker.setPosition(Kicker.DOWN);
         TrajectoryActionBuilder trajPreload = drive.actionBuilder(startPose)
@@ -61,8 +61,8 @@ public class FirstAutoRed extends LinearOpMode{
 
 
         TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-41.1914631184, 13.6936191855), Math.toRadians(128.188)))//TODO: find ending pose
-                .strafeToSplineHeading(new Vector2d(-13, 20), Math.toRadians(90))
-                .strafeToConstantHeading(new Vector2d(-13, 50));
+                .strafeToSplineHeading(new Vector2d(-13, -20), Math.toRadians(-90))
+                .strafeToConstantHeading(new Vector2d(-13, -50));
 
         Thread update = new Thread( ()-> updateAll(turret, shooter, kicker, intake));
 
@@ -80,21 +80,6 @@ public class FirstAutoRed extends LinearOpMode{
                         //trajLeave.build()
                 )
         );
-        turret.tracking = true;
-        shooter.setVelocity(shooter.calcVelocity((Math.sqrt(
-                (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)))));
-        sleep(1500);
-        intake.setAllPower(1);
-        for(int i = 1; i < 3; i++) {
-            time1.reset();
-            
-        }
-
-        turret.setPosition(0);
-        shooter.setPower(0);
-        intake.setAllPower(0);
-
-
     }
     // Define all functions here (if you call subsystems movements from here it wont be parallel)
 
@@ -102,19 +87,8 @@ public class FirstAutoRed extends LinearOpMode{
     public void updateAll(Turret turret, Mortar shooter, Kicker kicker, Intake intake){
         while (opModeInInit() || opModeIsActive())
         {
-            turret.update();
-            shooter.update();
-            kicker.update();
-            intake.update();
+
             telemetry.update();
-        }
-    }
-    public void sleep(int t) {
-        try {
-            Thread.sleep(t); // Wait for 1 millisecond
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // Restore interrupted status
-            // Optionally, log or handle the interruption
         }
     }
 }

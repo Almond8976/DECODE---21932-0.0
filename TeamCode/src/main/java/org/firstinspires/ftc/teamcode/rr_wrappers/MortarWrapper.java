@@ -62,7 +62,7 @@ public class MortarWrapper {
         }
     }
 
-    public Action update() {
+    private Action update() {
         return new Update();
     }
 

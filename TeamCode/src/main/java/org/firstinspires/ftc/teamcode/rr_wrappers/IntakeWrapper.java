@@ -39,6 +39,18 @@ public class IntakeWrapper {
             return false;
         }
     }
+    private class Update implements Action {
+
+        private boolean initialized = false;
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            if (!initialized) {
+                initialized = true;
+            }
+            intake.update();
+            return false;
+        }
+    }
     public Action update() {
         return new Update();
     }
