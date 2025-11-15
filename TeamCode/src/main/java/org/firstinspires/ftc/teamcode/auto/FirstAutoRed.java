@@ -42,7 +42,7 @@ public class FirstAutoRed extends LinearOpMode{
     public void runOpMode() throws InterruptedException {
         // init all subsystems (switch to using wrappers if you want parallel movement)
         // define startpose, in, in, rad
-        Pose2d startPose = new Pose2d(-57.78, 45.6439, Math.toRadians(128.188));
+        Pose2d startPose = new Pose2d(-57.78, 42.27, Math.toRadians(128.188));
 
         util = new Util();
         kicker = new Kicker(hardwareMap, util.deviceConf);
@@ -128,7 +128,7 @@ public class FirstAutoRed extends LinearOpMode{
             kicker.update();
             intake.update();
 
-            telemetry.addData("heading", turret.getPose().heading);
+            telemetry.addData("heading", turret.getPose().heading.toDouble());
             telemetry.update();
         }
     }
