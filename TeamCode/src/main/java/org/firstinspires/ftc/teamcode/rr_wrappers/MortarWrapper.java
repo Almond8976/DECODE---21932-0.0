@@ -65,4 +65,14 @@ public class MortarWrapper {
     public Action update() {
         return new Update();
     }
+
+    public class setBasketPos implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+
+            return false;
+        }
+    }
 }

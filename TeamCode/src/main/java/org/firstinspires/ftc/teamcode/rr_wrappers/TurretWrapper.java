@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -31,6 +32,11 @@ public class TurretWrapper {
         intake = new Intake(hwMap, config);
 
     }
+
+    public void setBasketPos(Vector2d redBasket) {
+        turret.setBasketPos(redBasket);
+    }
+
     public class Launch implements Action {
         private boolean initialized = false;
 
@@ -76,4 +82,14 @@ public class TurretWrapper {
     public Action launch(){
         return new Launch();
     }
+   public class update implements Action{
+
+       @Override
+       public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+           turret.update();
+           shooter.update();
+           intake.update();
+           return false;
+       }
+   }
 }
