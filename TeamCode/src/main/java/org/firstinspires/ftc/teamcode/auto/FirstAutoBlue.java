@@ -60,7 +60,7 @@ public class FirstAutoBlue extends LinearOpMode{
 
 
 
-        TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-41.1914631184, 13.6936191855), Math.toRadians(128.188)))//TODO: find ending pose
+        TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-41.1914631184, -13.6936191855), Math.toRadians(128.188)))//TODO: find ending pose
                 .strafeToSplineHeading(new Vector2d(-13, -20), Math.toRadians(-90))
                 .strafeToConstantHeading(new Vector2d(-13, -50));
 
