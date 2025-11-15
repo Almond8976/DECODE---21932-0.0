@@ -92,6 +92,9 @@ public class FirstAutoRed extends LinearOpMode{
                     new ParallelAction(
                             turret.update()
                             )
+                    new ParallelAction(
+                            intakimg.update();
+                    )
             );
             telemetry.update();
         }

@@ -27,6 +27,8 @@ public class FirstTeleOpRed extends LinearOpMode {
     public static int maxTurretChange = 20;
     public static Pose2d resetPose = new Pose2d(62.4652,-64.94,Math.PI);
 
+    public static int shooterTimeThresh = 35;
+
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -50,7 +52,9 @@ public class FirstTeleOpRed extends LinearOpMode {
 
         waitForStart();
 
-        boolean shooting = false, metShooterThresh = false, turretOverride = false, intaking = false, metDistanceSensorThresh = false;
+        boolean shooting = false, turretOverride = false, intaking = false, metDistanceSensorThresh = false;
+
+        int prevShooterVel = 0;
 
         int ballCount = 0;
 
@@ -86,12 +90,15 @@ public class FirstTeleOpRed extends LinearOpMode {
                 }
             }
 
-
-            if(shooting && shooter.getVelocity() <= shooterTargetSpeed - Mortar.THRESH && metShooterThresh) {
-                ballCount--;
-                intake.setAllPower(0);
+            if(time2.milliseconds()>shooterTimeThresh) {
+                if(shooting && shooter.getVelocity()-prevShooterVel <-Mortar.THRESH) {
+                    ballCount--;
+                    intake.setAllPower(0);
+                }
+                prevShooterVel = (int)shooter.getVelocity();
+                time2.reset();
             }
-            metShooterThresh = shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH;
+
             // KICKER
             if (gamepad1.aWasPressed()) {
                 kicker.setPosition(Kicker.UP);

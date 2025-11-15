@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -10,12 +11,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 import java.util.HashMap;
 
+@Config
 public class Mortar {
     private DcMotorEx flyMotor;
 
     private double power, vel;
 
-    public static double THRESH = 80;
+    public static double THRESH = 100;
     public static double OFF = 0, MAX = 1, NORMAL = 0.6;
 
     public static double MAX_VEL = 1200;

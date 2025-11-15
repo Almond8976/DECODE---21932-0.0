@@ -3,11 +3,13 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.HashMap;
 
 @Config
 public class Kicker {
+    ElapsedTime time1 = new ElapsedTime();
     private Servo kicker;
 
     public static double DOWN = 0.75, UP = 1.0;
@@ -19,6 +21,14 @@ public class Kicker {
 
     public void setPosition(double kickerPositon){
         position = kickerPositon;
+    }
+
+    public void sweep(){
+        time1.reset();
+        kicker.setPosition(UP);
+        if(time1.milliseconds() > 500) {
+            kicker.setPosition(DOWN);
+        }
     }
 
     public void update() {

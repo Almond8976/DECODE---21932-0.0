@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.rr_wrappers;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+import static org.firstinspires.ftc.teamcode.teleop.FirstTeleOpRed.shooterTimeThresh;
+
+import static java.lang.Thread.sleep;
 
 import androidx.annotation.NonNull;
 
@@ -27,6 +30,8 @@ public class TurretWrapper {
 
     private int ballCount;
     ElapsedTime time1 = new ElapsedTime();
+    ElapsedTime time2 = new ElapsedTime();
+    ElapsedTime time3 = new ElapsedTime();
 
     public TurretWrapper(HardwareMap hwMap,HashMap<String, String> config ,Pose2d startPos) {
         shooter = new Mortar(hwMap, config);
@@ -48,7 +53,7 @@ public class TurretWrapper {
         private boolean initialized = false;
 
         @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
+        public boolean run(@NonNull TelemetryPacket packet)  {
             if (!initialized) {
                 initialized = true;
             }
@@ -56,13 +61,15 @@ public class TurretWrapper {
             // function to call when action is ran
 
 
-            boolean metShooterThresh = false;
+
             int shooterTargetSpeed = shooter.calcVelocity(Math.sqrt(
                     (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)));
             Turret.tracking = true;
             shooter.setVelocity(shooterTargetSpeed);
             time1.reset();
 
+
+            int prevShooterVel = (int)shooter.getVelocity();
             while (ballCount > 0 && time1.seconds() < 5) {
                 if (shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH) {
                     switch (ballCount) {
@@ -71,21 +78,26 @@ public class TurretWrapper {
                             shooter.setVelocity(Mortar.OFF);
                             Turret.tracking = false;
                             break;
-                        case 1: kicker.setPosition(Kicker.UP);
-                        case 2:
+                        case 1: intake.setAllPower(1); kicker.sweep(); break;
+                        case 2: intake.setAllPower(0); Thread.sleep(2000); kicker.sweep(); break;
                         case 3:
                             intake.setAllPower(1);
                             break;
                     }
-                } else if (shooter.getVelocity() <= shooterTargetSpeed - Mortar.THRESH && metShooterThresh) {
-                    ballCount--;
-                    intake.setAllPower(0);
+                } else if(time2.milliseconds()>shooterTimeThresh) {
+                    if(shooter.getVelocity()-prevShooterVel <-Mortar.THRESH) {
+                        ballCount--;
+                        intake.setAllPower(0);
+                    }
+                    prevShooterVel = (int)shooter.getVelocity();
+                    time2.reset();
                 }
-                metShooterThresh = shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH;
 
             }
-            kicker.setPosition(Kicker.DOWN);
+
+            turret.setPosition(0);
             shooter.setPower(0);
+            kicker.setPosition(Kicker.DOWN);
             return false;
         }
     }
