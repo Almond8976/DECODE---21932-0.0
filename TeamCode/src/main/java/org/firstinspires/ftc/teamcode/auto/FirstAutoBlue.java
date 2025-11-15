@@ -128,6 +128,8 @@ public class FirstAutoBlue extends LinearOpMode{
             kicker.update();
             turret.update();
             intake.update();
+
+            telemetry.addData("Heading", turret.getPose().heading);
             telemetry.update();
         }
     }

@@ -127,6 +127,8 @@ public class FirstAutoRed extends LinearOpMode{
             shooter.update();
             kicker.update();
             intake.update();
+
+            telemetry.addData("heading", turret.getPose().heading);
             telemetry.update();
         }
     }
