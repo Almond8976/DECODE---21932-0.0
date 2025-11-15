@@ -82,14 +82,24 @@ public class TurretWrapper {
     public Action launch(){
         return new Launch();
     }
-   public class update implements Action{
 
-       @Override
-       public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-           turret.update();
-           shooter.update();
-           intake.update();
-           return false;
+    public class Update implements Action{
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                initialized = true;
+            }
+
+            turret.update();
+            shooter.update();
+            intake.update();
+            return false;
        }
    }
+
+    public Action update() {
+        return new Update();
+    }
 }
