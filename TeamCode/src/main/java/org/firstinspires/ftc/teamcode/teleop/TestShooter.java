@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Kicker;
 import org.firstinspires.ftc.teamcode.subsystems.Mortar;
 import org.firstinspires.ftc.teamcode.subsystems.Turret;
@@ -24,20 +25,22 @@ public class TestShooter extends LinearOpMode {
         Mortar shooter = new Mortar(hardwareMap, util.deviceConf);
         Kicker kicker = new Kicker(hardwareMap, util.deviceConf);
         Turret turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(0,0,0));
+        Intake intake = new Intake(hardwareMap, util.deviceConf);
         turret.tracking = false;
+        turret.setBasketPos(turret.redBasket);
 
         Pose2d pose;
         waitForStart();
 
         while(opModeIsActive()) {
             pose = turret.getPose();
-            if (gamepad1.a) {
+            if (gamepad1.dpad_down) {
                 vel = 0;
             }
-            if (gamepad1.right_bumper) {
+            if (gamepad1.rightBumperWasPressed()) {
                 vel += 100;
             }
-            if (gamepad1.left_bumper) {
+            if (gamepad1.leftBumperWasPressed()) {
                 vel -= 100;
             }
 
@@ -48,7 +51,20 @@ public class TestShooter extends LinearOpMode {
                 kicker.setPosition(Kicker.UP);
             }
 
-            if (gamepad1.b) {
+            if(gamepad1.a) {
+                intake.setAllPower(1);
+            }
+            if(gamepad1.b) {
+                intake.setAllPower(0);
+            }
+            if(gamepad1.x) {
+                intake.setRollerPower(1);
+            }
+            if(gamepad1.y) {
+                intake.setRollerPower(0);
+            }
+
+            if (gamepad2.bWasPressed()) {
                 turret.tracking = !turret.tracking;
             }
 
@@ -60,6 +76,7 @@ public class TestShooter extends LinearOpMode {
             shooter.update();
             kicker.update();
             turret.update();
+            intake.update();
             telemetry.addData("vel", shooter.getVelocity());
             telemetry.addData("target vel", shooter.getTargetVelocity());
             telemetry.update();

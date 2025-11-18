@@ -86,8 +86,8 @@ public class FirstTeleOpBlue extends LinearOpMode {
                 switch(ballCount) {
                     case 0: intake.setAllPower(0); shooting = false; shooter.setVelocity(Mortar.OFF); Turret.tracking = false; break;
                     case 1:
-                    case 2: intake.setAllPower(1); break;
-                    case 3: intake.setIntakePower(1); break;
+                    case 2:
+                    case 3: intake.setAllPower(1); break;
                 }
             }
 
