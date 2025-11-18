@@ -32,8 +32,8 @@ public class Turret {
 
     private Pose2d pose;
 
-    public static Vector2d blueBasket = new Vector2d(-66,-66);
-    public static Vector2d redBasket = new Vector2d(-66, 66);
+    public static Vector2d blueBasket = new Vector2d(-71,-71);
+    public static Vector2d redBasket = new Vector2d(-71, 71);
     public static Vector2d curBasket;
 
     public Turret(HardwareMap hardwareMap, HashMap<String, String> config, Pose2d startPos) {

@@ -82,6 +82,7 @@ public class FirstTeleOpRed extends LinearOpMode {
                 intake.setAllPower(0);
                 turret.tracking = false;
                 shooting = false;
+                ballCount = 0;
             }
             if(shooting && shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH) {
                 switch(ballCount) {
@@ -91,11 +92,11 @@ public class FirstTeleOpRed extends LinearOpMode {
                     case 3: intake.setAllPower(1); break;
                 }
             }
-            if(shooting && shooter.getVelocity()-prevShooterVel <-Mortar.THRESH && prevShooterVel>shooterTargetSpeed-Mortar.THRESH) {
-                ballCount--;
-                intake.setAllPower(0);
-            }
-            prevShooterVel = (int)shooter.getVelocity();
+//            if(shooting && shooter.getVelocity()-prevShooterVel <-Mortar.THRESH && prevShooterVel>shooterTargetSpeed-Mortar.THRESH) {
+//                ballCount--;
+//                intake.setAllPower(0);
+//            }
+//            prevShooterVel = (int)shooter.getVelocity();
 
 //            if(time2.milliseconds()>shooterTimeThresh) {
 //                if(shooting && shooter.getVelocity()-prevShooterVel <-Mortar.THRESH) {
