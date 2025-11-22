@@ -61,8 +61,6 @@ public class FirstAutoBlue extends LinearOpMode{
         TrajectoryActionBuilder trajPreload = drive.actionBuilder(startPose)
                 .strafeToConstantHeading(new Vector2d(-41.1914631184, -13.6936191855));
 
-
-
         TrajectoryActionBuilder trajSetUpOne = drive.actionBuilder(new Pose2d(new Vector2d(-41.1914631184, -13.6936191855), Math.toRadians(128.188)))//TODO: find ending pose
                 .strafeToConstantHeading(new Vector2d(-10, -10))
                 .strafeToSplineHeading(new Vector2d(-12, -34), Math.toRadians(-90));
@@ -72,6 +70,8 @@ public class FirstAutoBlue extends LinearOpMode{
 
         TrajectoryActionBuilder trajShootOne = drive.actionBuilder(new Pose2d(new Vector2d(-53, -10), Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(-34, -16));
+
+        TrajectoryActionBuilder trajSetUpTwo = drive.actionBuilder(new Pose2d(new Vector2d(-34, -16), Math.toRadians(-90)));
 
 
         Thread update = new Thread( ()-> updateAll(turret, shooter, kicker, intake));
@@ -89,6 +89,34 @@ public class FirstAutoBlue extends LinearOpMode{
                 )
         );
 
+        Launch();
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajSetUpOne.build()
+                )
+        );
+        gate.setPosition(Gate.CLOSE);
+        intake.setAllPower(1);
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajPickupOne.build()
+                )
+        );
+        wait(2);
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajShootOne.build()
+                )
+        );
+
+        Launch();
+    }
+    // Define all functions here (if you call subsystems movements from here it wont be parallel)
+
+    public void Launch() {
         turret.tracking = true;
         shooterTargetSpeed = shooter.calcVelocity(
                 Math.sqrt(
@@ -96,7 +124,6 @@ public class FirstAutoBlue extends LinearOpMode{
                 )
         );
         shooter.setVelocity(shooterTargetSpeed);
-
         sleep(1500);
         intake.setAllPower(1);
 
@@ -125,32 +152,7 @@ public class FirstAutoBlue extends LinearOpMode{
         intake.setAllPower(0);
 
         turret.update();
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        trajSetUpOne.build()
-                )
-        );
-        gate.setPosition(Gate.CLOSE);
-        intake.setAllPower(1);
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        trajPickupOne.build()
-                )
-        );
-        wait(2);
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        trajShootOne.build()
-                )
-        );
-
-
     }
-    // Define all functions here (if you call subsystems movements from here it wont be parallel)
-
 
     public void updateAll(Turret turret, Mortar shooter, Kicker kicker, Intake intake){
         while (opModeInInit() || opModeIsActive())
@@ -159,6 +161,7 @@ public class FirstAutoBlue extends LinearOpMode{
             kicker.update();
             turret.update();
             intake.update();
+            gate.update();
 
             telemetry.addData("Heading", turret.getPose().heading);
             telemetry.update();
