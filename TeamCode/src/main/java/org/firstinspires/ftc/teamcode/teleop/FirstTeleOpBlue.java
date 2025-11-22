@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Kicker;
 import org.firstinspires.ftc.teamcode.subsystems.Mortar;
-import org.firstinspires.ftc.teamcode.subsystems.Sparky;
+//import org.firstinspires.ftc.teamcode.subsystems.Sparky;
 import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 
@@ -40,7 +40,7 @@ public class FirstTeleOpBlue extends LinearOpMode {
         Turret turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-41.1914631184, -13.6936191855, Math.toRadians(-128.188)));
         Mortar shooter = new Mortar(hardwareMap, util.deviceConf);
         Kicker kicker = new Kicker(hardwareMap, util.deviceConf);
-        Sparky sensor = new Sparky(hardwareMap);
+        //Sparky sensor = new Sparky(hardwareMap);
 
         ElapsedTime time1 = new ElapsedTime();
         ElapsedTime time2 = new ElapsedTime();
@@ -48,7 +48,7 @@ public class FirstTeleOpBlue extends LinearOpMode {
 
         turret.setBasketPos(turret.blueBasket);
 
-        sensor.setLEDBrightness(brightness);
+        //sensor.setLEDBrightness(brightness);
 
         waitForStart();
 
@@ -231,7 +231,7 @@ public class FirstTeleOpBlue extends LinearOpMode {
             telemetry.addData("Turret target", turret.getTurretHeading());
             telemetry.addData("Shooter vel", shooter.getVelocity());
             telemetry.addData("Shooter target vel", shooter.getTargetVelocity());
-            telemetry.addData("DISTANCE:", sensor.getDistance());
+            //telemetry.addData("DISTANCE:", sensor.getDistance());
             telemetry.addLine();
             telemetry.addData("Ball Count", ballCount);
             telemetry.addData("Turret Manual Override", turretOverride);

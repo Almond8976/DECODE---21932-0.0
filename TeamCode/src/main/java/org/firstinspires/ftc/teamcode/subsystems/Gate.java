@@ -9,7 +9,7 @@ public class Gate {
     private Servo gate;
 
     public static double CLOSE = 0.7, OPEN = 0.3;
-    private double position = OPEN;
+    private double position = CLOSE;
 
     public Gate(HardwareMap hardwareMap, HashMap<String, String> config) {
         gate = hardwareMap.get(Servo.class, config.get("gate"));

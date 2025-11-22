@@ -15,12 +15,11 @@ public class MeepMeepTesting {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-57.78, -45.6439, Math.toRadians(-128.188)))
-                .strafeToConstantHeading(new Vector2d(-41.1914631184, -13.6936191855))
-                .strafeToConstantHeading(new Vector2d(-10, -10))
-                .strafeToSplineHeading(new Vector2d(-12, -34), Math.toRadians(-90))
-                .strafeToConstantHeading(new Vector2d(-12, -53))
-                .strafeToConstantHeading(new Vector2d(-34, -16))
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-57.78, 45.6439, Math.toRadians(128.188)))
+                .strafeToConstantHeading(new Vector2d(-41.1914631184, 13.6936191855))
+                .strafeToSplineHeading(new Vector2d(-11, 20), Math.toRadians(90))
+                .strafeToConstantHeading(new Vector2d(-11, 53))
+                .strafeToConstantHeading(new Vector2d(-38, 16))
                 .build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_DECODE_OFFICIAL)

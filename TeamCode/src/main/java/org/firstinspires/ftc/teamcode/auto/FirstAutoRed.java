@@ -43,42 +43,79 @@ public class FirstAutoRed extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
         // init all subsystems (switch to using wrappers if you want parallel movement)
-        // define startpose, in, in, rad
-        Pose2d startPose = new Pose2d(-57.78, 42.27, Math.toRadians(128.188));
-
         util = new Util();
         kicker = new Kicker(hardwareMap, util.deviceConf);
         shooter = new Mortar(hardwareMap, util.deviceConf);
+        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.78, 45.6439, Math.toRadians(128.188)));
         intake = new Intake(hardwareMap, util.deviceConf);
-        turret = new Turret(hardwareMap, util.deviceConf, startPose);
+        gate = new Gate(hardwareMap, util.deviceConf);
+
+
+
+        // define startpose, in, in, rad
+        Pose2d startPose = new Pose2d(-57.78, 45.6439, Math.toRadians(128.188));
         drive = new MecanumDrive(hardwareMap, startPose);
-
         turret.setBasketPos(Turret.redBasket);
-        kicker.setPosition(Kicker.DOWN);
 
+        kicker.setPosition(Kicker.DOWN);
         TrajectoryActionBuilder trajPreload = drive.actionBuilder(startPose)
                 .strafeToConstantHeading(new Vector2d(-41.1914631184, 13.6936191855));
 
-        TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-41.1914631184, 13.6936191855), Math.toRadians(128.188)))//TODO: find ending pose
-                .strafeToSplineHeading(new Vector2d(-13, 20), Math.toRadians(90))
-                .strafeToConstantHeading(new Vector2d(-13, 50));
+        TrajectoryActionBuilder trajSetUpOne = drive.actionBuilder(new Pose2d(new Vector2d(-41.1914631184, 13.6936191855), Math.toRadians(-128.188)))//TODO: find ending pose
+                .strafeToSplineHeading(new Vector2d(-11, 20), Math.toRadians(90));
 
-        Thread update = new Thread( ()-> updateAll(turret, shooter, kicker, intake));
+        TrajectoryActionBuilder trajPickupOne = drive.actionBuilder(new Pose2d(new Vector2d(-11, 20), Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(-11, 53));
 
-        turret.tracking = false;
-        update.start();
+        TrajectoryActionBuilder trajShootOne = drive.actionBuilder(new Pose2d(new Vector2d(-11, 53), Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(-38, 16));
+
+        TrajectoryActionBuilder trajSetUpTwo = drive.actionBuilder(new Pose2d(new Vector2d(-38, 16), Math.toRadians(90)));
+
+
+        Thread update = new Thread( ()-> updateAll(turret, shooter, kicker, intake, gate));
+
         // TODO: move everything to start position (after init, before program start)
 
-        waitForStart();
 
+
+        waitForStart();
+        update.start();
 
         Actions.runBlocking(
                 new SequentialAction(
                         trajPreload.build()
-
-                        //trajLeave.build()
                 )
         );
+
+        Launch();
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajSetUpOne.build()
+                )
+        );
+        gate.setPosition(Gate.CLOSE);
+        intake.setAllPower(1);
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajPickupOne.build()
+                )
+        );
+        sleep(1000);
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajShootOne.build()
+                )
+        );
+
+        Launch();
+    }
+    // Define all functions here (if you call subsystems movements from here it wont be parallel)
+
+    public void Launch() {
 
         turret.tracking = true;
         shooterTargetSpeed = shooter.calcVelocity(
@@ -87,7 +124,6 @@ public class FirstAutoRed extends LinearOpMode{
                 )
         );
         shooter.setVelocity(shooterTargetSpeed);
-
         sleep(1500);
         intake.setAllPower(1);
 
@@ -100,47 +136,37 @@ public class FirstAutoRed extends LinearOpMode{
                 case 2: intake.setAllPower(1); break;
                 case 3: intake.setIntakePower(1); break;
             }
-            
+
+            sleep(1000);
+            intake.setIntakePower(0);
+            gate.setPosition(Gate.OPEN);
             kicker.setPosition(kicker.UP);
             sleep(500);
+            gate.setPosition(Gate.CLOSE);
             kicker.setPosition(kicker.DOWN);
             sleep(500);
         }
         turret.tracking = false;
 
-        sleep(1000);
-        intake.setIntakePower(0);
         turret.setPosition(0);
         sleep(1000);
         shooter.setPower(0);
         intake.setAllPower(0);
 
         turret.update();
-
-
     }
-    // Define all functions here (if you call subsystems movements from here it wont be parallel)
 
-
-    public void updateAll(Turret turret, Mortar shooter, Kicker kicker, Intake intake){
+    public void updateAll(Turret turret, Mortar shooter, Kicker kicker, Intake intake, Gate gate){
         while (opModeInInit() || opModeIsActive())
         {
-            turret.update();
             shooter.update();
             kicker.update();
+            turret.update();
             intake.update();
             gate.update();
 
-            telemetry.addData("heading", turret.getPose().heading.toDouble());
+            telemetry.addData("Heading", turret.getPose().heading);
             telemetry.update();
-        }
-    }
-    public void sleep(int t) {
-        try {
-            Thread.sleep(t); // Wait for 1 millisecond
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // Restore interrupted status
-            // Optionally, log or handle the interruption
         }
     }
 }
