@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.rr_wrappers.IntakeWrapper;
+import org.firstinspires.ftc.teamcode.subsystems.Gate;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Kicker;
 import org.firstinspires.ftc.teamcode.subsystems.Mortar;
@@ -31,6 +32,7 @@ public class FirstAutoRed extends LinearOpMode{
     Mortar shooter;
     Turret turret;
     Intake intake;
+    Gate gate;
 
     private MecanumDrive drive;
 
@@ -73,7 +75,7 @@ public class FirstAutoRed extends LinearOpMode{
         Actions.runBlocking(
                 new SequentialAction(
                         trajPreload.build()
-                        //turret.launch()
+
                         //trajLeave.build()
                 )
         );
@@ -127,6 +129,7 @@ public class FirstAutoRed extends LinearOpMode{
             shooter.update();
             kicker.update();
             intake.update();
+            gate.update();
 
             telemetry.addData("heading", turret.getPose().heading.toDouble());
             telemetry.update();

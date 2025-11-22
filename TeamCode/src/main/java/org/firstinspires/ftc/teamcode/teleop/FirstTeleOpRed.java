@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.subsystems.Gate;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Kicker;
 import org.firstinspires.ftc.teamcode.subsystems.Mortar;
@@ -41,6 +42,7 @@ public class FirstTeleOpRed extends LinearOpMode {
         Mortar shooter = new Mortar(hardwareMap, util.deviceConf);
         Kicker kicker = new Kicker(hardwareMap, util.deviceConf);
         Sparky sensor = new Sparky(hardwareMap);
+        Gate gate = new Gate(hardwareMap, util.deviceConf);
 
         ElapsedTime time1 = new ElapsedTime();
         ElapsedTime time2 = new ElapsedTime();
@@ -189,6 +191,12 @@ public class FirstTeleOpRed extends LinearOpMode {
             if(!shooting && !turretOverride) {
                 turret.setPosition(0);
             }
+            if(!shooting) {
+                gate.setPosition(Gate.CLOSE);
+            }
+            else if(shooting) {
+                gate.setPosition(Gate.OPEN);
+            }
 
             if (turretOverride) {
                 turret.setPosition((int) (turret.getTargetPosition() + (maxTurretChange * -gamepad2.right_stick_x)));
@@ -222,6 +230,7 @@ public class FirstTeleOpRed extends LinearOpMode {
             turret.update();
             shooter.update();
             kicker.update();
+            gate.update();
 
 
             telemetry.addData("pose x", pose.position.x);

@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.rr_wrappers.IntakeWrapper;
+import org.firstinspires.ftc.teamcode.subsystems.Gate;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Kicker;
 import org.firstinspires.ftc.teamcode.subsystems.Mortar;
@@ -31,6 +32,7 @@ public class FirstAutoBlue extends LinearOpMode{
     Mortar shooter;
     Turret turret;
     Intake intake;
+    Gate gate;
 
     private MecanumDrive drive;
 
@@ -46,6 +48,7 @@ public class FirstAutoBlue extends LinearOpMode{
         shooter = new Mortar(hardwareMap, util.deviceConf);
         turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.78, -45.6439, Math.toRadians(-128.188)));
         intake = new Intake(hardwareMap, util.deviceConf);
+        gate = new Gate(hardwareMap, util.deviceConf);
 
 
 
@@ -60,9 +63,16 @@ public class FirstAutoBlue extends LinearOpMode{
 
 
 
-        TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-41.1914631184, -13.6936191855), Math.toRadians(128.188)))//TODO: find ending pose
-                .strafeToSplineHeading(new Vector2d(-13, -20), Math.toRadians(-90))
-                .strafeToConstantHeading(new Vector2d(-13, -50));
+        TrajectoryActionBuilder trajSetUpOne = drive.actionBuilder(new Pose2d(new Vector2d(-41.1914631184, -13.6936191855), Math.toRadians(128.188)))//TODO: find ending pose
+                .strafeToConstantHeading(new Vector2d(-10, -10))
+                .strafeToSplineHeading(new Vector2d(-12, -34), Math.toRadians(-90));
+
+        TrajectoryActionBuilder trajPickupOne = drive.actionBuilder(new Pose2d(new Vector2d(-34, -10), Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(-53, -10));
+
+        TrajectoryActionBuilder trajShootOne = drive.actionBuilder(new Pose2d(new Vector2d(-53, -10), Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(-34, -16));
+
 
         Thread update = new Thread( ()-> updateAll(turret, shooter, kicker, intake));
 
@@ -76,10 +86,9 @@ public class FirstAutoBlue extends LinearOpMode{
         Actions.runBlocking(
                 new SequentialAction(
                         trajPreload.build()
-                        //turret.launch()
-                        //trajLeave.build()
                 )
         );
+
         turret.tracking = true;
         shooterTargetSpeed = shooter.calcVelocity(
                 Math.sqrt(
@@ -116,6 +125,28 @@ public class FirstAutoBlue extends LinearOpMode{
         intake.setAllPower(0);
 
         turret.update();
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajSetUpOne.build()
+                )
+        );
+        gate.setPosition(Gate.CLOSE);
+        intake.setAllPower(1);
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajPickupOne.build()
+                )
+        );
+        wait(2);
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajShootOne.build()
+                )
+        );
+
 
     }
     // Define all functions here (if you call subsystems movements from here it wont be parallel)
