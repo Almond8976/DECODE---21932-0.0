@@ -8,11 +8,11 @@ import java.util.HashMap;
 public class Gate {
     private Servo gate;
 
-    public static double CLOSE = 0.75, OPEN = 1.0;
+    public static double CLOSE = 0.7, OPEN = 0.3;
     private double position = OPEN;
 
     public Gate(HardwareMap hardwareMap, HashMap<String, String> config) {
-        gate = hardwareMap.get(Servo.class, config.get("kicker"));
+        gate = hardwareMap.get(Servo.class, config.get("gate"));
     }
 
     public void setPosition(double gatePosition){
