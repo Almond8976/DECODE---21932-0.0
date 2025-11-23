@@ -97,7 +97,7 @@ public class FirstAutoBlue extends LinearOpMode{
                 )
         );
         gate.setPosition(Gate.CLOSE);
-        intake.setAllPower(1);
+        intake.setIntakePower(1);
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -125,7 +125,7 @@ public class FirstAutoBlue extends LinearOpMode{
         );
         shooter.setVelocity(shooterTargetSpeed);
         sleep(1500);
-        intake.setAllPower(1);
+        intake.setIntakePower(1);
 
         for(int i = 3; i >= 1; i--) {
             time1.reset();
@@ -133,7 +133,7 @@ public class FirstAutoBlue extends LinearOpMode{
             while ((Math.abs(shooter.getVelocity() - shooterTargetSpeed) > Mortar.THRESH) && time1.milliseconds() < 5000) {}; // wait until shooter velocity is with THRESH of target or shooter has been spinning for over 5s
             switch(i) {
                 case 1:
-                case 2: intake.setAllPower(1); break;
+                case 2: intake.setIntakePower(1); break;
                 case 3: intake.setIntakePower(1); break;
             }
 
@@ -149,7 +149,7 @@ public class FirstAutoBlue extends LinearOpMode{
         turret.setPosition(0);
         sleep(1000);
         shooter.setPower(0);
-        intake.setAllPower(0);
+        intake.setIntakePower(0);
 
         turret.update();
     }
@@ -164,6 +164,7 @@ public class FirstAutoBlue extends LinearOpMode{
             gate.update();
 
             telemetry.addData("Heading", turret.getPose().heading);
+            telemetry.addData("Gate Position", gate.getPosition());
             telemetry.update();
         }
     }

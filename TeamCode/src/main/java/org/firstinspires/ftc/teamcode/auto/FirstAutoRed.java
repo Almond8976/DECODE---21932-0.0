@@ -36,6 +36,8 @@ public class FirstAutoRed extends LinearOpMode{
 
     private MecanumDrive drive;
 
+    public static int KICKER_WAIT_TIME = 2000;
+
     private int ballCount = 3, shooterTargetSpeed;
 
     ElapsedTime time1 = new ElapsedTime();
@@ -59,19 +61,29 @@ public class FirstAutoRed extends LinearOpMode{
 
         kicker.setPosition(Kicker.DOWN);
         TrajectoryActionBuilder trajPreload = drive.actionBuilder(startPose)
-                .strafeToConstantHeading(new Vector2d(-41.1914631184, 13.6936191855));
+                .strafeToConstantHeading(new Vector2d(-20, 20));
 
-        TrajectoryActionBuilder trajSetUpOne = drive.actionBuilder(new Pose2d(new Vector2d(-41.1914631184, 13.6936191855), Math.toRadians(-128.188)))//TODO: find ending pose
-                .strafeToSplineHeading(new Vector2d(-11, 20), Math.toRadians(90));
+        TrajectoryActionBuilder trajSetUpOne = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(-128.188)))//TODO: find ending pose
+                .strafeToSplineHeading(new Vector2d(-11, 33), Math.toRadians(90));
 
-        TrajectoryActionBuilder trajPickupOne = drive.actionBuilder(new Pose2d(new Vector2d(-11, 20), Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(-11, 53));
+        TrajectoryActionBuilder trajPickupOne = drive.actionBuilder(new Pose2d(new Vector2d(-11, 33), Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(-11, 53))
+                .turnTo(0)
+                .strafeToConstantHeading(new Vector2d(0, 54))
+                .strafeToConstantHeading(new Vector2d(0, 58));
 
-        TrajectoryActionBuilder trajShootOne = drive.actionBuilder(new Pose2d(new Vector2d(-11, 53), Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(-38, 16));
+        TrajectoryActionBuilder trajShootOne = drive.actionBuilder(new Pose2d(new Vector2d(0, 58), Math.toRadians(0)))
+                .strafeToConstantHeading(new Vector2d(-20, 20));
 
-        TrajectoryActionBuilder trajSetUpTwo = drive.actionBuilder(new Pose2d(new Vector2d(-38, 16), Math.toRadians(90)));
+        TrajectoryActionBuilder trajSetTwo = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(0)))
+                .strafeToSplineHeading(new Vector2d(11, 33), Math.toRadians(90))
+                .strafeToConstantHeading(new Vector2d(11, 53))
+                .strafeToConstantHeading(new Vector2d(-20, 20));
 
+        TrajectoryActionBuilder trajSetThree = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(36, 33))
+                .strafeToConstantHeading(new Vector2d(36, 53))
+                .strafeToConstantHeading(new Vector2d(-20, 20));
 
         Thread update = new Thread( ()-> updateAll(turret, shooter, kicker, intake, gate));
 
@@ -81,6 +93,7 @@ public class FirstAutoRed extends LinearOpMode{
 
         waitForStart();
         update.start();
+        shooter.setVelocity(shooter.calcVelocity(73.5391));
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -96,22 +109,35 @@ public class FirstAutoRed extends LinearOpMode{
                 )
         );
         gate.setPosition(Gate.CLOSE);
-        intake.setAllPower(1);
+        intake.setIntakePower(1);
 
         Actions.runBlocking(
                 new SequentialAction(
                         trajPickupOne.build()
                 )
         );
-        sleep(1000);
 
         Actions.runBlocking(
                 new SequentialAction(
                         trajShootOne.build()
                 )
         );
-
         Launch();
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajSetTwo.build()
+                )
+        );
+        Launch();
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajSetThree.build()
+                )
+        );
+        Launch();
+
     }
     // Define all functions here (if you call subsystems movements from here it wont be parallel)
 
@@ -124,35 +150,21 @@ public class FirstAutoRed extends LinearOpMode{
                 )
         );
         shooter.setVelocity(shooterTargetSpeed);
-        sleep(1500);
-        intake.setAllPower(1);
 
-        for(int i = 3; i >= 1; i--) {
-            time1.reset();
-            shooter.setVelocity(shooterTargetSpeed);
-            while ((Math.abs(shooter.getVelocity() - shooterTargetSpeed) > Mortar.THRESH) && time1.milliseconds() < 5000) {}; // wait until shooter velocity is with THRESH of target or shooter has been spinning for over 5s
-            switch(i) {
-                case 1:
-                case 2: intake.setAllPower(1); break;
-                case 3: intake.setIntakePower(1); break;
-            }
-
-            sleep(1000);
-            intake.setIntakePower(0);
+        shooter.setVelocity(shooterTargetSpeed);
+        while (shooter.getVelocity() < shooterTargetSpeed - Mortar.THRESH) {
             gate.setPosition(Gate.OPEN);
-            kicker.setPosition(kicker.UP);
-            sleep(500);
-            gate.setPosition(Gate.CLOSE);
-            kicker.setPosition(kicker.DOWN);
-            sleep(500);
         }
+        intake.setIntakePower(1);
+
+        sleep(KICKER_WAIT_TIME);
+        kicker.sweep();
+        gate.setPosition(Gate.CLOSE);
+
         turret.tracking = false;
 
         turret.setPosition(0);
-        sleep(1000);
-        shooter.setPower(0);
-        intake.setAllPower(0);
-
+        kicker.update();
         turret.update();
     }
 
@@ -166,6 +178,7 @@ public class FirstAutoRed extends LinearOpMode{
             gate.update();
 
             telemetry.addData("Heading", turret.getPose().heading);
+            telemetry.addData("Gate Position", gate.getPosition());
             telemetry.update();
         }
     }

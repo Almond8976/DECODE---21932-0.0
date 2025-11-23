@@ -69,7 +69,7 @@ public class FirstAutoFar extends LinearOpMode {
         shooter.setVelocity(shooterTargetSpeed);
 
         sleep(1500);
-        intake.setAllPower(1);
+        intake.setIntakePower(1);
 
         for(int i = 3; i >= 1; i--) {
             time1.reset();
@@ -77,7 +77,7 @@ public class FirstAutoFar extends LinearOpMode {
             while ((Math.abs(shooter.getVelocity() - shooterTargetSpeed) > Mortar.THRESH) && time1.milliseconds() < 5000) {}; // wait until shooter velocity is with THRESH of target or shooter has been spinning for over 5s
             switch(i) {
                 case 1:
-                case 2: intake.setAllPower(1); break;
+                case 2: intake.setIntakePower(1); break;
                 case 3: intake.setIntakePower(1); break;
             }
 
@@ -90,7 +90,7 @@ public class FirstAutoFar extends LinearOpMode {
 
         turret.setPosition(0);
         shooter.setPower(0);
-        intake.setAllPower(0);
+        intake.setIntakePower(0);
 
     }
     // Define all functions here (if you call subsystems movements from here it wont be parallel)

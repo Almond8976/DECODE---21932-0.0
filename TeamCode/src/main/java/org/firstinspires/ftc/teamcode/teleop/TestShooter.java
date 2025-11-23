@@ -52,16 +52,16 @@ public class TestShooter extends LinearOpMode {
             }
 
             if(gamepad1.a) {
-                intake.setAllPower(1);
+                intake.setIntakePower(1);
             }
             if(gamepad1.b) {
-                intake.setAllPower(0);
+                intake.setIntakePower(0);
             }
             if(gamepad1.x) {
-                intake.setRollerPower(1);
+                intake.setIntakePower(1);
             }
             if(gamepad1.y) {
-                intake.setRollerPower(0);
+                intake.setIntakePower(0);
             }
 
             if (gamepad2.bWasPressed()) {

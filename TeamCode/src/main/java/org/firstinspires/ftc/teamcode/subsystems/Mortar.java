@@ -18,7 +18,7 @@ public class Mortar {
     private double power, vel;
 
     public static double THRESH = 80;
-    public static double OFF = 0, MAX = 1, NORMAL = 0.6;
+    public static double OFF = 0, MAX = 1, NORMAL = 0.6, WAIT = 1000;
 
     public static double MAX_VEL = 1200;
 

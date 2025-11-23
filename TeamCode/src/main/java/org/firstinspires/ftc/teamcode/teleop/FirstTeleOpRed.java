@@ -25,10 +25,9 @@ public class FirstTeleOpRed extends LinearOpMode {
 
     public static int brightness = 50;
 
-    public static int maxTurretChange = 20;
+    public static int maxTurretChange = 15;
     public static Pose2d resetPose = new Pose2d(62.4652,-64.94,Math.PI);
 
-    public static int shooterTimeThresh =40;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -38,7 +37,8 @@ public class FirstTeleOpRed extends LinearOpMode {
         Drivetrain drive = new Drivetrain(hardwareMap, util.deviceConf);
 
         Intake intake = new Intake(hardwareMap, util.deviceConf);
-        Turret turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-41.1914631184, 13.6936191855,2.26));
+        //Turret turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-41.1914631184, 13.6936191855,2.26));
+        Turret turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(0, 0,0));
         Mortar shooter = new Mortar(hardwareMap, util.deviceConf);
         Kicker kicker = new Kicker(hardwareMap, util.deviceConf);
         //Sparky sensor = new Sparky(hardwareMap);
@@ -54,13 +54,11 @@ public class FirstTeleOpRed extends LinearOpMode {
 
         waitForStart();
 
-        boolean shooting = false, turretOverride = false, intaking = false, metDistanceSensorThresh = false;
-
-        int prevShooterVel = 0;
+        boolean shooting = false, turretOverride = false, intaking = false, metDistanceSensorThresh = false, keepShooterRunning = true;
 
         int shooterTargetSpeed = 0;
 
-        turret.tracking =false;
+        turret.tracking = false;
 
 
 
@@ -78,15 +76,26 @@ public class FirstTeleOpRed extends LinearOpMode {
                 shooter.setVelocity(shooterTargetSpeed);
                 gate.setPosition(Gate.OPEN);
                 if(shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH) {
-                    intake.setAllPower(1);
+                    intake.setIntakePower(1);
                 }
             }
             if (gamepad1.left_bumper) {
-                shooter.setPower(0);
-                intake.setAllPower(0);
+                intake.setIntakePower(0);
                 turret.tracking = false;
                 shooting = false;
                 gate.setPosition(Gate.CLOSE);
+            }
+
+            if(!shooting && keepShooterRunning) {
+                shooter.setVelocity(Mortar.WAIT);
+            }
+
+            if(!shooting && !keepShooterRunning) {
+                shooter.setVelocity(0);
+            }
+
+            if(gamepad2.aWasPressed()) {
+                keepShooterRunning = !keepShooterRunning;
             }
             // KICKER
             if (gamepad1.aWasPressed()) {
@@ -98,49 +107,25 @@ public class FirstTeleOpRed extends LinearOpMode {
             }
 
             if(kicker.getPosition() > Kicker.DOWN) {
-                intake.setAllPower(0);
+                intake.setIntakePower(0);
             }
             // INTAKE
             if(gamepad2.right_bumper) {
                 intaking = true;
-                intake.setAllPower(1);
+                intake.setIntakePower(1);
+                gate.setPosition(Gate.CLOSE);
             }
 
             if(gamepad2.left_bumper) {
                 intaking = false;
-                intake.setAllPower(0);
+                intake.setIntakePower(0);
             }
-
-            if(gamepad2.a) {
-                shooter.setVelocity(-700);
-                intake.setAllPower(-.5);
-            }
-            if(!gamepad2.a && !shooting && !intaking) {
-                shooter.setVelocity(0);
-                intake.setAllPower(0);
-            }
-//            if(gamepad2.right_bumper) {
-//                intake.setIntakePower(1.0);
-//            }
-//
-//            if(gamepad2.left_bumper) {
-//                intake.setIntakePower(0);
-//            }
-
-//            if(gamepad2.a) {
-//                intake.setRollerPower(1);
-//            }
-//
-//            if(gamepad2.b) {
-//                intake.setRollerPower(0);
-//            }
             // SENSOR
 //            if(intaking && metDistanceSensorThresh && sensor.getDistance() < sensorThresh) {
 //                ballCount++;
 //
 //            }
 //            metDistanceSensorThresh = sensor.getDistance() > sensorThresh;
-
 
             // DRIVE
             if(gamepad1.left_trigger>.1) {

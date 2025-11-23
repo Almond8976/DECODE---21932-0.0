@@ -16,10 +16,19 @@ public class MeepMeepTesting {
                 .build();
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-57.78, 45.6439, Math.toRadians(128.188)))
-                .strafeToConstantHeading(new Vector2d(-41.1914631184, 13.6936191855))
-                .strafeToSplineHeading(new Vector2d(-11, 20), Math.toRadians(90))
+                .strafeToConstantHeading(new Vector2d(-20, 20))
+                .strafeToSplineHeading(new Vector2d(-11, 33), Math.toRadians(90))
                 .strafeToConstantHeading(new Vector2d(-11, 53))
-                .strafeToConstantHeading(new Vector2d(-38, 16))
+                .turnTo(0)
+                .strafeToConstantHeading(new Vector2d(0, 54))
+                .strafeToConstantHeading(new Vector2d(0, 58))
+                .strafeToConstantHeading(new Vector2d(-20, 20))
+                .strafeToSplineHeading(new Vector2d(11, 33), Math.toRadians(90))
+                .strafeToConstantHeading(new Vector2d(11, 53))
+                .strafeTo(new Vector2d(-20, 20))
+                .strafeToConstantHeading(new Vector2d(36, 33))
+                .strafeToConstantHeading(new Vector2d(36, 53))
+                .strafeToConstantHeading(new Vector2d(-20, 20))
                 .build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_DECODE_OFFICIAL)

@@ -33,7 +33,7 @@ public class IntakeWrapper {
 
             time1.reset();
             while(time1.seconds() < 4) {
-                intake.setAllPower(1);
+                intake.setIntakePower(1);
             }
 
             return false;
