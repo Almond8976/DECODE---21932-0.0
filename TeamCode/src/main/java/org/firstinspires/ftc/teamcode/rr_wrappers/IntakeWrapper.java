@@ -15,13 +15,11 @@ public class IntakeWrapper {
 
     private Intake intake;
 
-    ElapsedTime time1 = new ElapsedTime();
-
     public IntakeWrapper(HardwareMap hwMap, HashMap<String, String> config) {
         intake = new Intake(hwMap, config);
     }
 
-    public class Intaking implements Action {
+    public class StartIntake implements Action {
 
         private boolean initialized = false;
 
@@ -31,10 +29,22 @@ public class IntakeWrapper {
                 initialized = true;
             }
 
-            time1.reset();
-            while(time1.seconds() < 4) {
-                intake.setIntakePower(1);
+            intake.setIntakePower(1);
+
+            return false;
+        }
+    }
+
+    public class StopIntake implements Action {
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            if (!initialized) {
+                initialized = true;
             }
+
+            intake.setIntakePower(0);
 
             return false;
         }
