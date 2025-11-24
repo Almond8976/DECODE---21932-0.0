@@ -36,7 +36,7 @@ public class FirstAutoRed extends LinearOpMode{
 
     private MecanumDrive drive;
 
-    public static int KICKER_WAIT_TIME = 2000;
+    public static int KICKER_WAIT_TIME = 1500;
 
     private int ballCount = 3, shooterTargetSpeed;
 
