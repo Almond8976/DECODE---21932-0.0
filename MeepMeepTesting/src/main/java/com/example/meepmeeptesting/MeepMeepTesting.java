@@ -23,10 +23,10 @@ public class MeepMeepTesting {
                 .strafeToConstantHeading(new Vector2d(0, 54))
                 .strafeToConstantHeading(new Vector2d(0, 58))
                 .strafeToConstantHeading(new Vector2d(-20, 20))
-                .strafeToSplineHeading(new Vector2d(11, 33), Math.toRadians(90))
+                .strafeToSplineHeading(new Vector2d(11, 29), Math.toRadians(90))
                 .strafeToConstantHeading(new Vector2d(11, 53))
                 .strafeTo(new Vector2d(-20, 20))
-                .strafeToConstantHeading(new Vector2d(36, 33))
+                .strafeToConstantHeading(new Vector2d(36, 29))
                 .strafeToConstantHeading(new Vector2d(36, 53))
                 .strafeToConstantHeading(new Vector2d(-20, 20))
                 .build());

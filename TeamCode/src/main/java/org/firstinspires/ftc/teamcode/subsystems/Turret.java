@@ -97,19 +97,9 @@ public class Turret {
         else if(turretHeading<-Math.PI) {
             turretHeading += 2*Math.PI;
         }
-        /*if (turret.getTargetPosition() > rotationLimit) {
-            turret.setTargetPosition((int) ((turretHeading * ticksPerRad) - (rotationLimit * 2)));
-            turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            turret.setPower(rotationSpeed);
-        } else if (turret.getTargetPosition() < -rotationLimit) {
-            turret.setTargetPosition((int) ((turretHeading * ticksPerRad) + (rotationLimit * 2)));
-            turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            turret.setPower(rotationSpeed);
-        } else {
-            turret.setTargetPosition((int) ((turretHeading * ticksPerRad)));
-            turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            turret.setPower(rotationSpeed);
-        }*/
+        if(turretHeading < -3*Math.PI/4) {
+            turretHeading = -3 * Math.PI/4;
+        }
         if (tracking) {
             turret.setTargetPosition((int) ((turretHeading * ticksPerRad)));
             turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);

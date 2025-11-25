@@ -31,14 +31,15 @@ public class FirstAutoRed extends LinearOpMode{
     Kicker kicker;
     Mortar shooter;
     Turret turret;
+    IntakeWrapper intakeWr;
     Intake intake;
     Gate gate;
 
     private MecanumDrive drive;
 
-    public static int KICKER_WAIT_TIME = 1500;
+    public static int KICKER_WAIT_TIME = 750;
 
-    private int ballCount = 3, shooterTargetSpeed;
+    private int shooterTargetSpeed;
 
     ElapsedTime time1 = new ElapsedTime();
 
@@ -49,6 +50,7 @@ public class FirstAutoRed extends LinearOpMode{
         kicker = new Kicker(hardwareMap, util.deviceConf);
         shooter = new Mortar(hardwareMap, util.deviceConf);
         turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.78, 45.6439, Math.toRadians(128.188)));
+        intakeWr = new IntakeWrapper(hardwareMap, util.deviceConf);
         intake = new Intake(hardwareMap, util.deviceConf);
         gate = new Gate(hardwareMap, util.deviceConf);
 
@@ -61,12 +63,11 @@ public class FirstAutoRed extends LinearOpMode{
 
         kicker.setPosition(Kicker.DOWN);
         TrajectoryActionBuilder trajPreload = drive.actionBuilder(startPose)
-                .strafeToConstantHeading(new Vector2d(-20, 20));
+                .strafeToSplineHeading(new Vector2d(-12, 12), Math.toRadians(90));
 
-        TrajectoryActionBuilder trajSetUpOne = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(-128.188)))//TODO: find ending pose
-                .strafeToSplineHeading(new Vector2d(-11, 33), Math.toRadians(90));
 
         TrajectoryActionBuilder trajPickupOne = drive.actionBuilder(new Pose2d(new Vector2d(-11, 33), Math.toRadians(90)))
+                .afterTime(3.83, intakeWr.StartIntake())
                 .strafeToConstantHeading(new Vector2d(-11, 53))
                 .turnTo(0)
                 .strafeToConstantHeading(new Vector2d(0, 54))
@@ -103,19 +104,14 @@ public class FirstAutoRed extends LinearOpMode{
 
         Launch();
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        trajSetUpOne.build()
-                )
-        );
         gate.setPosition(Gate.CLOSE);
-        intake.setIntakePower(1);
 
         Actions.runBlocking(
                 new SequentialAction(
                         trajPickupOne.build()
                 )
         );
+
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -158,7 +154,9 @@ public class FirstAutoRed extends LinearOpMode{
         intake.setIntakePower(1);
 
         sleep(KICKER_WAIT_TIME);
-        kicker.sweep();
+        kicker.setPosition(Kicker.UP);
+        sleep(500);
+        kicker.setPosition(Kicker.DOWN);
         gate.setPosition(Gate.CLOSE);
 
         turret.tracking = false;
