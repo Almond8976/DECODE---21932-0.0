@@ -101,6 +101,7 @@ public class FirstAutoRed extends LinearOpMode{
         waitForStart();
         update.start();
         shooter.setVelocity(shooter.calcVelocity(73.5391));
+        Turret.tracking = true;
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -145,14 +146,14 @@ public class FirstAutoRed extends LinearOpMode{
 
     public void Launch() {
 
-        turret.tracking = true;
+
 
         shooterTargetSpeed = shooter.calcVelocity(
                 Math.sqrt(
                         (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)
                 )
         );
-        target = turret.getTurretHeading();
+        //target = turret.getTargetPosition();
         shooter.setVelocity(shooterTargetSpeed);
 
         shooter.setVelocity(shooterTargetSpeed);
@@ -167,8 +168,8 @@ public class FirstAutoRed extends LinearOpMode{
         kicker.setPosition(Kicker.DOWN);
         gate.setPosition(Gate.CLOSE);
 
-        Turret.tracking = false;
-        turret.setPosition((int)target);
+        //Turret.tracking = false;
+        turret.setPosition(0);
 
 
     }
