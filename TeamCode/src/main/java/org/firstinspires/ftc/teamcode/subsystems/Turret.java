@@ -28,7 +28,7 @@ public class Turret {
 
     public static boolean tracking = false;
 
-    private int pos;
+    private double pos;
 
     private Pose2d pose;
 
@@ -61,7 +61,7 @@ public class Turret {
         return new Vector2d(curBasket.y-y, curBasket.x-x);
     }
 
-    public void setPosition(int ticks) {
+    public void setPosition(double ticks) {
         pos = ticks;
     }
 
@@ -106,7 +106,7 @@ public class Turret {
             turret.setPower(rotationSpeed);
         }
         else {
-            turret.setTargetPosition(pos);
+            turret.setTargetPosition((int)(pos * ticksPerRad));
             turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             turret.setPower(rotationSpeed);
         }

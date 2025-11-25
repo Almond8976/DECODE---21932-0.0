@@ -37,9 +37,10 @@ public class FirstAutoRed extends LinearOpMode{
 
     private MecanumDrive drive;
 
-    public static int KICKER_WAIT_TIME = 750;
+    public static int KICKER_WAIT_TIME = 650;
 
     private int shooterTargetSpeed;
+    private double target;
 
     ElapsedTime time1 = new ElapsedTime();
 
@@ -69,10 +70,10 @@ public class FirstAutoRed extends LinearOpMode{
         TrajectoryActionBuilder trajPickupOne = drive.actionBuilder(new Pose2d(new Vector2d(-12, 12), Math.toRadians(90)))
                 .afterTime(0, intakeWr.startIntake())
                 .strafeToConstantHeading(new Vector2d(-11, 53))
-                .afterTime(0, intakeWr.stopIntake())
+                .afterTime(1, intakeWr.stopIntake())
                 .turnTo(0)
-                .strafeToConstantHeading(new Vector2d(0, 54))
-                .strafeToConstantHeading(new Vector2d(0, 58));
+                .strafeToConstantHeading(new Vector2d(-2, 54))
+                .strafeToConstantHeading(new Vector2d(-2, 58));
 
         TrajectoryActionBuilder trajShootOne = drive.actionBuilder(new Pose2d(new Vector2d(0, 58), Math.toRadians(0)))
                 .strafeToSplineHeading(new Vector2d(-20, 20), Math.toRadians(90));
@@ -80,15 +81,15 @@ public class FirstAutoRed extends LinearOpMode{
         TrajectoryActionBuilder trajSetTwo = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(11, 29))
                 .afterTime(0, intakeWr.startIntake())
-                .strafeToConstantHeading(new Vector2d(11, 53))
-                .afterTime(0, intakeWr.stopIntake())
+                .strafeToConstantHeading(new Vector2d(11, 60))
+                .afterTime(1, intakeWr.stopIntake())
                 .strafeToConstantHeading(new Vector2d(-20, 20));
 
         TrajectoryActionBuilder trajSetThree = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(36, 29))
                 .afterTime(0, intakeWr.startIntake())
-                .strafeToConstantHeading(new Vector2d(36, 53))
-                .afterTime(0, intakeWr.stopIntake())
+                .strafeToConstantHeading(new Vector2d(36, 60))
+                .afterTime(1, intakeWr.stopIntake())
                 .strafeToConstantHeading(new Vector2d(-20, 20));
 
         Thread update = new Thread( ()-> updateAll(turret, shooter, kicker, intake, gate, intakeWr));
@@ -109,7 +110,6 @@ public class FirstAutoRed extends LinearOpMode{
 
         Launch();
 
-        gate.setPosition(Gate.CLOSE);
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -138,6 +138,7 @@ public class FirstAutoRed extends LinearOpMode{
                 )
         );
         Launch();
+        turret.setPosition(0);
 
     }
     // Define all functions here (if you call subsystems movements from here it wont be parallel)
@@ -145,11 +146,13 @@ public class FirstAutoRed extends LinearOpMode{
     public void Launch() {
 
         turret.tracking = true;
+
         shooterTargetSpeed = shooter.calcVelocity(
                 Math.sqrt(
                         (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)
                 )
         );
+        target = turret.getTurretHeading();
         shooter.setVelocity(shooterTargetSpeed);
 
         shooter.setVelocity(shooterTargetSpeed);
@@ -158,18 +161,16 @@ public class FirstAutoRed extends LinearOpMode{
         }
         while (shooter.getVelocity() < shooterTargetSpeed - Mortar.THRESH);
         intake.setIntakePower(1);
-
         sleep(KICKER_WAIT_TIME);
         kicker.setPosition(Kicker.UP);
         sleep(500);
         kicker.setPosition(Kicker.DOWN);
         gate.setPosition(Gate.CLOSE);
 
-        turret.tracking = false;
+        Turret.tracking = false;
+        turret.setPosition((int)target);
 
-        turret.setPosition(0);
-        kicker.update();
-        turret.update();
+
     }
 
     public void updateAll(Turret turret, Mortar shooter, Kicker kicker, Intake intake, Gate gate, IntakeWrapper intakeWr){
@@ -182,7 +183,7 @@ public class FirstAutoRed extends LinearOpMode{
             gate.update();
             intakeWr.update();
 
-            telemetry.addData("Heading", turret.getPose().heading);
+            telemetry.addData("Heading", turret.getPose().heading.toDouble());
             telemetry.addData("Gate Position", gate.getPosition());
             telemetry.update();
         }
