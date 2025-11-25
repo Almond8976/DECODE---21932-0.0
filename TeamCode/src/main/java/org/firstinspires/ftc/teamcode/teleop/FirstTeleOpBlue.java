@@ -80,7 +80,7 @@ public class FirstTeleOpBlue extends LinearOpMode {
                 }
             }
             if (gamepad1.left_bumper) {
-                intake.setIntakePower(0);
+                //intake.setIntakePower(0);
                 turret.tracking = false;
                 shooting = false;
                 gate.setPosition(Gate.CLOSE);

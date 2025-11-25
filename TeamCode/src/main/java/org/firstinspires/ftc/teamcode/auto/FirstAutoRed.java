@@ -37,7 +37,7 @@ public class FirstAutoRed extends LinearOpMode{
 
     private MecanumDrive drive;
 
-    public static int KICKER_WAIT_TIME = 650;
+    public static int KICKER_WAIT_TIME = 500;
 
     private int shooterTargetSpeed;
     private double target;
@@ -71,17 +71,19 @@ public class FirstAutoRed extends LinearOpMode{
                 .afterTime(0, intakeWr.startIntake())
                 .strafeToConstantHeading(new Vector2d(-11, 53))
                 .afterTime(1, intakeWr.stopIntake())
-                .turnTo(0)
-                .strafeToConstantHeading(new Vector2d(-2, 54))
-                .strafeToConstantHeading(new Vector2d(-2, 58));
+                /*.turnTo(Math.toRadians(0))
+                .strafeToConstantHeading(new Vector2d(-2, 54))*/
+                .strafeToSplineHeading(new Vector2d(-2, 54), Math.toRadians(180))
+                .strafeToConstantHeading(new Vector2d(-2, 60));
 
-        TrajectoryActionBuilder trajShootOne = drive.actionBuilder(new Pose2d(new Vector2d(0, 58), Math.toRadians(0)))
+        TrajectoryActionBuilder trajShootOne = drive.actionBuilder(new Pose2d(new Vector2d(-2, 60), Math.toRadians(180)))
+                /*.strafeToConstantHeading(new Vector2d(-20, 20));*/
                 .strafeToSplineHeading(new Vector2d(-20, 20), Math.toRadians(90));
 
         TrajectoryActionBuilder trajSetTwo = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(11, 29))
+                .strafeToConstantHeading(new Vector2d(13, 29))
                 .afterTime(0, intakeWr.startIntake())
-                .strafeToConstantHeading(new Vector2d(11, 60))
+                .strafeToConstantHeading(new Vector2d(13, 60))
                 .afterTime(1, intakeWr.stopIntake())
                 .strafeToConstantHeading(new Vector2d(-20, 20));
 
@@ -91,6 +93,9 @@ public class FirstAutoRed extends LinearOpMode{
                 .strafeToConstantHeading(new Vector2d(36, 60))
                 .afterTime(1, intakeWr.stopIntake())
                 .strafeToConstantHeading(new Vector2d(-20, 20));
+
+        TrajectoryActionBuilder trajSetFour = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
+                .strafeToSplineHeading(new Vector2d(0, 52), Math.toRadians(180));
 
         Thread update = new Thread( ()-> updateAll(turret, shooter, kicker, intake, gate, intakeWr));
 
@@ -118,6 +123,7 @@ public class FirstAutoRed extends LinearOpMode{
                 )
         );
 
+        sleep(400);
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -139,7 +145,14 @@ public class FirstAutoRed extends LinearOpMode{
                 )
         );
         Launch();
+
+        Turret.tracking = false;
         turret.setPosition(0);
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajSetFour.build()
+                )
+        );
 
     }
     // Define all functions here (if you call subsystems movements from here it wont be parallel)
@@ -169,7 +182,7 @@ public class FirstAutoRed extends LinearOpMode{
         gate.setPosition(Gate.CLOSE);
 
         //Turret.tracking = false;
-        turret.setPosition(0);
+        //turret.setPosition(0);
 
 
     }
