@@ -66,27 +66,32 @@ public class FirstAutoRed extends LinearOpMode{
                 .strafeToSplineHeading(new Vector2d(-12, 12), Math.toRadians(90));
 
 
-        TrajectoryActionBuilder trajPickupOne = drive.actionBuilder(new Pose2d(new Vector2d(-11, 33), Math.toRadians(90)))
-                .afterTime(3.83, intakeWr.StartIntake())
+        TrajectoryActionBuilder trajPickupOne = drive.actionBuilder(new Pose2d(new Vector2d(-12, 12), Math.toRadians(90)))
+                .afterTime(0, intakeWr.startIntake())
                 .strafeToConstantHeading(new Vector2d(-11, 53))
+                .afterTime(0, intakeWr.stopIntake())
                 .turnTo(0)
                 .strafeToConstantHeading(new Vector2d(0, 54))
                 .strafeToConstantHeading(new Vector2d(0, 58));
 
         TrajectoryActionBuilder trajShootOne = drive.actionBuilder(new Pose2d(new Vector2d(0, 58), Math.toRadians(0)))
-                .strafeToConstantHeading(new Vector2d(-20, 20));
+                .strafeToSplineHeading(new Vector2d(-20, 20), Math.toRadians(90));
 
-        TrajectoryActionBuilder trajSetTwo = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(0)))
-                .strafeToSplineHeading(new Vector2d(11, 33), Math.toRadians(90))
+        TrajectoryActionBuilder trajSetTwo = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(11, 29))
+                .afterTime(0, intakeWr.startIntake())
                 .strafeToConstantHeading(new Vector2d(11, 53))
+                .afterTime(0, intakeWr.stopIntake())
                 .strafeToConstantHeading(new Vector2d(-20, 20));
 
         TrajectoryActionBuilder trajSetThree = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(36, 33))
+                .strafeToConstantHeading(new Vector2d(36, 29))
+                .afterTime(0, intakeWr.startIntake())
                 .strafeToConstantHeading(new Vector2d(36, 53))
+                .afterTime(0, intakeWr.stopIntake())
                 .strafeToConstantHeading(new Vector2d(-20, 20));
 
-        Thread update = new Thread( ()-> updateAll(turret, shooter, kicker, intake, gate));
+        Thread update = new Thread( ()-> updateAll(turret, shooter, kicker, intake, gate, intakeWr));
 
         // TODO: move everything to start position (after init, before program start)
 
@@ -148,9 +153,10 @@ public class FirstAutoRed extends LinearOpMode{
         shooter.setVelocity(shooterTargetSpeed);
 
         shooter.setVelocity(shooterTargetSpeed);
-        while (shooter.getVelocity() < shooterTargetSpeed - Mortar.THRESH) {
+        do {
             gate.setPosition(Gate.OPEN);
         }
+        while (shooter.getVelocity() < shooterTargetSpeed - Mortar.THRESH);
         intake.setIntakePower(1);
 
         sleep(KICKER_WAIT_TIME);
@@ -166,7 +172,7 @@ public class FirstAutoRed extends LinearOpMode{
         turret.update();
     }
 
-    public void updateAll(Turret turret, Mortar shooter, Kicker kicker, Intake intake, Gate gate){
+    public void updateAll(Turret turret, Mortar shooter, Kicker kicker, Intake intake, Gate gate, IntakeWrapper intakeWr){
         while (opModeInInit() || opModeIsActive())
         {
             shooter.update();
@@ -174,6 +180,7 @@ public class FirstAutoRed extends LinearOpMode{
             turret.update();
             intake.update();
             gate.update();
+            intakeWr.update();
 
             telemetry.addData("Heading", turret.getPose().heading);
             telemetry.addData("Gate Position", gate.getPosition());

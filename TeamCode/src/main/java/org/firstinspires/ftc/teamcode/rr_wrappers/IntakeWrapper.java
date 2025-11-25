@@ -19,7 +19,7 @@ public class IntakeWrapper {
         intake = new Intake(hwMap, config);
     }
 
-    public class StartIntake implements Action {
+    private class StartIntake implements Action {
 
         private boolean initialized = false;
 
@@ -34,8 +34,12 @@ public class IntakeWrapper {
             return false;
         }
     }
+    public Action startIntake() {
+        return new StartIntake();
+    }
 
-    public class StopIntake implements Action {
+
+    private class StopIntake implements Action {
         private boolean initialized = false;
 
         @Override
@@ -48,6 +52,9 @@ public class IntakeWrapper {
 
             return false;
         }
+    }
+    public Action stopIntake() {
+        return new StopIntake();
     }
     private class Update implements Action {
 
