@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Config
 public class servoTest extends LinearOpMode {
     public static double change = 0.01;
-    public static String servoName = "Turn";
+    public static String servoName = "gate";
 
     @Override
     public void runOpMode() throws InterruptedException {
