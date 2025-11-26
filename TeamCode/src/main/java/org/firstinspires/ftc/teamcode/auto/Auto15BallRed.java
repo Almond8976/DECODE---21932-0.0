@@ -149,6 +149,7 @@ public class Auto15BallRed extends LinearOpMode{
                         trajSetFour.build()
                 )
         );
+        Launch();
 
         Turret.tracking = false;
         turret.setPosition(0);
@@ -162,9 +163,6 @@ public class Auto15BallRed extends LinearOpMode{
     // Define all functions here (if you call subsystems movements from here it wont be parallel)
 
     public void Launch() {
-
-
-
         shooterTargetSpeed = shooter.calcVelocity(
                 Math.sqrt(
                         (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)
@@ -173,7 +171,6 @@ public class Auto15BallRed extends LinearOpMode{
         //target = turret.getTargetPosition();
         shooter.setVelocity(shooterTargetSpeed);
 
-        shooter.setVelocity(shooterTargetSpeed);
         do {
             gate.setPosition(Gate.OPEN);
         }
@@ -184,11 +181,6 @@ public class Auto15BallRed extends LinearOpMode{
         sleep(500);
         kicker.setPosition(Kicker.DOWN);
         gate.setPosition(Gate.CLOSE);
-
-        //Turret.tracking = false;
-        //turret.setPosition(0);
-
-
     }
 
     public void updateAll(Turret turret, Mortar shooter, Kicker kicker, Intake intake, Gate gate, IntakeWrapper intakeWr){
