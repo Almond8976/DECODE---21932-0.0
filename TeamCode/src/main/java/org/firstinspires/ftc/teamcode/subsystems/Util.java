@@ -22,6 +22,7 @@ public class Util {
         deviceConf.put("turretMotor",       "turret");
         deviceConf.put("webcam1",           "camera");
         deviceConf.put("shooter",           "flyMotor");
+        deviceConf.put("shooterTwo",        "flyMotor2");
         deviceConf.put("gate",              "gate");
     }
 }
