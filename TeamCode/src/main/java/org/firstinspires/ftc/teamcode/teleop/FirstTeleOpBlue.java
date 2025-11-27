@@ -75,7 +75,7 @@ public class FirstTeleOpBlue extends LinearOpMode {
                 }
                 shooter.setVelocity(shooterTargetSpeed);
                 gate.setPosition(Gate.OPEN);
-                if(shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH) {
+                if(shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH && shooter.getVelocity() <= shooterTargetSpeed) {
                     intake.setIntakePower(1);
                 }
             }
@@ -178,6 +178,7 @@ public class FirstTeleOpBlue extends LinearOpMode {
             //telemetry.addData("DISTANCE:", sensor.getDistance());
             telemetry.addLine();
             telemetry.addData("Turret Manual Override", turretOverride);
+            telemetry.addData("Keep Shooter Running", keepShooterRunning);
             telemetry.update();
 
         }

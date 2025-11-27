@@ -48,7 +48,7 @@ public class Auto15BallRed extends LinearOpMode{
         util = new Util();
         kicker = new Kicker(hardwareMap, util.deviceConf);
         shooter = new Mortar(hardwareMap, util.deviceConf);
-        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.78, 45.6439, Math.toRadians(128.188)));
+        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.7, 45.9, Math.toRadians(128.188)));
         intakeWr = new IntakeWrapper(hardwareMap, util.deviceConf);
         intake = new Intake(hardwareMap, util.deviceConf);
         gate = new Gate(hardwareMap, util.deviceConf);
@@ -56,7 +56,7 @@ public class Auto15BallRed extends LinearOpMode{
 
 
         // define startpose, in, in, rad
-        Pose2d startPose = new Pose2d(-57.78, 45.6439, Math.toRadians(128.188));
+        Pose2d startPose = new Pose2d(-57.7, 45.9, Math.toRadians(128.188));
         drive = new MecanumDrive(hardwareMap, startPose);
         turret.setBasketPos(Turret.redBasket);
         kicker.setPosition(Kicker.DOWN);
@@ -75,10 +75,10 @@ public class Auto15BallRed extends LinearOpMode{
                 .afterTime(0, intakeWr.startIntake())
                 .strafeToConstantHeading(new Vector2d(13, 60))
                 .afterTime(1, intakeWr.stopIntake())
-                .strafeToSplineHeading(new Vector2d(-2, 54), Math.toRadians(0))
-                .strafeToConstantHeading(new Vector2d(-2, 60));
+                .strafeToSplineHeading(new Vector2d(-2, 52), Math.toRadians(0))
+                .strafeToConstantHeading(new Vector2d(-2, 58));
 
-        TrajectoryActionBuilder trajShootTwo = drive.actionBuilder(new Pose2d(new Vector2d(-2, 60), Math.toRadians(0)))
+        TrajectoryActionBuilder trajShootTwo = drive.actionBuilder(new Pose2d(new Vector2d(-2, 58), Math.toRadians(0)))
                 .strafeToSplineHeading(new Vector2d(-20, 20), Math.toRadians(90));
 
         TrajectoryActionBuilder trajSetThree = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
@@ -89,8 +89,8 @@ public class Auto15BallRed extends LinearOpMode{
                 .strafeToSplineHeading(new Vector2d(-20, 20), Math.toRadians(0));
 
         TrajectoryActionBuilder trajSetFour = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(0)))
-                .strafeToConstantHeading(new Vector2d(24, 65))
-                .strafeToConstantHeading(new Vector2d(60, 65))
+                .strafeToConstantHeading(new Vector2d(24, 64))
+                .strafeToConstantHeading(new Vector2d(60, 64))
                 .strafeToConstantHeading(new Vector2d(-20, 20));
 
         TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(0)))

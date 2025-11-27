@@ -50,7 +50,8 @@ public class FirstAutoRed extends LinearOpMode{
         util = new Util();
         kicker = new Kicker(hardwareMap, util.deviceConf);
         shooter = new Mortar(hardwareMap, util.deviceConf);
-        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.78, 45.6439, Math.toRadians(128.188)));
+        //turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.78, 45.6439, Math.toRadians(128.188)));
+        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.7, 45.9, Math.toRadians(128.188)));
         intakeWr = new IntakeWrapper(hardwareMap, util.deviceConf);
         intake = new Intake(hardwareMap, util.deviceConf);
         gate = new Gate(hardwareMap, util.deviceConf);
@@ -58,7 +59,7 @@ public class FirstAutoRed extends LinearOpMode{
 
 
         // define startpose, in, in, rad
-        Pose2d startPose = new Pose2d(-57.78, 45.6439, Math.toRadians(128.188));
+        Pose2d startPose = new Pose2d(-57.7, 45.9, Math.toRadians(128.188));
         drive = new MecanumDrive(hardwareMap, startPose);
         turret.setBasketPos(Turret.redBasket);
 
