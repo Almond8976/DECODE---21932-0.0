@@ -21,10 +21,11 @@ import org.firstinspires.ftc.teamcode.subsystems.Util;
 @TeleOp(name = "FirstTeleOpRed")
 public class FirstTeleOpRed extends LinearOpMode {
 
-    public static int sensorThresh = 20;
+    //SENSOR
+    public static int sensorThresh = 20, brightness = 50;
+    //
 
-    public static int brightness = 50;
-
+    public static double reverseIntakeSpeed = -.75;
     public static int maxTurretChange = 15;
     public static Pose2d resetPose = new Pose2d(62.4652,-64.94,Math.PI);
 
@@ -114,6 +115,9 @@ public class FirstTeleOpRed extends LinearOpMode {
                 intaking = true;
                 intake.setIntakePower(1);
                 gate.setPosition(Gate.CLOSE);
+            }
+            if(gamepad2.yWasPressed()) {
+                intake.setIntakePower(reverseIntakeSpeed);
             }
 
             if(gamepad2.left_bumper) {
