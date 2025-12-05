@@ -26,7 +26,7 @@ public class FirstTeleOpBlue extends LinearOpMode {
     public static int brightness = 50;
 
     public static int maxTurretChange = 15;
-    public static Pose2d resetPose = new Pose2d(62.4652,64.94,Math.PI);
+    public static Pose2d resetPose = new Pose2d(62.4652,0,Math.PI);
 
 
     @Override

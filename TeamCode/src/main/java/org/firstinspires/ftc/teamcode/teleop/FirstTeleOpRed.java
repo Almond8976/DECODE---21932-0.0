@@ -27,7 +27,7 @@ public class FirstTeleOpRed extends LinearOpMode {
 
     public static double reverseIntakeSpeed = -.75;
     public static int maxTurretChange = 15;
-    public static Pose2d resetPose = new Pose2d(62.4652,-64.94,Math.PI);
+    public static Pose2d resetPose = new Pose2d(62.4652,0,Math.PI);
 
 
     @Override
@@ -116,7 +116,7 @@ public class FirstTeleOpRed extends LinearOpMode {
                 intake.setIntakePower(1);
                 gate.setPosition(Gate.CLOSE);
             }
-            if(gamepad2.yWasPressed()) {
+            if(gamepad2.y) {
                 intake.setIntakePower(reverseIntakeSpeed);
             }
 

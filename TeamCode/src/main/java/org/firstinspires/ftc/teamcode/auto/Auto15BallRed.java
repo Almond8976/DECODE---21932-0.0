@@ -193,6 +193,8 @@ public class Auto15BallRed extends LinearOpMode{
             gate.update();
             intakeWr.update();
 
+            telemetry.addData("pose x", turret.getPose().position.x);
+            telemetry.addData("pose y", turret.getPose().position.y);
             telemetry.addData("Heading", turret.getPose().heading.toDouble());
             telemetry.addData("Gate Position", gate.getPosition());
             telemetry.update();
