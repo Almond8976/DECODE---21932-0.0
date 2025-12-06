@@ -57,6 +57,9 @@ public class AutoFarHumanZoneCycleBLUE extends LinearOpMode{
 
 
         // define startpose, in, in, rad
+        drive = new MecanumDrive(hardwareMap, new Pose2d(new Vector2d(65.29, -8.29), Math.toRadians(-90)));
+        turret.setBasketPos(Turret.blueBasket);
+
         TrajectoryActionBuilder trajSetOne = drive.actionBuilder(new Pose2d(new Vector2d(65.29, -8.29), Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(36, -29))
                 .afterTime(0, intakeWr.startIntake())
@@ -89,6 +92,7 @@ public class AutoFarHumanZoneCycleBLUE extends LinearOpMode{
                         trajSetOne.build()
                 )
         );
+        Launch();
 
         for(int i = 0; i < 3; i++) {
             Actions.runBlocking(

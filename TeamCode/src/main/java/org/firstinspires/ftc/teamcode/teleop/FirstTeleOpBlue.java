@@ -39,7 +39,7 @@ public class FirstTeleOpBlue extends LinearOpMode {
 
         Intake intake = new Intake(hardwareMap, util.deviceConf);
         //Turret turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-41.1914631184, 13.6936191855,2.26));
-        Turret turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-4, -48.5, Math.PI));
+        Turret turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-4.8, -49.5, Math.PI));
         Mortar shooter = new Mortar(hardwareMap, util.deviceConf);
         Kicker kicker = new Kicker(hardwareMap, util.deviceConf);
         //Sparky sensor = new Sparky(hardwareMap);

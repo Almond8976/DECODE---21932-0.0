@@ -92,9 +92,9 @@ public class Auto12BallRed extends LinearOpMode{
                 .strafeToConstantHeading(new Vector2d(36, 60))
                 .afterTime(1, intakeWr.stopIntake())
                 .strafeToConstantHeading(new Vector2d(36, 22))
-                .strafeToConstantHeading(new Vector2d(-28, 22));
+                .strafeToConstantHeading(new Vector2d(-30, 22));
 
-        TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-28, 22), Math.toRadians(90)))
+        TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-30, 22), Math.toRadians(90)))
                 .strafeToSplineHeading(new Vector2d(0, 52), Math.toRadians(180));
 
         Thread update = new Thread( ()-> updateAll(turret, shooter, kicker, intake, gate, intakeWr));
