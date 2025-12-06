@@ -49,7 +49,7 @@ public class Auto12FarRed extends LinearOpMode{
         kicker = new Kicker(hardwareMap, util.deviceConf);
         shooter = new Mortar(hardwareMap, util.deviceConf);
         //turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.78, 45.6439, Math.toRadians(128.188)));
-        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(new Vector2d(56, 5), Math.toRadians(90)));
+        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(new Vector2d(65.29, 8.29), Math.toRadians(90)));
         intakeWr = new IntakeWrapper(hardwareMap, util.deviceConf);
         intake = new Intake(hardwareMap, util.deviceConf);
         gate = new Gate(hardwareMap, util.deviceConf);
@@ -57,16 +57,26 @@ public class Auto12FarRed extends LinearOpMode{
 
 
         // define startpose, in, in, rad
-        TrajectoryActionBuilder trajSetOne = drive.actionBuilder(new Pose2d(new Vector2d(56, 5), Math.toRadians(90)))
+        TrajectoryActionBuilder trajSetOne = drive.actionBuilder(new Pose2d(new Vector2d(65.29, 8.29), Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(36, 29))
                 .afterTime(0, intakeWr.startIntake())
                 .strafeToConstantHeading(new Vector2d(36, 60))
                 .afterTime(1, intakeWr.stopIntake())
-                .strafeToConstantHeading(new Vector2d(56, 5));
+                .strafeToConstantHeading(new Vector2d(56, 13.5));
 
-        TrajectoryActionBuilder trajHuman = drive.actionBuilder(new Pose2d(new Vector2d(56, 5), Math.toRadians(90)))
+        TrajectoryActionBuilder trajHuman = drive.actionBuilder(new Pose2d(new Vector2d(56, 13.5), Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(56, 60))
-                .strafeToConstantHeading(new Vector2d(56, 5));
+                .strafeToConstantHeading(new Vector2d(56, 13.5));
+
+        TrajectoryActionBuilder trajSetTwo = drive.actionBuilder(new Pose2d(new Vector2d(56, 13.5), Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(13, 29))
+                .afterTime(0, intakeWr.startIntake())
+                .strafeToConstantHeading(new Vector2d(13, 60))
+                .afterTime(1, intakeWr.stopIntake())
+                .strafeToConstantHeading(new Vector2d(-12, 12));
+
+        TrajectoryActionBuilder trajLeave  = drive.actionBuilder(new Pose2d(new Vector2d(-12, 12), Math.toRadians(90)))
+                .strafeTo(new Vector2d(0, 20));
 
 
         Thread update = new Thread( ()-> updateAll(turret, shooter, kicker, intake, gate, intakeWr));
@@ -95,7 +105,18 @@ public class Auto12FarRed extends LinearOpMode{
         );
         Launch();
 
-        
+        Actions.runBlocking(
+                new SequentialAction(
+                    trajSetTwo.build()
+                )
+        );
+        Launch();
+
+        Actions.runBlocking(
+                new SequentialAction(
+                    trajLeave.build()
+                )
+        );
 
 
 

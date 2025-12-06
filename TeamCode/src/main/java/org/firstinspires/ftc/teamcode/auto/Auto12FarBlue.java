@@ -22,8 +22,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 
 @Config
-@Autonomous(name = "Auto12BallRed")
-public class Auto12BallBlue extends LinearOpMode{
+@Autonomous(name = "Auto12FarBlue")
+public class Auto12FarBlue extends LinearOpMode{
 
     Util util;
     Kicker kicker;
@@ -49,7 +49,7 @@ public class Auto12BallBlue extends LinearOpMode{
         kicker = new Kicker(hardwareMap, util.deviceConf);
         shooter = new Mortar(hardwareMap, util.deviceConf);
         //turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.78, 45.6439, Math.toRadians(128.188)));
-        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.7, -45.9, Math.toRadians(-128.188)));
+        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(new Vector2d(65.29, 8.29), Math.toRadians(-90)));
         intakeWr = new IntakeWrapper(hardwareMap, util.deviceConf);
         intake = new Intake(hardwareMap, util.deviceConf);
         gate = new Gate(hardwareMap, util.deviceConf);
@@ -57,44 +57,27 @@ public class Auto12BallBlue extends LinearOpMode{
 
 
         // define startpose, in, in, rad
-        Pose2d startPose = new Pose2d(-57.7, -45.9, Math.toRadians(-128.188));
-        drive = new MecanumDrive(hardwareMap, startPose);
-        turret.setBasketPos(Turret.blueBasket);
-
-        kicker.setPosition(Kicker.DOWN);
-        TrajectoryActionBuilder trajPreload = drive.actionBuilder(startPose)
-                .strafeToSplineHeading(new Vector2d(-12, -12), Math.toRadians(-90));
-
-
-        TrajectoryActionBuilder trajPickupOne = drive.actionBuilder(new Pose2d(new Vector2d(-12, -12), Math.toRadians(-90)))
-                .afterTime(0, intakeWr.startIntake())
-                .strafeToConstantHeading(new Vector2d(-11, -53))
-                .afterTime(1, intakeWr.stopIntake())
-                /*.turnTo(Math.toRadians(0))
-                .strafeToConstantHeading(new Vector2d(-2, 54))*/
-                .strafeToSplineHeading(new Vector2d(-2, -54), Math.toRadians(-180))
-                .strafeToConstantHeading(new Vector2d(-2, -60));
-
-        TrajectoryActionBuilder trajShootOne = drive.actionBuilder(new Pose2d(new Vector2d(-2, -60), Math.toRadians(-180)))
-                /*.strafeToConstantHeading(new Vector2d(-20, 20));*/
-                .strafeToSplineHeading(new Vector2d(-20, -20), Math.toRadians(-90));
-
-        TrajectoryActionBuilder trajSetTwo = drive.actionBuilder(new Pose2d(new Vector2d(-20, -20), Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(13, -29))
-                .afterTime(0, intakeWr.startIntake())
-                .strafeToConstantHeading(new Vector2d(13, -60))
-                .afterTime(1, intakeWr.stopIntake())
-                .strafeToConstantHeading(new Vector2d(-20, -20));
-
-        TrajectoryActionBuilder trajSetThree = drive.actionBuilder(new Pose2d(new Vector2d(-20, -20), Math.toRadians(-90)))
+        TrajectoryActionBuilder trajSetOne = drive.actionBuilder(new Pose2d(new Vector2d(65.29, -8.29), Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(36, -29))
                 .afterTime(0, intakeWr.startIntake())
                 .strafeToConstantHeading(new Vector2d(36, -60))
                 .afterTime(1, intakeWr.stopIntake())
-                .strafeToConstantHeading(new Vector2d(-28, -22));
+                .strafeToConstantHeading(new Vector2d(56, -13.5));
 
-        TrajectoryActionBuilder trajSetFour = drive.actionBuilder(new Pose2d(new Vector2d(-28, -22), Math.toRadians(-90)))
-                .strafeToSplineHeading(new Vector2d(0, -52), Math.toRadians(-180));
+        TrajectoryActionBuilder trajHuman = drive.actionBuilder(new Pose2d(new Vector2d(56, -13.5), Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(56, -60))
+                .strafeToConstantHeading(new Vector2d(56, -13.5));
+
+        TrajectoryActionBuilder trajSetTwo = drive.actionBuilder(new Pose2d(new Vector2d(56, -13.5), Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(13, -29))
+                .afterTime(0, intakeWr.startIntake())
+                .strafeToConstantHeading(new Vector2d(13, -60))
+                .afterTime(1, intakeWr.stopIntake())
+                .strafeToConstantHeading(new Vector2d(-12, -12));
+
+        TrajectoryActionBuilder trajLeave  = drive.actionBuilder(new Pose2d(new Vector2d(-12, -12), Math.toRadians(-90)))
+                .strafeTo(new Vector2d(0, -20));
+
 
         Thread update = new Thread( ()-> updateAll(turret, shooter, kicker, intake, gate, intakeWr));
 
@@ -107,26 +90,17 @@ public class Auto12BallBlue extends LinearOpMode{
         shooter.setVelocity(shooter.calcVelocity(73.5391));
         Turret.tracking = true;
 
+        Launch();
         Actions.runBlocking(
                 new SequentialAction(
-                        trajPreload.build()
+                        trajHuman.build()
                 )
         );
-
         Launch();
 
-
         Actions.runBlocking(
                 new SequentialAction(
-                        trajPickupOne.build()
-                )
-        );
-
-        sleep(400);
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        trajShootOne.build()
+                        trajSetOne.build()
                 )
         );
         Launch();
@@ -140,18 +114,12 @@ public class Auto12BallBlue extends LinearOpMode{
 
         Actions.runBlocking(
                 new SequentialAction(
-                        trajSetThree.build()
+                        trajLeave.build()
                 )
         );
-        Launch();
 
-        Turret.tracking = false;
-        turret.setPosition(0);
-        Actions.runBlocking(
-                new SequentialAction(
-                        trajSetFour.build()
-                )
-        );
+
+
 
     }
     // Define all functions here (if you call subsystems movements from here it wont be parallel)
@@ -196,8 +164,6 @@ public class Auto12BallBlue extends LinearOpMode{
             gate.update();
             intakeWr.update();
 
-            telemetry.addData("pose x", turret.getPose().position.x);
-            telemetry.addData("pose y", turret.getPose().position.y);
             telemetry.addData("Heading", turret.getPose().heading.toDouble());
             telemetry.addData("Gate Position", gate.getPosition());
             telemetry.update();
