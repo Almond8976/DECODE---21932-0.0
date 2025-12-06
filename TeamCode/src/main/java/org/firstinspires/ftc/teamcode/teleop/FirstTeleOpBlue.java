@@ -21,10 +21,11 @@ import org.firstinspires.ftc.teamcode.subsystems.Util;
 @TeleOp(name = "FirstTeleOpBlue")
 public class FirstTeleOpBlue extends LinearOpMode {
 
-    public static int sensorThresh = 20;
+    //SENSOR
+    public static int sensorThresh = 20, brightness = 50;
+    //
 
-    public static int brightness = 50;
-
+    public static double reverseIntakeSpeed = -.75;
     public static int maxTurretChange = 15;
     public static Pose2d resetPose = new Pose2d(62.4652,0,Math.PI);
 
@@ -48,7 +49,7 @@ public class FirstTeleOpBlue extends LinearOpMode {
         ElapsedTime time2 = new ElapsedTime();
         Pose2d pose;
 
-        turret.setBasketPos(turret.blueBasket);
+        turret.setBasketPos(Turret.blueBasket);
 
         //sensor.setLEDBrightness(brightness);
 
@@ -58,7 +59,7 @@ public class FirstTeleOpBlue extends LinearOpMode {
 
         int shooterTargetSpeed = 0;
 
-        turret.tracking = false;
+        turret.tracking = true;
 
 
 
@@ -113,7 +114,12 @@ public class FirstTeleOpBlue extends LinearOpMode {
             if(gamepad2.right_bumper) {
                 intaking = true;
                 intake.setIntakePower(1);
-                gate.setPosition(Gate.CLOSE);
+                if(!shooting) {
+                    gate.setPosition(Gate.CLOSE);
+                }
+            }
+            if(gamepad2.y) {
+                intake.setIntakePower(reverseIntakeSpeed);
             }
 
             if(gamepad2.left_bumper) {
@@ -144,9 +150,9 @@ public class FirstTeleOpBlue extends LinearOpMode {
                 }
             }
 
-            if(!shooting && !turretOverride) {
-                turret.setPosition(0);
-            }
+//            if(!shooting && !turretOverride) {
+//                turret.setPosition(0);
+//            }
 
             if (turretOverride) {
                 turret.setPosition((int) (turret.getTargetPosition() + (maxTurretChange * -gamepad2.right_stick_x)));

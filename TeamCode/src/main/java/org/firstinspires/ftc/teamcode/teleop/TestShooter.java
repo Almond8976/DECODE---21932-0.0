@@ -38,10 +38,10 @@ public class TestShooter extends LinearOpMode {
                 vel = 0;
             }
             if (gamepad1.rightBumperWasPressed()) {
-                vel += 100;
+                vel += 25;
             }
             if (gamepad1.leftBumperWasPressed()) {
-                vel -= 100;
+                vel -= 25;
             }
 
             if (gamepad2.x) {

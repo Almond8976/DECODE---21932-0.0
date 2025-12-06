@@ -49,7 +49,7 @@ public class FirstTeleOpRed extends LinearOpMode {
         ElapsedTime time2 = new ElapsedTime();
         Pose2d pose;
 
-        turret.setBasketPos(turret.redBasket);
+        turret.setBasketPos(Turret.redBasket);
 
         //sensor.setLEDBrightness(brightness);
 
@@ -59,7 +59,7 @@ public class FirstTeleOpRed extends LinearOpMode {
 
         int shooterTargetSpeed = 0;
 
-        turret.tracking = false;
+        turret.tracking = true;
 
 
 
@@ -82,7 +82,7 @@ public class FirstTeleOpRed extends LinearOpMode {
             }
             if (gamepad1.left_bumper) {
                 //intake.setIntakePower(0);
-                turret.tracking = false;
+                //turret.tracking = false;
                 shooting = false;
                 gate.setPosition(Gate.CLOSE);
             }
@@ -114,7 +114,9 @@ public class FirstTeleOpRed extends LinearOpMode {
             if(gamepad2.right_bumper) {
                 intaking = true;
                 intake.setIntakePower(1);
-                gate.setPosition(Gate.CLOSE);
+                if(!shooting) {
+                    gate.setPosition(Gate.CLOSE);
+                }
             }
             if(gamepad2.y) {
                 intake.setIntakePower(reverseIntakeSpeed);
@@ -148,9 +150,9 @@ public class FirstTeleOpRed extends LinearOpMode {
                 }
             }
 
-            if(!shooting && !turretOverride) {
-                turret.setPosition(0);
-            }
+//            if(!shooting && !turretOverride) {
+//                turret.setPosition(0);
+//            }
 
             if (turretOverride) {
                 turret.setPosition((int) (turret.getTargetPosition() + (maxTurretChange * -gamepad2.right_stick_x)));
