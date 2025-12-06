@@ -44,6 +44,9 @@ public class Mortar {
     }
 
     public int calcVelocity(double dist) {
+        if(dist > 118) {
+            return 1450;
+        }
         return (int) ( 6.0*(dist) + 599.5122);
     }
 

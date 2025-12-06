@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 
 @Config
-@Autonomous(name = "Auto12BallRed")
+@Autonomous(name = "Auto12BallBlue")
 public class Auto12BallBlue extends LinearOpMode{
 
     Util util;
@@ -35,7 +35,7 @@ public class Auto12BallBlue extends LinearOpMode{
 
     private MecanumDrive drive;
 
-    public static int KICKER_WAIT_TIME = 500;
+    public static int KICKER_WAIT_TIME = 700;
 
     private int shooterTargetSpeed;
     private double target;
@@ -91,6 +91,7 @@ public class Auto12BallBlue extends LinearOpMode{
                 .afterTime(0, intakeWr.startIntake())
                 .strafeToConstantHeading(new Vector2d(36, -60))
                 .afterTime(1, intakeWr.stopIntake())
+                .strafeToConstantHeading(new Vector2d(36, -22))
                 .strafeToConstantHeading(new Vector2d(-28, -22));
 
         TrajectoryActionBuilder trajSetFour = drive.actionBuilder(new Pose2d(new Vector2d(-28, -22), Math.toRadians(-90)))
@@ -175,10 +176,15 @@ public class Auto12BallBlue extends LinearOpMode{
         while (shooter.getVelocity() < shooterTargetSpeed - Mortar.THRESH);
         intake.setIntakePower(1);
         sleep(KICKER_WAIT_TIME);
+        intake.setIntakePower(0);
         kicker.setPosition(Kicker.UP);
         sleep(500);
         kicker.setPosition(Kicker.DOWN);
-        gate.setPosition(Gate.CLOSE);
+        intake.setIntakePower(1);
+        sleep(KICKER_WAIT_TIME);
+        kicker.setPosition(Kicker.UP);
+        sleep(500);
+        kicker.setPosition(Kicker.DOWN);
 
         //Turret.tracking = false;
         //turret.setPosition(0);

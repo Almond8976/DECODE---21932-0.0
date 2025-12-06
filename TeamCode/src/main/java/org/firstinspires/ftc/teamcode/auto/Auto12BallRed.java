@@ -35,7 +35,7 @@ public class Auto12BallRed extends LinearOpMode{
 
     private MecanumDrive drive;
 
-    public static int KICKER_WAIT_TIME = 500;
+    public static int KICKER_WAIT_TIME = 700;
 
     private int shooterTargetSpeed;
     private double target;
@@ -91,9 +91,10 @@ public class Auto12BallRed extends LinearOpMode{
                 .afterTime(0, intakeWr.startIntake())
                 .strafeToConstantHeading(new Vector2d(36, 60))
                 .afterTime(1, intakeWr.stopIntake())
+                .strafeToConstantHeading(new Vector2d(36, 22))
                 .strafeToConstantHeading(new Vector2d(-28, 22));
 
-        TrajectoryActionBuilder trajSetFour = drive.actionBuilder(new Pose2d(new Vector2d(-28, 22), Math.toRadians(90)))
+        TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-28, 22), Math.toRadians(90)))
                 .strafeToSplineHeading(new Vector2d(0, 52), Math.toRadians(180));
 
         Thread update = new Thread( ()-> updateAll(turret, shooter, kicker, intake, gate, intakeWr));
@@ -149,7 +150,7 @@ public class Auto12BallRed extends LinearOpMode{
         turret.setPosition(0);
         Actions.runBlocking(
                 new SequentialAction(
-                        trajSetFour.build()
+                        trajLeave.build()
                 )
         );
 
@@ -175,9 +176,16 @@ public class Auto12BallRed extends LinearOpMode{
         while (shooter.getVelocity() < shooterTargetSpeed - Mortar.THRESH);
         intake.setIntakePower(1);
         sleep(KICKER_WAIT_TIME);
+        intake.setIntakePower(0);
         kicker.setPosition(Kicker.UP);
         sleep(500);
         kicker.setPosition(Kicker.DOWN);
+        intake.setIntakePower(1);
+        sleep(KICKER_WAIT_TIME);
+        kicker.setPosition(Kicker.UP);
+        sleep(500);
+        kicker.setPosition(Kicker.DOWN);
+
         gate.setPosition(Gate.CLOSE);
 
         //Turret.tracking = false;

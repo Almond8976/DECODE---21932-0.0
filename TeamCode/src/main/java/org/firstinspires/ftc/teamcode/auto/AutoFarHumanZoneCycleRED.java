@@ -105,7 +105,7 @@ public class AutoFarHumanZoneCycleRED extends LinearOpMode{
                 )
         );
 
-        
+
     }
     // Define all functions here (if you call subsystems movements from here it wont be parallel)
 

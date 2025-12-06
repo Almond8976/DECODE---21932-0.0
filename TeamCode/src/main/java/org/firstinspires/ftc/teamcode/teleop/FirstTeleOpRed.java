@@ -27,7 +27,7 @@ public class FirstTeleOpRed extends LinearOpMode {
 
     public static double reverseIntakeSpeed = -.75;
     public static int maxTurretChange = 15;
-    public static Pose2d resetPose = new Pose2d(62.4652,0,Math.PI);
+    public static Pose2d resetPose = new Pose2d(63.6,0,Math.PI);
 
 
     @Override
@@ -39,7 +39,7 @@ public class FirstTeleOpRed extends LinearOpMode {
 
         Intake intake = new Intake(hardwareMap, util.deviceConf);
         //Turret turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-41.1914631184, 13.6936191855,2.26));
-        Turret turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(0, 0,0));
+        Turret turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-4, 48.5, Math.PI));
         Mortar shooter = new Mortar(hardwareMap, util.deviceConf);
         Kicker kicker = new Kicker(hardwareMap, util.deviceConf);
         //Sparky sensor = new Sparky(hardwareMap);
@@ -59,7 +59,7 @@ public class FirstTeleOpRed extends LinearOpMode {
 
         int shooterTargetSpeed = 0;
 
-        turret.tracking = true;
+        Turret.tracking = false;
 
 
 
@@ -72,7 +72,7 @@ public class FirstTeleOpRed extends LinearOpMode {
             if (gamepad1.right_bumper || shooting) {
                 shooting = true;
                 if(!turretOverride) {
-                    turret.tracking = true;
+                    Turret.tracking = true;
                 }
                 shooter.setVelocity(shooterTargetSpeed);
                 gate.setPosition(Gate.OPEN);
@@ -82,7 +82,7 @@ public class FirstTeleOpRed extends LinearOpMode {
             }
             if (gamepad1.left_bumper) {
                 //intake.setIntakePower(0);
-                //turret.tracking = false;
+                Turret.tracking = false;
                 shooting = false;
                 gate.setPosition(Gate.CLOSE);
             }
@@ -145,14 +145,14 @@ public class FirstTeleOpRed extends LinearOpMode {
             if(gamepad2.xWasPressed()) {
                 turretOverride = !turretOverride;
                 if(turretOverride) {
-                    turret.tracking = false;
+                    Turret.tracking = false;
                     turret.setPosition(0);
                 }
             }
 
-//            if(!shooting && !turretOverride) {
-//                turret.setPosition(0);
-//            }
+            if(!shooting && !turretOverride) {
+                turret.setPosition(0);
+            }
 
             if (turretOverride) {
                 turret.setPosition((int) (turret.getTargetPosition() + (maxTurretChange * -gamepad2.right_stick_x)));
