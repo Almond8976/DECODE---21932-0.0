@@ -60,30 +60,31 @@ public class Auto12BallRed extends LinearOpMode{
         Pose2d startPose = new Pose2d(-57.7, 45.9, Math.toRadians(128.188));
         drive = new MecanumDrive(hardwareMap, startPose);
         turret.setBasketPos(Turret.redBasket);
-
         kicker.setPosition(Kicker.DOWN);
+
         TrajectoryActionBuilder trajPreload = drive.actionBuilder(startPose)
                 .strafeToSplineHeading(new Vector2d(-12, 12), Math.toRadians(90));
 
 
         TrajectoryActionBuilder trajPickupOne = drive.actionBuilder(new Pose2d(new Vector2d(-12, 12), Math.toRadians(90)))
                 .afterTime(0, intakeWr.startIntake())
-                .strafeToConstantHeading(new Vector2d(-11, 53))
+                .strafeToConstantHeading(new Vector2d(-12, 50))
                 .afterTime(1, intakeWr.stopIntake())
                 /*.turnTo(Math.toRadians(0))
                 .strafeToConstantHeading(new Vector2d(-2, 54))*/
-                .strafeToSplineHeading(new Vector2d(-2, 54), Math.toRadians(180))
-                .strafeToConstantHeading(new Vector2d(-2, 60));
+                .strafeToSplineHeading(new Vector2d(-2, 50), Math.toRadians(180))
+                .strafeToConstantHeading(new Vector2d(-2, 58));
 
-        TrajectoryActionBuilder trajShootOne = drive.actionBuilder(new Pose2d(new Vector2d(-2, 60), Math.toRadians(180)))
+        TrajectoryActionBuilder trajShootOne = drive.actionBuilder(new Pose2d(new Vector2d(-2, 58), Math.toRadians(180)))
                 /*.strafeToConstantHeading(new Vector2d(-20, 20));*/
                 .strafeToSplineHeading(new Vector2d(-20, 20), Math.toRadians(90));
 
         TrajectoryActionBuilder trajSetTwo = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(13, 29))
+                .strafeToConstantHeading(new Vector2d(12, 29))
                 .afterTime(0, intakeWr.startIntake())
-                .strafeToConstantHeading(new Vector2d(13, 60))
+                .strafeToConstantHeading(new Vector2d(12, 60))
                 .afterTime(1, intakeWr.stopIntake())
+                .strafeToConstantHeading(new Vector2d(12, 20))
                 .strafeToConstantHeading(new Vector2d(-20, 20));
 
         TrajectoryActionBuilder trajSetThree = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
@@ -91,11 +92,10 @@ public class Auto12BallRed extends LinearOpMode{
                 .afterTime(0, intakeWr.startIntake())
                 .strafeToConstantHeading(new Vector2d(36, 60))
                 .afterTime(1, intakeWr.stopIntake())
-                .strafeToConstantHeading(new Vector2d(36, 22))
-                .strafeToConstantHeading(new Vector2d(-30, 22));
+                .strafeToConstantHeading(new Vector2d(-20, 20));
 
-        TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-30, 22), Math.toRadians(90)))
-                .strafeToSplineHeading(new Vector2d(0, 52), Math.toRadians(180));
+        TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
+                .strafeToSplineHeading(new Vector2d(0, 50), Math.toRadians(180));
 
         Thread update = new Thread( ()-> updateAll(turret, shooter, kicker, intake, gate, intakeWr));
 
@@ -148,6 +148,7 @@ public class Auto12BallRed extends LinearOpMode{
 
         Turret.tracking = false;
         turret.setPosition(0);
+        intake.setIntakePower(0);
         Actions.runBlocking(
                 new SequentialAction(
                         trajLeave.build()
@@ -158,40 +159,26 @@ public class Auto12BallRed extends LinearOpMode{
     // Define all functions here (if you call subsystems movements from here it wont be parallel)
 
     public void Launch() {
-
-
-
         shooterTargetSpeed = shooter.calcVelocity(
                 Math.sqrt(
                         (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)
                 )
         );
-        //target = turret.getTargetPosition();
         shooter.setVelocity(shooterTargetSpeed);
-
-        shooter.setVelocity(shooterTargetSpeed);
+        intake.setIntakePower(0);
         do {
             gate.setPosition(Gate.OPEN);
         }
-        while (shooter.getVelocity() < shooterTargetSpeed - Mortar.THRESH);
+        while (shooter.getVelocity() < shooterTargetSpeed - Mortar.THRESH || shooter.getVelocity()>shooterTargetSpeed);
         intake.setIntakePower(1);
         sleep(KICKER_WAIT_TIME);
         intake.setIntakePower(0);
         kicker.setPosition(Kicker.UP);
         sleep(500);
         kicker.setPosition(Kicker.DOWN);
-        intake.setIntakePower(1);
-        sleep(KICKER_WAIT_TIME);
-        kicker.setPosition(Kicker.UP);
-        sleep(500);
-        kicker.setPosition(Kicker.DOWN);
 
         gate.setPosition(Gate.CLOSE);
-
-        //Turret.tracking = false;
-        //turret.setPosition(0);
-
-
+        intake.setIntakePower(1);
     }
 
     public void updateAll(Turret turret, Mortar shooter, Kicker kicker, Intake intake, Gate gate, IntakeWrapper intakeWr){

@@ -26,8 +26,9 @@ public class FirstTeleOpRed extends LinearOpMode {
     //
 
     public static double reverseIntakeSpeed = -.75;
-    public static int maxTurretChange = 15;
-    public static Pose2d resetPose = new Pose2d(63.6,0,Math.PI);
+    public static int maxTurretChange = 10;
+    public static int kickerWaitTime = 500;
+    public static Pose2d resetPose = new Pose2d(0,-24, -Math.PI);
 
 
     @Override
@@ -54,7 +55,7 @@ public class FirstTeleOpRed extends LinearOpMode {
 
         waitForStart();
 
-        boolean shooting = false, turretOverride = false, intaking = false, metDistanceSensorThresh = false, keepShooterRunning = true, preshoot = false;
+        boolean shooting = false, turretOverride = false, intaking = false, metDistanceSensorThresh = false, keepShooterRunning = true, preshoot = false, manualKicker = false;
 
         int shooterTargetSpeed = 0;
 
@@ -83,8 +84,15 @@ public class FirstTeleOpRed extends LinearOpMode {
                 shooter.setVelocity(shooterTargetSpeed);
                 if(shooting) {
                     if (shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH && shooter.getVelocity() <= shooterTargetSpeed) {
+                        if(gate.getPosition()==Gate.CLOSE) {
+                            time2.reset();
+                        }
                         gate.setPosition(Gate.OPEN);
                         intake.setIntakePower(1);
+                    }
+                    if(time2.milliseconds()>kickerWaitTime && !manualKicker) {
+                        kicker.setPosition(Kicker.UP);
+                        time1.reset();
                     }
                 }
             }
@@ -121,6 +129,10 @@ public class FirstTeleOpRed extends LinearOpMode {
 
             if(kicker.getPosition() > Kicker.DOWN) {
                 intake.setIntakePower(0);
+            }
+
+            if(gamepad1.bWasPressed()) {
+                manualKicker = !manualKicker;
             }
             // INTAKE
             if(gamepad2.right_bumper) {
@@ -201,6 +213,7 @@ public class FirstTeleOpRed extends LinearOpMode {
             telemetry.addData("Turret Manual Override", turretOverride);
             telemetry.addData("Keep Shooter Running", keepShooterRunning);
             telemetry.addData("Preshoot", preshoot);
+            telemetry.addData("Manual Kicker", manualKicker);
             telemetry.update();
 
         }

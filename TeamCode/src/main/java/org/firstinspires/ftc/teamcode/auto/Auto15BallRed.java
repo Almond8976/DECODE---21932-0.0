@@ -64,37 +64,42 @@ public class Auto15BallRed extends LinearOpMode{
         TrajectoryActionBuilder trajPreload = drive.actionBuilder(startPose)
                 .strafeToSplineHeading(new Vector2d(-12, 12), Math.toRadians(90));
 
-        TrajectoryActionBuilder trajSetOne = drive.actionBuilder(new Pose2d(new Vector2d(-12, 12), Math.toRadians(90)))
-                .afterTime(0, intakeWr.startIntake())
-                .strafeToConstantHeading(new Vector2d(-11, 53))
-                .afterTime(1, intakeWr.stopIntake())
-                .strafeToConstantHeading(new Vector2d(-20, 20));
 
-        TrajectoryActionBuilder trajSetTwo = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(13, 29))
+        TrajectoryActionBuilder trajPickupOne = drive.actionBuilder(new Pose2d(new Vector2d(-12, 12), Math.toRadians(90)))
                 .afterTime(0, intakeWr.startIntake())
-                .strafeToConstantHeading(new Vector2d(13, 60))
+                .strafeToConstantHeading(new Vector2d(-12, 50))
                 .afterTime(1, intakeWr.stopIntake())
-                .strafeToSplineHeading(new Vector2d(-2, 52), Math.toRadians(0))
+                /*.turnTo(Math.toRadians(0))
+                .strafeToConstantHeading(new Vector2d(-2, 54))*/
+                .strafeToSplineHeading(new Vector2d(-2, 50), Math.toRadians(180))
                 .strafeToConstantHeading(new Vector2d(-2, 58));
 
-        TrajectoryActionBuilder trajShootTwo = drive.actionBuilder(new Pose2d(new Vector2d(-2, 58), Math.toRadians(0)))
+        TrajectoryActionBuilder trajShootOne = drive.actionBuilder(new Pose2d(new Vector2d(-2, 58), Math.toRadians(180)))
+                /*.strafeToConstantHeading(new Vector2d(-20, 20));*/
                 .strafeToSplineHeading(new Vector2d(-20, 20), Math.toRadians(90));
+
+        TrajectoryActionBuilder trajSetTwo = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(12, 29))
+                .afterTime(0, intakeWr.startIntake())
+                .strafeToConstantHeading(new Vector2d(12, 60))
+                .afterTime(1, intakeWr.stopIntake())
+                .strafeToConstantHeading(new Vector2d(12, 20))
+                .strafeToConstantHeading(new Vector2d(-20, 20));
 
         TrajectoryActionBuilder trajSetThree = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(36, 29))
                 .afterTime(0, intakeWr.startIntake())
                 .strafeToConstantHeading(new Vector2d(36, 60))
                 .afterTime(1, intakeWr.stopIntake())
-                .strafeToSplineHeading(new Vector2d(-20, 20), Math.toRadians(0));
-
-        TrajectoryActionBuilder trajSetFour = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(0)))
-                .strafeToConstantHeading(new Vector2d(24, 64))
-                .strafeToConstantHeading(new Vector2d(60, 64))
                 .strafeToConstantHeading(new Vector2d(-20, 20));
 
-        TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(0)))
-                .strafeToConstantHeading(new Vector2d(0, 52));
+        TrajectoryActionBuilder trajSetFour = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
+                .strafeToSplineHeading(new Vector2d(30, 62), Math.toRadians(0))
+                .strafeToConstantHeading(new Vector2d(60, 62))
+                .strafeToSplineHeading(new Vector2d(-20, 20), Math.toRadians(90));
+
+        TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
+                .strafeToSplineHeading(new Vector2d(0, 50), Math.toRadians(180));
 
         Thread update = new Thread( ()-> updateAll(turret, shooter, kicker, intake, gate, intakeWr));
 
@@ -118,7 +123,14 @@ public class Auto15BallRed extends LinearOpMode{
 
         Actions.runBlocking(
                 new SequentialAction(
-                        trajSetOne.build()
+                        trajPickupOne.build()
+                )
+        );
+        sleep(400);
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajShootOne.build()
                 )
         );
         Launch();
@@ -126,13 +138,6 @@ public class Auto15BallRed extends LinearOpMode{
         Actions.runBlocking(
                 new SequentialAction(
                         trajSetTwo.build()
-                )
-        );
-        sleep(600);
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        trajShootTwo.build()
                 )
         );
         Launch();
@@ -153,6 +158,7 @@ public class Auto15BallRed extends LinearOpMode{
 
         Turret.tracking = false;
         turret.setPosition(0);
+        intake.setIntakePower(0);
         Actions.runBlocking(
                 new SequentialAction(
                         trajLeave.build()
@@ -168,19 +174,21 @@ public class Auto15BallRed extends LinearOpMode{
                         (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)
                 )
         );
-        //target = turret.getTargetPosition();
         shooter.setVelocity(shooterTargetSpeed);
-
+        intake.setIntakePower(0);
         do {
             gate.setPosition(Gate.OPEN);
         }
-        while (shooter.getVelocity() < shooterTargetSpeed - Mortar.THRESH);
+        while (shooter.getVelocity() < shooterTargetSpeed - Mortar.THRESH || shooter.getVelocity()>shooterTargetSpeed);
         intake.setIntakePower(1);
         sleep(KICKER_WAIT_TIME);
+        intake.setIntakePower(0);
         kicker.setPosition(Kicker.UP);
         sleep(500);
         kicker.setPosition(Kicker.DOWN);
+
         gate.setPosition(Gate.CLOSE);
+        intake.setIntakePower(1);
     }
 
     public void updateAll(Turret turret, Mortar shooter, Kicker kicker, Intake intake, Gate gate, IntakeWrapper intakeWr){
