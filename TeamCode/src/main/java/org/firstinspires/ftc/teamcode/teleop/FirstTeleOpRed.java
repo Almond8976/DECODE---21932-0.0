@@ -38,7 +38,6 @@ public class FirstTeleOpRed extends LinearOpMode {
         Drivetrain drive = new Drivetrain(hardwareMap, util.deviceConf);
 
         Intake intake = new Intake(hardwareMap, util.deviceConf);
-        //Turret turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-41.1914631184, 13.6936191855,2.26));
         Turret turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-4, 48.5, Math.PI));
         Mortar shooter = new Mortar(hardwareMap, util.deviceConf);
         Kicker kicker = new Kicker(hardwareMap, util.deviceConf);
@@ -55,7 +54,7 @@ public class FirstTeleOpRed extends LinearOpMode {
 
         waitForStart();
 
-        boolean shooting = false, turretOverride = false, intaking = false, metDistanceSensorThresh = false, keepShooterRunning = true;
+        boolean shooting = false, turretOverride = false, intaking = false, metDistanceSensorThresh = false, keepShooterRunning = true, preshoot = false;
 
         int shooterTargetSpeed = 0;
 
@@ -69,30 +68,43 @@ public class FirstTeleOpRed extends LinearOpMode {
             shooterTargetSpeed = shooter.calcVelocity(Math.sqrt(
                     (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)));
 
-            if (gamepad1.right_bumper || shooting) {
+            if (gamepad1.right_bumper) {
                 shooting = true;
+            }
+
+            if (gamepad2.bWasPressed()) {
+                preshoot = !preshoot;
+            }
+
+            if (shooting || preshoot) {
                 if(!turretOverride) {
                     Turret.tracking = true;
                 }
                 shooter.setVelocity(shooterTargetSpeed);
-                gate.setPosition(Gate.OPEN);
-                if(shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH && shooter.getVelocity() <= shooterTargetSpeed) {
-                    intake.setIntakePower(1);
+                if(shooting) {
+                    if (shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH && shooter.getVelocity() <= shooterTargetSpeed) {
+                        gate.setPosition(Gate.OPEN);
+                        intake.setIntakePower(1);
+                    }
                 }
             }
+
             if (gamepad1.left_bumper) {
                 //intake.setIntakePower(0);
                 Turret.tracking = false;
                 shooting = false;
+                preshoot = false;
                 gate.setPosition(Gate.CLOSE);
             }
 
-            if(!shooting && keepShooterRunning) {
-                shooter.setVelocity(Mortar.WAIT);
-            }
-
-            if(!shooting && !keepShooterRunning) {
-                shooter.setVelocity(0);
+            if(!shooting && !preshoot) {
+                Turret.tracking = false;
+                if(keepShooterRunning) {
+                    shooter.setVelocity(Mortar.WAIT);
+                }
+                else {
+                    shooter.setVelocity(0);
+                }
             }
 
             if(gamepad2.aWasPressed()) {
@@ -118,8 +130,11 @@ public class FirstTeleOpRed extends LinearOpMode {
                     gate.setPosition(Gate.CLOSE);
                 }
             }
-            if(gamepad2.y) {
+            if(gamepad2.yWasPressed()) {
                 intake.setIntakePower(reverseIntakeSpeed);
+            }
+            if(gamepad2.yWasReleased()) {
+                intake.setIntakePower(0);
             }
 
             if(gamepad2.left_bumper) {
@@ -185,6 +200,7 @@ public class FirstTeleOpRed extends LinearOpMode {
             telemetry.addLine();
             telemetry.addData("Turret Manual Override", turretOverride);
             telemetry.addData("Keep Shooter Running", keepShooterRunning);
+            telemetry.addData("Preshoot", preshoot);
             telemetry.update();
 
         }

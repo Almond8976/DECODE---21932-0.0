@@ -185,6 +185,7 @@ public class Auto12BallBlue extends LinearOpMode{
         kicker.setPosition(Kicker.UP);
         sleep(500);
         kicker.setPosition(Kicker.DOWN);
+        gate.setPosition(Gate.CLOSE);
 
         //Turret.tracking = false;
         //turret.setPosition(0);

@@ -39,7 +39,7 @@ public class Drivetrain {
     }
 
     public void parkMode() {
-        speedMult = .2;
+        speedMult = .25;
 //        maxLinear = slowLin;
 //        maxRot = slowRot;
     }

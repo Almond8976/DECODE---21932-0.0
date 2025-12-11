@@ -82,16 +82,16 @@ public class AutoFarHumanZoneCycleRED extends LinearOpMode{
 
         waitForStart();
         update.start();
-        shooter.setVelocity(shooter.calcVelocity(73.5391));
+        shooter.setVelocity(shooter.calcVelocity(125));
         Turret.tracking = true;
 
         Launch();
-        Actions.runBlocking(
-                new SequentialAction(
-                        trajSetOne.build()
-                )
-        );
-        Launch();
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        trajSetOne.build()
+//                )
+//        );
+//        Launch();
 
         for(int i = 0; i < 3; i++) {
             Actions.runBlocking(

@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import android.util.Size;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -15,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Config
-public class AllSeeingEye {
+public class InfernoTower {
 
     private VisionPortal visionPortal;
 
@@ -27,7 +26,7 @@ public class AllSeeingEye {
     private int cameraWidth = 640, cameraHeight = 480; // TODO: set proper aspect ratio and resolution if needed
 
 
-    public AllSeeingEye(HardwareMap hwMap, HashMap<String, String> config) {
+    public InfernoTower(HardwareMap hwMap, HashMap<String, String> config) {
 
         aprilTagProcessor = new AprilTagProcessor.Builder()
                 .setDrawTagID(true)
