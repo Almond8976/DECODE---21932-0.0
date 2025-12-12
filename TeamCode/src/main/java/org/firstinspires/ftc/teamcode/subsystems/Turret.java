@@ -40,9 +40,9 @@ public class Turret {
     public static Vector2d redBasket = new Vector2d(-71, 71);
     public static Vector2d curBasket;
 
-    public static double kP = 0.005;
+    public static double kP = 0.0055;
     public static double kD = 0.0006;
-    public static double kF = 0.015;
+    public static double kF = 0.03;
 
     public Turret(HardwareMap hardwareMap, HashMap<String, String> config, Pose2d startPos) {
         drive = new MecanumDrive(hardwareMap, startPos); // TODO: set this to whatever position auton will end at
