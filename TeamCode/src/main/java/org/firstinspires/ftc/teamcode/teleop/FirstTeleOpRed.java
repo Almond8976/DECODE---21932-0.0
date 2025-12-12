@@ -28,7 +28,7 @@ public class FirstTeleOpRed extends LinearOpMode {
     public static double reverseIntakeSpeed = -.75;
     public static int maxTurretChange = 10;
     public static int kickerWaitTime = 500;
-    public static Pose2d resetPose = new Pose2d(0,-24, -Math.PI);
+    public static Pose2d resetPose = new Pose2d(0,-24, -Math.PI/2);
 
 
     @Override
@@ -39,7 +39,7 @@ public class FirstTeleOpRed extends LinearOpMode {
         Drivetrain drive = new Drivetrain(hardwareMap, util.deviceConf);
 
         Intake intake = new Intake(hardwareMap, util.deviceConf);
-        Turret turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-4, 48.5, Math.PI));
+        Turret turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(0, 50, Math.PI));
         Mortar shooter = new Mortar(hardwareMap, util.deviceConf);
         Kicker kicker = new Kicker(hardwareMap, util.deviceConf);
         //Sparky sensor = new Sparky(hardwareMap);
@@ -58,6 +58,8 @@ public class FirstTeleOpRed extends LinearOpMode {
         boolean shooting = false, turretOverride = false, intaking = false, metDistanceSensorThresh = false, keepShooterRunning = true, preshoot = false, manualKicker = false;
 
         int shooterTargetSpeed = 0;
+
+        int ballCount = 0;
 
         Turret.tracking = false;
 
@@ -82,18 +84,17 @@ public class FirstTeleOpRed extends LinearOpMode {
                     Turret.tracking = true;
                 }
                 shooter.setVelocity(shooterTargetSpeed);
-                if(shooting) {
-                    if (shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH && shooter.getVelocity() <= shooterTargetSpeed) {
-                        if(gate.getPosition()==Gate.CLOSE) {
-                            time2.reset();
-                        }
-                        gate.setPosition(Gate.OPEN);
-                        intake.setIntakePower(1);
-                    }
-                    if(time2.milliseconds()>kickerWaitTime && !manualKicker) {
-                        kicker.setPosition(Kicker.UP);
-                        time1.reset();
-                    }
+
+                if (shooting && shooter.getVelocity() > shooterTargetSpeed - Mortar.THRESH && shooter.getVelocity() <= shooterTargetSpeed) {
+//                    if(gate.getPosition()==Gate.CLOSE) {
+//                        time2.reset();
+//                    }
+                    gate.setPosition(Gate.OPEN);
+                    intake.setIntakePower(1);
+//                    if(time2.milliseconds()>kickerWaitTime && !manualKicker) {
+//                        kicker.setPosition(Kicker.UP);
+//                        time1.reset();
+//                    }
                 }
             }
 
@@ -131,9 +132,9 @@ public class FirstTeleOpRed extends LinearOpMode {
                 intake.setIntakePower(0);
             }
 
-            if(gamepad1.bWasPressed()) {
-                manualKicker = !manualKicker;
-            }
+//            if(gamepad1.bWasPressed()) {
+//                manualKicker = !manualKicker;
+//            }
             // INTAKE
             if(gamepad2.right_bumper) {
                 intaking = true;
@@ -190,6 +191,21 @@ public class FirstTeleOpRed extends LinearOpMode {
                 turret.resetRobotPose(resetPose);
             }
 
+            //BALLCOUNT
+            if(gamepad2.dpadUpWasPressed()) {
+                ballCount++;
+            }
+            if(gamepad2.dpadDownWasPressed()) {
+                ballCount--;
+            }
+
+            if(ballCount>3) {
+                ballCount = 3;
+            }
+            if(ballCount<0) {
+                ballCount = 0;
+            }
+
 
 
             // update all systems
@@ -210,10 +226,11 @@ public class FirstTeleOpRed extends LinearOpMode {
             telemetry.addData("Shooter target vel", shooter.getTargetVelocity());
             //telemetry.addData("DISTANCE:", sensor.getDistance());
             telemetry.addLine();
+            telemetry.addData("Ball Count", ballCount);
             telemetry.addData("Turret Manual Override", turretOverride);
             telemetry.addData("Keep Shooter Running", keepShooterRunning);
             telemetry.addData("Preshoot", preshoot);
-            telemetry.addData("Manual Kicker", manualKicker);
+            //telemetry.addData("Manual Kicker", manualKicker);
             telemetry.update();
 
         }

@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -22,8 +23,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 
 @Config
-@Autonomous(name = "Auto15BallRed")
-public class Auto15BallRed extends LinearOpMode{
+@Autonomous(name = "Red15BallNoOverflow")
+public class Red15BallNoOverflow extends LinearOpMode{
 
     Util util;
     Kicker kicker;
@@ -35,7 +36,7 @@ public class Auto15BallRed extends LinearOpMode{
 
     private MecanumDrive drive;
 
-    public static int KICKER_WAIT_TIME = 500;
+    public static int KICKER_WAIT_TIME = 600;
 
     private int shooterTargetSpeed;
     private double target;
@@ -48,7 +49,7 @@ public class Auto15BallRed extends LinearOpMode{
         util = new Util();
         kicker = new Kicker(hardwareMap, util.deviceConf);
         shooter = new Mortar(hardwareMap, util.deviceConf);
-        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.7, 45.9, Math.toRadians(128.188)));
+        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(64.5, 16.4, Math.toRadians(180)));
         intakeWr = new IntakeWrapper(hardwareMap, util.deviceConf);
         intake = new Intake(hardwareMap, util.deviceConf);
         gate = new Gate(hardwareMap, util.deviceConf);
@@ -56,29 +57,21 @@ public class Auto15BallRed extends LinearOpMode{
 
 
         // define startpose, in, in, rad
-        Pose2d startPose = new Pose2d(-57.7, 45.9, Math.toRadians(128.188));
+        Pose2d startPose = new Pose2d(64.5, 16.4, Math.toRadians(180));
         drive = new MecanumDrive(hardwareMap, startPose);
         turret.setBasketPos(Turret.redBasket);
         kicker.setPosition(Kicker.DOWN);
 
         TrajectoryActionBuilder trajPreload = drive.actionBuilder(startPose)
-                .strafeToSplineHeading(new Vector2d(-12, 12), Math.toRadians(90));
+                .strafeToSplineHeading(new Vector2d(-12, 16), Math.toRadians(90));
 
-
-        TrajectoryActionBuilder trajPickupOne = drive.actionBuilder(new Pose2d(new Vector2d(-12, 12), Math.toRadians(90)))
+        TrajectoryActionBuilder trajSpikeOne = drive.actionBuilder(new Pose2d(new Vector2d(-12, 16), Math.toRadians(90)))
                 .afterTime(0, intakeWr.startIntake())
                 .strafeToConstantHeading(new Vector2d(-12, 50))
                 .afterTime(1, intakeWr.stopIntake())
-                /*.turnTo(Math.toRadians(0))
-                .strafeToConstantHeading(new Vector2d(-2, 54))*/
-                .strafeToSplineHeading(new Vector2d(-2, 50), Math.toRadians(180))
-                .strafeToConstantHeading(new Vector2d(-2, 58));
-
-        TrajectoryActionBuilder trajShootOne = drive.actionBuilder(new Pose2d(new Vector2d(-2, 58), Math.toRadians(180)))
-                /*.strafeToConstantHeading(new Vector2d(-20, 20));*/
                 .strafeToSplineHeading(new Vector2d(-20, 20), Math.toRadians(90));
 
-        TrajectoryActionBuilder trajSetTwo = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
+        TrajectoryActionBuilder trajSpikeTwo = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(12, 29))
                 .afterTime(0, intakeWr.startIntake())
                 .strafeToConstantHeading(new Vector2d(12, 60))
@@ -86,16 +79,26 @@ public class Auto15BallRed extends LinearOpMode{
                 .strafeToConstantHeading(new Vector2d(12, 20))
                 .strafeToConstantHeading(new Vector2d(-20, 20));
 
-        TrajectoryActionBuilder trajSetThree = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
+        TrajectoryActionBuilder trajGateOpen = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(8, 29))
+                .strafeToSplineHeading(new Vector2d(13, 59.8), Math.toRadians(126.35))
+                .strafeToSplineHeading(new Vector2d(17, 62), Math.toRadians(155));
+
+        TrajectoryActionBuilder trajGateShoot = drive.actionBuilder(new Pose2d(new Vector2d(17, 62), Math.toRadians(155)))
+                .strafeToSplineHeading(new Vector2d(12, 20), Math.toRadians(90))
+                .strafeToConstantHeading(new Vector2d(-20, 20));
+
+        TrajectoryActionBuilder trajSpikeThree = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(36, 29))
                 .afterTime(0, intakeWr.startIntake())
                 .strafeToConstantHeading(new Vector2d(36, 60))
                 .afterTime(1, intakeWr.stopIntake())
+                .strafeToConstantHeading(new Vector2d(36, 40))
                 .strafeToConstantHeading(new Vector2d(-20, 20));
 
-        TrajectoryActionBuilder trajSetFour = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
-                .strafeToSplineHeading(new Vector2d(30, 62), Math.toRadians(0))
-                .strafeToConstantHeading(new Vector2d(60, 62))
+        TrajectoryActionBuilder trajHumanPlayer = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
+                .strafeToSplineHeading(new Vector2d(36, 64), Math.toRadians(0))
+                .strafeToConstantHeading(new Vector2d(62, 64), new TranslationalVelConstraint(70))
                 .strafeToSplineHeading(new Vector2d(-20, 20), Math.toRadians(90));
 
         TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
@@ -109,7 +112,7 @@ public class Auto15BallRed extends LinearOpMode{
 
         waitForStart();
         update.start();
-        shooter.setVelocity(shooter.calcVelocity(73.5391));
+        shooter.setVelocity(shooter.calcVelocity((71-20)*Math.sqrt(2)));
         Turret.tracking = true;
 
         Actions.runBlocking(
@@ -120,38 +123,37 @@ public class Auto15BallRed extends LinearOpMode{
 
         Launch();
 
-
         Actions.runBlocking(
                 new SequentialAction(
-                        trajPickupOne.build()
-                )
-        );
-        sleep(400);
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        trajShootOne.build()
+                        trajSpikeOne.build()
                 )
         );
         Launch();
 
         Actions.runBlocking(
                 new SequentialAction(
-                        trajSetTwo.build()
+                        trajSpikeTwo.build()
                 )
         );
         Launch();
 
         Actions.runBlocking(
                 new SequentialAction(
-                        trajSetThree.build()
+                        trajGateOpen.build()
+                )
+        );
+        sleep(1200);
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajGateShoot.build()
                 )
         );
         Launch();
 
         Actions.runBlocking(
                 new SequentialAction(
-                        trajSetFour.build()
+                        trajSpikeThree.build()
                 )
         );
         Launch();
@@ -182,7 +184,7 @@ public class Auto15BallRed extends LinearOpMode{
         while (shooter.getVelocity() < shooterTargetSpeed - Mortar.THRESH || shooter.getVelocity()>shooterTargetSpeed);
         intake.setIntakePower(1);
         sleep(KICKER_WAIT_TIME);
-        intake.setIntakePower(0);
+        //intake.setIntakePower(0);
         kicker.setPosition(Kicker.UP);
         sleep(500);
         kicker.setPosition(Kicker.DOWN);

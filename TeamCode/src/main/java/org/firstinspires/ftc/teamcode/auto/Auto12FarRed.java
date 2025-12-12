@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 
 @Config
-@Autonomous(name = "Auto12FarRed")
+//@Autonomous(name = "Auto12FarRed")
 public class Auto12FarRed extends LinearOpMode{
 
     Util util;
