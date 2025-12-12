@@ -19,6 +19,7 @@ public class Mortar {
 
     public static double THRESH = 80;
     public static double OFF = 0, MAX = 1, NORMAL = 0.6, WAIT = 1200;
+    public static double slope = 4.5, closeB = 710, farB = 790;
 
 
     public Mortar(HardwareMap hardwareMap, HashMap<String, String> config) {
@@ -44,7 +45,8 @@ public class Mortar {
     }
 
     public int calcVelocity(double dist) {
-        return (int) ( 6.0*(dist) + 599.5122);
+        double b = dist>130 ? farB : closeB;
+        return (int) ( slope*(dist) + b);
     }
 
     public double getTargetVelocity() {
