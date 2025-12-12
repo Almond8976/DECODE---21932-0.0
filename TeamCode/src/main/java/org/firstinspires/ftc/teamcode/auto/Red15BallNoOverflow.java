@@ -85,7 +85,7 @@ public class Red15BallNoOverflow extends LinearOpMode{
                 .strafeToSplineHeading(new Vector2d(17, 62), Math.toRadians(155));
 
         TrajectoryActionBuilder trajGateShoot = drive.actionBuilder(new Pose2d(new Vector2d(17, 62), Math.toRadians(155)))
-                .strafeToSplineHeading(new Vector2d(12, 20), Math.toRadians(90))
+                .strafeToSplineHeading(new Vector2d(12, 56), Math.toRadians(90))
                 .strafeToConstantHeading(new Vector2d(-20, 20));
 
         TrajectoryActionBuilder trajSpikeThree = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
