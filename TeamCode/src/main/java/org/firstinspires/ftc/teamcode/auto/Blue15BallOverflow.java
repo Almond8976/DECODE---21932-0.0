@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 
 @Config
-@Autonomous(name = "Red15BallNoOverflow")
-public class Red15BallNoOverflow extends LinearOpMode{
+@Autonomous(name = "Blue15BallOverflow")
+public class Blue15BallOverflow extends LinearOpMode{
 
     Util util;
     Kicker kicker;
@@ -57,52 +57,49 @@ public class Red15BallNoOverflow extends LinearOpMode{
 
 
         // define startpose, in, in, rad
-        Pose2d startPose = new Pose2d(64.5, 16.4, Math.toRadians(180));
+        Pose2d startPose = new Pose2d(64.5, -16.4, Math.toRadians(-180));
         drive = new MecanumDrive(hardwareMap, startPose);
-        turret.setBasketPos(Turret.redBasket);
+        turret.setBasketPos(Turret.blueBasket);
         kicker.setPosition(Kicker.DOWN);
 
         TrajectoryActionBuilder trajPreload = drive.actionBuilder(startPose)
-                .strafeToSplineHeading(new Vector2d(-12, 20), Math.toRadians(90));
+                .strafeToSplineHeading(new Vector2d(-12, -16), Math.toRadians(-90));
 
-        TrajectoryActionBuilder trajSpikeOne = drive.actionBuilder(new Pose2d(new Vector2d(-12, 16), Math.toRadians(90)))
+
+        TrajectoryActionBuilder trajPickupSpikeOne = drive.actionBuilder(new Pose2d(new Vector2d(-12, -16), Math.toRadians(-90)))
                 .afterTime(0, intakeWr.startIntake())
-                .strafeToConstantHeading(new Vector2d(-12, 50))
+                .strafeToConstantHeading(new Vector2d(-12, -50))
                 .afterTime(1, intakeWr.stopIntake())
-                .strafeToSplineHeading(new Vector2d(-20, 20), Math.toRadians(90));
+                .strafeToSplineHeading(new Vector2d(-2, -50), Math.toRadians(-180))
+                .strafeToConstantHeading(new Vector2d(-2, -58));
 
-        TrajectoryActionBuilder trajSpikeTwo = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(12, 29))
+        TrajectoryActionBuilder trajShootOne = drive.actionBuilder(new Pose2d(new Vector2d(-2, -58), Math.toRadians(-180)))
+                /*.strafeToConstantHeading(new Vector2d(-20, 20));*/
+                .strafeToSplineHeading(new Vector2d(-20, -20), Math.toRadians(-90));
+
+        TrajectoryActionBuilder trajSpikeTwo = drive.actionBuilder(new Pose2d(new Vector2d(-20, -20), Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(12, -29))
                 .afterTime(0, intakeWr.startIntake())
-                .strafeToConstantHeading(new Vector2d(12, 60))
+                .strafeToConstantHeading(new Vector2d(12, -60))
                 .afterTime(1, intakeWr.stopIntake())
-                .strafeToConstantHeading(new Vector2d(12, 20))
-                .strafeToConstantHeading(new Vector2d(-20, 20));
+                .strafeToConstantHeading(new Vector2d(12, -20))
+                .strafeToConstantHeading(new Vector2d(-20, -20));
 
-        TrajectoryActionBuilder trajGateOpen = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(8, 29))
-                .strafeToSplineHeading(new Vector2d(13, 59.8), Math.toRadians(127), new TranslationalVelConstraint(30))
-                .strafeToSplineHeading(new Vector2d(17, 62), Math.toRadians(155));
-
-        TrajectoryActionBuilder trajGateShoot = drive.actionBuilder(new Pose2d(new Vector2d(17, 62), Math.toRadians(155)))
-                .strafeToSplineHeading(new Vector2d(12, 53), Math.toRadians(90))
-                .strafeToConstantHeading(new Vector2d(-20, 20));
-
-        TrajectoryActionBuilder trajSpikeThree = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(36, 29))
+        TrajectoryActionBuilder trajSpikeThree = drive.actionBuilder(new Pose2d(new Vector2d(-20, -20), Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(36, -29))
                 .afterTime(0, intakeWr.startIntake())
-                .strafeToConstantHeading(new Vector2d(36, 60))
+                .strafeToConstantHeading(new Vector2d(36, -60))
                 .afterTime(1, intakeWr.stopIntake())
-                .strafeToConstantHeading(new Vector2d(36, 40))
-                .strafeToConstantHeading(new Vector2d(-20, 20));
+                .strafeToConstantHeading(new Vector2d(36, -40))
+                .strafeToConstantHeading(new Vector2d(-20, -20));
 
-        TrajectoryActionBuilder trajHumanPlayer = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
-                .strafeToSplineHeading(new Vector2d(36, 64), Math.toRadians(0))
-                .strafeToConstantHeading(new Vector2d(62, 64), new TranslationalVelConstraint(70))
-                .strafeToSplineHeading(new Vector2d(-20, 20), Math.toRadians(90));
+        TrajectoryActionBuilder trajHumanPlayer = drive.actionBuilder(new Pose2d(new Vector2d(-20, -20), Math.toRadians(-90)))
+                .strafeToSplineHeading(new Vector2d(36, -64), Math.toRadians(0))
+                .strafeToConstantHeading(new Vector2d(62, -64), new TranslationalVelConstraint(70))
+                .strafeToSplineHeading(new Vector2d(-20, -20), Math.toRadians(-90));
 
-        TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
-                .strafeToSplineHeading(new Vector2d(0, 50), Math.toRadians(180));
+        TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-20, -20), Math.toRadians(-90)))
+                .strafeToSplineHeading(new Vector2d(0, -50), Math.toRadians(-180));
 
         Thread update = new Thread( ()-> updateAll(turret, shooter, kicker, intake, gate, intakeWr));
 
@@ -123,9 +120,17 @@ public class Red15BallNoOverflow extends LinearOpMode{
 
         Launch();
 
+
         Actions.runBlocking(
                 new SequentialAction(
-                        trajSpikeOne.build()
+                        trajPickupSpikeOne.build()
+                )
+        );
+        sleep(400);
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajShootOne.build()
                 )
         );
         Launch();
@@ -139,21 +144,14 @@ public class Red15BallNoOverflow extends LinearOpMode{
 
         Actions.runBlocking(
                 new SequentialAction(
-                        trajGateOpen.build()
-                )
-        );
-        sleep(1200);
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        trajGateShoot.build()
+                        trajSpikeThree.build()
                 )
         );
         Launch();
 
         Actions.runBlocking(
                 new SequentialAction(
-                        trajSpikeThree.build()
+                        trajHumanPlayer.build()
                 )
         );
         Launch();

@@ -4,10 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.arcrobotics.ftclib.controller.PIDController;
-import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
@@ -18,16 +15,15 @@ import java.util.HashMap;
 @Config
 public class Turret {
 
-    private DcMotorEx turret;
+    private DcMotor turret;
     private MecanumDrive drive;
     private PinpointLocalizer localizer;
-
-    private PIDController pid;
 
     private double ticksPerRad = (384.5*((double)85/25)) / (2*Math.PI);;
 
     private double rotationLimit = Math.PI * 208;
 
+    public static double rotationSpeed = 1;
     private double x, y, heading, turretHeading, turretHeadingRelative;
 
     public static boolean tracking = false;
@@ -40,16 +36,10 @@ public class Turret {
     public static Vector2d redBasket = new Vector2d(-71, 71);
     public static Vector2d curBasket;
 
-    public static double kP = 0.0055;
-    public static double kD = 0.0006;
-    public static double kF = 0.03;
-
     public Turret(HardwareMap hardwareMap, HashMap<String, String> config, Pose2d startPos) {
         drive = new MecanumDrive(hardwareMap, startPos); // TODO: set this to whatever position auton will end at
         pose = startPos;
-        turret = hardwareMap.get(DcMotorEx.class, config.get("turretMotor"));
-
-        pid = new PIDController(kP, 0, kD);
+        turret = hardwareMap.get(DcMotor.class, config.get("turretMotor"));
 
         turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -88,7 +78,6 @@ public class Turret {
     }
 
     public void update() {
-        pid.setPID(kP, 0, kD);
 
         drive.updatePoseEstimate();
 
@@ -111,10 +100,16 @@ public class Turret {
         if(turretHeading < -3*Math.PI/4) {
             turretHeading = -3 * Math.PI/4;
         }
-        int target = tracking ? (int) (turretHeading * ticksPerRad) : pos;
-        double power = pid.calculate(turret.getCurrentPosition(), target);
-        power += kF * Math.signum(power);
-        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        turret.setPower(power);
+        if (tracking) {
+            turret.setTargetPosition((int) ((turretHeading * ticksPerRad)));
+            turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            turret.setPower(rotationSpeed);
+        }
+        else {
+            turret.setTargetPosition(pos);
+            turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            turret.setPower(rotationSpeed);
+        }
+
     }
 }

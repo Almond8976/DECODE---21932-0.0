@@ -46,6 +46,7 @@ public class Mortar {
 
     public int calcVelocity(double dist) {
         double b = dist>130 ? farB : closeB;
+        b = closeB;
         return (int) ( slope*(dist) + b);
     }
 
