@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 
 @Config
-@Autonomous(name = "AutoFarHumanZoneCycleRED")
+//@Autonomous(name = "AutoFarHumanZoneCycleRED")
 public class AutoFarHumanZoneCycleRED extends LinearOpMode{
 
     Util util;
