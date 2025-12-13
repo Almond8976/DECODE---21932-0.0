@@ -90,11 +90,11 @@ public final class MecanumDrive {
         public double lateralVelGain = 1;
         public double headingVelGain = 1; // shared with turn
 
-        public double errorTol = 4;
+        public double errorTol = 3;
         public double errorVelTol = 3;
         public double angleTol = Math.toRadians(10);
         public double angleVelTol = Math.toRadians(10);
-        public double timeoutSeconds = 0.15;
+        public double timeoutSeconds = 0.25;
     }
 
     public static Params PARAMS = new Params();

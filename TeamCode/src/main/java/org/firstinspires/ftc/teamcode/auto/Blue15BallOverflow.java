@@ -49,7 +49,7 @@ public class Blue15BallOverflow extends LinearOpMode{
         util = new Util();
         kicker = new Kicker(hardwareMap, util.deviceConf);
         shooter = new Mortar(hardwareMap, util.deviceConf);
-        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(64.5, 16.4, Math.toRadians(180)));
+        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(64.5, -16.4, Math.toRadians(-180)));
         intakeWr = new IntakeWrapper(hardwareMap, util.deviceConf);
         intake = new Intake(hardwareMap, util.deviceConf);
         gate = new Gate(hardwareMap, util.deviceConf);
@@ -63,27 +63,31 @@ public class Blue15BallOverflow extends LinearOpMode{
         kicker.setPosition(Kicker.DOWN);
 
         TrajectoryActionBuilder trajPreload = drive.actionBuilder(startPose)
-                .strafeToSplineHeading(new Vector2d(-12, -16), Math.toRadians(-90));
+                .strafeToSplineHeading(new Vector2d(-13, -20), Math.toRadians(-90));
 
 
-        TrajectoryActionBuilder trajPickupSpikeOne = drive.actionBuilder(new Pose2d(new Vector2d(-12, -16), Math.toRadians(-90)))
+        TrajectoryActionBuilder trajPickupSpikeOne = drive.actionBuilder(new Pose2d(new Vector2d(-13, -20), Math.toRadians(-90)))
                 .afterTime(0, intakeWr.startIntake())
-                .strafeToConstantHeading(new Vector2d(-12, -50))
+                .strafeToConstantHeading(new Vector2d(-13, -50))
                 .afterTime(1, intakeWr.stopIntake())
-                .strafeToSplineHeading(new Vector2d(-2, -50), Math.toRadians(-180))
-                .strafeToConstantHeading(new Vector2d(-2, -58));
-
-        TrajectoryActionBuilder trajShootOne = drive.actionBuilder(new Pose2d(new Vector2d(-2, -58), Math.toRadians(-180)))
-                /*.strafeToConstantHeading(new Vector2d(-20, 20));*/
+                //.strafeToSplineHeading(new Vector2d(-2, -50), Math.toRadians(-180))
+                //.strafeToConstantHeading(new Vector2d(-2, -58));
                 .strafeToSplineHeading(new Vector2d(-20, -20), Math.toRadians(-90));
+//                .strafeToSplineHeading(new Vector2d(-2, -50), Math.toRadians(-180))
+//                .strafeToConstantHeading(new Vector2d(-2, -58));
+
 
         TrajectoryActionBuilder trajSpikeTwo = drive.actionBuilder(new Pose2d(new Vector2d(-20, -20), Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(12, -29))
                 .afterTime(0, intakeWr.startIntake())
                 .strafeToConstantHeading(new Vector2d(12, -60))
                 .afterTime(1, intakeWr.stopIntake())
-                .strafeToConstantHeading(new Vector2d(12, -20))
-                .strafeToConstantHeading(new Vector2d(-20, -20));
+                .strafeToSplineHeading(new Vector2d(-2, -50), Math.toRadians(0))
+                .strafeToConstantHeading(new Vector2d(-2, -58));
+
+        TrajectoryActionBuilder trajShootTwo = drive.actionBuilder(new Pose2d(new Vector2d(-2, -58), Math.toRadians(0)))
+                /*.strafeToConstantHeading(new Vector2d(-20, 20));*/
+                .strafeToSplineHeading(new Vector2d(-20, -20), Math.toRadians(-90));
 
         TrajectoryActionBuilder trajSpikeThree = drive.actionBuilder(new Pose2d(new Vector2d(-20, -20), Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(36, -29))
@@ -126,18 +130,17 @@ public class Blue15BallOverflow extends LinearOpMode{
                         trajPickupSpikeOne.build()
                 )
         );
-        sleep(400);
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        trajShootOne.build()
-                )
-        );
         Launch();
 
         Actions.runBlocking(
                 new SequentialAction(
                         trajSpikeTwo.build()
+                )
+        );
+        sleep(400);
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajShootTwo.build()
                 )
         );
         Launch();
@@ -184,6 +187,7 @@ public class Blue15BallOverflow extends LinearOpMode{
         sleep(KICKER_WAIT_TIME);
         //intake.setIntakePower(0);
         kicker.setPosition(Kicker.UP);
+        intake.setIntakePower(0);
         sleep(500);
         kicker.setPosition(Kicker.DOWN);
 
