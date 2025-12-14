@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 
 @Config
-@Autonomous(name = "RedAutoSync")
-public class AutoSyncRed extends LinearOpMode{
+@Autonomous(name = "RedAutoSync2")
+public class AutoSyncRed2 extends LinearOpMode{
 
     Util util;
     Kicker kicker;
@@ -84,6 +84,17 @@ public class AutoSyncRed extends LinearOpMode{
                 .strafeToSplineHeading(new Vector2d(-2, 50), Math.toRadians(0))
                 .strafeToConstantHeading(new Vector2d(-2, 58));
 
+        //TrajectoryActionBuilder trajGate = drive.actionBuilder(new Pose2d(new Vector2d()))
+
+        TrajectoryActionBuilder trajHumanPlayer = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
+                .strafeToSplineHeading(new Vector2d(-2, 50), Math.toRadians(0))
+                .strafeToConstantHeading(new Vector2d(-2, 58))
+                .strafeToSplineHeading(new Vector2d(36, 64), Math.toRadians(0))
+                .strafeToConstantHeading(new Vector2d(62, 64), new TranslationalVelConstraint(70))
+                .strafeToConstantHeading(new Vector2d(58, 64))
+                .strafeToConstantHeading(new Vector2d(62, 64), new TranslationalVelConstraint(70))
+                .strafeToSplineHeading(new Vector2d(-20, 20), Math.toRadians(90));
+
         TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
                 .strafeToSplineHeading(new Vector2d(0, 50), Math.toRadians(180));
 
@@ -129,9 +140,17 @@ public class AutoSyncRed extends LinearOpMode{
                 )
         );
         sleep(400);
+
         Actions.runBlocking(
                 new SequentialAction(
                         trajReturnToShoot.build()
+                )
+        );
+        Launch();
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajHumanPlayer.build()
                 )
         );
         Launch();
