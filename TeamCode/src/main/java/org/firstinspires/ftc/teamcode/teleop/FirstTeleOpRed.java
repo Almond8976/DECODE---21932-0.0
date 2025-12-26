@@ -182,12 +182,12 @@ public class FirstTeleOpRed extends LinearOpMode {
                 turret.setPosition(0);
             }
 
-            if (turretOverride) {
-                turret.setPosition((int) (turret.getTargetPosition() + (maxTurretChange * -gamepad2.right_stick_x)));
-            }
+//            if (turretOverride) {
+//                turret.setPosition((int) (turret.getTargetPosition() + (maxTurretChange * -gamepad2.right_stick_x)));
+//            }
 
             if (gamepad1.y && gamepad1.dpad_left) {
-                turret.resetEncoder();
+                //turret.resetEncoder();
                 turret.resetRobotPose(resetPose);
             }
 
