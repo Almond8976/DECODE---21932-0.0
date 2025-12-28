@@ -26,7 +26,7 @@ public class Turret {
 
     private double rotationLimit = Math.PI * 208;
 
-    public static double rotationSpeed = 1, maxRange = Math.toRadians(355*88.0/85);
+    public static double rotationSpeed = 1, maxRange = Math.toRadians(350*88.0/85);
     private double x, y, heading, turretHeading, turretHeadingRelative;
 
     public static boolean tracking = false;
@@ -107,12 +107,12 @@ public class Turret {
 //        }
 
         if(tracking) {
-            servoTurret.setPosition((turretHeading / maxRange) + .5);
-            servoTurret2.setPosition((turretHeading / maxRange) + .5);
+            servoTurret.setPosition((-turretHeading / maxRange) + .5);
+            servoTurret2.setPosition((-turretHeading / maxRange) + .5);
         }
         else {
-            servoTurret.setPosition((pos/maxRange) + .5);
-            servoTurret2.setPosition((pos/maxRange) + .5);
+            servoTurret.setPosition((-pos/maxRange) + .5);
+            servoTurret2.setPosition((-pos/maxRange) + .5);
         }
 
         //for turret with motor
