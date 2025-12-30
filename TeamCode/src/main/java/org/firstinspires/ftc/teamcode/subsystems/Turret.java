@@ -26,7 +26,7 @@ public class Turret {
 
     private double rotationLimit = Math.PI * 208;
 
-    public static double rotationSpeed = 1, maxRange = Math.toRadians(350*88.0/85);
+    public static double rotationSpeed = 1, maxRange = Math.toRadians(350);
     private double x, y, heading, turretHeading, turretHeadingRelative;
 
     public static boolean tracking = false;

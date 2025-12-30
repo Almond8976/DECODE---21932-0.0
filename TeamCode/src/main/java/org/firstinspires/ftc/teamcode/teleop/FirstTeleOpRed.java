@@ -61,9 +61,7 @@ public class FirstTeleOpRed extends LinearOpMode {
 
         int ballCount = 0;
 
-        Turret.tracking = false;
-
-
+        Turret.tracking = true;
 
         while(opModeIsActive()) {
             // SHOOTER
@@ -100,14 +98,14 @@ public class FirstTeleOpRed extends LinearOpMode {
 
             if (gamepad1.left_bumper) {
                 //intake.setIntakePower(0);
-                Turret.tracking = false;
+                //Turret.tracking = false;
                 shooting = false;
                 preshoot = false;
                 gate.setPosition(Gate.CLOSE);
             }
 
             if(!shooting && !preshoot) {
-                Turret.tracking = false;
+                //Turret.tracking = false;
                 if(keepShooterRunning) {
                     shooter.setVelocity(Mortar.WAIT);
                 }
@@ -178,9 +176,9 @@ public class FirstTeleOpRed extends LinearOpMode {
                 }
             }
 
-            if(!shooting && !turretOverride) {
-                turret.setPosition(0);
-            }
+//            if(!shooting && !turretOverride) {
+//                turret.setPosition(0);
+//            }
 
 //            if (turretOverride) {
 //                turret.setPosition((int) (turret.getTargetPosition() + (maxTurretChange * -gamepad2.right_stick_x)));
