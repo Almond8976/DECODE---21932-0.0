@@ -15,16 +15,16 @@ public class Intake {
 
     public Intake(HardwareMap hwMap, HashMap<String, String> config) {
         intake = hwMap.get(DcMotorEx.class, config.get("intakeMotor"));
-        //rollers = hwMap.get(DcMotorEx.class, config.get("rollersMotor"));
+        rollers = hwMap.get(DcMotorEx.class, config.get("rollersMotor"));
 
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //rollers.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rollers.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //rollers.setDirection(DcMotorSimple.Direction.REVERSE);
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //rollers.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rollers.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void setIntakePower(double power) {
@@ -42,6 +42,6 @@ public class Intake {
 */
     public void update() {
         intake.setPower(intakePower);
-        //rollers.setPower(rollerPower);
+        rollers.setPower(intakePower);
     }
 }
