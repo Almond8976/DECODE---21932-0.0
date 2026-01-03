@@ -39,6 +39,8 @@ public class Turret {
     public static Vector2d redBasket = new Vector2d(-71, 71);
     public static Vector2d curBasket;
 
+    public static double angleOffset = 0;
+
     public Turret(HardwareMap hardwareMap, HashMap<String, String> config, Pose2d startPos) {
         drive = new MecanumDrive(hardwareMap, startPos); // TODO: set this to whatever position auton will end at
         pose = startPos;
@@ -94,6 +96,7 @@ public class Turret {
         turretHeadingRelative = Math.atan2(curBasket.y-y, curBasket.x-x);
         turretHeading = turretHeadingRelative - heading;
 
+        turretHeading+=angleOffset;
 
         turretHeading %= 2*Math.PI;
         if(turretHeading>Math.PI) {
