@@ -63,14 +63,14 @@ public final class MecanumDrive {
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
 
         // drive model parameters
-        public double inPerTick = (4*24) / (63329d-15130);
-        public double lateralInPerTick = 0.0014919616408908308;
-        public double trackWidthTicks = 5834.814741291478;
+        public double inPerTick = .00196025947852;//(4*24) / (63329d-15130);
+        public double lateralInPerTick = 0.001459600352561563;//0.0014919616408908308;
+        public double trackWidthTicks = 6098.864880668248;//5834.814741291478;
 
         // feedforward parameters (in tick units)
-        public double kS = 1.412522742057872;
-        public double kV = 0.00028238665574739896;
-        public double kA = 0.00005;
+        public double kS = 1.6578154542461112;//1.412522742057872;
+        public double kV = 0.00023607917673756917;//.00028238665574739896;
+        public double kA = 0.002;//.00005;
 
         // path profile parameters (in inches)
         public double maxWheelVel = 200;
@@ -82,13 +82,13 @@ public final class MecanumDrive {
         public double maxAngAccel = Math.PI;
 
         // path controller gains
-        public double axialGain = 8.0;
-        public double lateralGain = 10.0;
-        public double headingGain = 20.0; // shared with turn
+        public double axialGain = 0.0;//8
+        public double lateralGain = 0.0;//10
+        public double headingGain = 0.0; // shared with turn20
 
-        public double axialVelGain = 1;
-        public double lateralVelGain = 1;
-        public double headingVelGain = 1; // shared with turn
+        public double axialVelGain = 0;//all were one
+        public double lateralVelGain = 0;
+        public double headingVelGain = 0; // shared with turn
 
         public double errorTol = 3;
         public double errorVelTol = 3;
