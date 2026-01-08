@@ -20,7 +20,6 @@ public class Intake {
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rollers.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        //rollers.setDirection(DcMotorSimple.Direction.REVERSE);
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -30,7 +29,7 @@ public class Intake {
     public void setIntakePower(double power) {
         intakePower = power;
     }
-    /*
+
     public void setRollerPower(double power) {
         rollerPower = power;
     }
@@ -39,7 +38,7 @@ public class Intake {
         intakePower = power;
         rollerPower = power;
     }
-*/
+
     public void update() {
         intake.setPower(intakePower);
         rollers.setPower(intakePower);
