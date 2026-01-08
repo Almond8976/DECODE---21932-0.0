@@ -152,6 +152,14 @@ public class FirstTeleOpRed extends LinearOpMode {
                 intaking = false;
                 intake.setIntakePower(0);
             }
+
+            if(ballCount == 1) {
+                intake.setRollerPower(0);
+            }
+            if(ballCount == 3) {
+                intake.setIntakePower(0);
+            }
+
             // SENSOR
 //            if(intaking && metDistanceSensorThresh && sensor.getDistance() < sensorThresh) {
 //                ballCount++;
