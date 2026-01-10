@@ -88,7 +88,7 @@ public class FirstTeleOpRed extends LinearOpMode {
 //                        time2.reset();
 //                    }
                     gate.setPosition(Gate.OPEN);
-                    intake.setIntakePower(1);
+                    intake.setAllPower(1);
 //                    if(time2.milliseconds()>kickerWaitTime && !manualKicker) {
 //                        kicker.setPosition(Kicker.UP);
 //                        time1.reset();
@@ -98,10 +98,11 @@ public class FirstTeleOpRed extends LinearOpMode {
 
             if (gamepad1.left_bumper) {
                 //intake.setIntakePower(0);
-                //Turret.tracking = false;
+                Turret.tracking = false;
                 shooting = false;
                 preshoot = false;
                 gate.setPosition(Gate.CLOSE);
+                ballCount = 0;
             }
 
             if(!shooting && !preshoot) {
@@ -114,9 +115,20 @@ public class FirstTeleOpRed extends LinearOpMode {
                 }
             }
 
+            if(gamepad1.dpadDownWasPressed()) {
+                Mortar.closeB -= 50;
+                Mortar.farB -= 50;
+            }
+
+            if(gamepad1.dpadUpWasPressed()) {
+                Mortar.closeB += 50;
+                Mortar.farB += 50;
+            }
+
             if(gamepad2.aWasPressed()) {
                 keepShooterRunning = !keepShooterRunning;
             }
+
             // KICKER
             if (gamepad1.aWasPressed()) {
                 kicker.setPosition(Kicker.UP);
@@ -127,7 +139,7 @@ public class FirstTeleOpRed extends LinearOpMode {
             }
 
             if(kicker.getPosition() > Kicker.DOWN) {
-                intake.setIntakePower(0);
+                intake.setAllPower(0);
             }
 
 //            if(gamepad1.bWasPressed()) {
@@ -136,29 +148,24 @@ public class FirstTeleOpRed extends LinearOpMode {
             // INTAKE
             if(gamepad2.right_bumper) {
                 intaking = true;
-                intake.setIntakePower(1);
+                intake.setAllPower(1);
                 if(!shooting) {
                     gate.setPosition(Gate.CLOSE);
                 }
             }
             if(gamepad2.yWasPressed()) {
-                intake.setIntakePower(reverseIntakeSpeed);
+                intake.setAllPower(reverseIntakeSpeed);
             }
             if(gamepad2.yWasReleased()) {
-                intake.setIntakePower(0);
+                intake.setAllPower(0);
             }
 
             if(gamepad2.left_bumper) {
                 intaking = false;
-                intake.setIntakePower(0);
+                intake.setAllPower(0);
             }
 
-            if(ballCount == 1) {
-                intake.setRollerPower(0);
-            }
-            if(ballCount == 3) {
-                intake.setIntakePower(0);
-            }
+
 
             // SENSOR
 //            if(intaking && metDistanceSensorThresh && sensor.getDistance() < sensorThresh) {
@@ -200,6 +207,12 @@ public class FirstTeleOpRed extends LinearOpMode {
             //BALLCOUNT
             if(gamepad2.dpadUpWasPressed()) {
                 ballCount++;
+                if(ballCount == 1) {
+                    intake.setRollerPower(0);
+                }
+                if(ballCount == 3) {
+                    intake.setAllPower(0);
+                }
             }
             if(gamepad2.dpadDownWasPressed()) {
                 ballCount--;
@@ -222,20 +235,31 @@ public class FirstTeleOpRed extends LinearOpMode {
             kicker.update();
             gate.update();
 
-
+            telemetry.addLine("SHOOTER:");
+            telemetry.addData("Shooter vel", shooter.getVelocity());
+            telemetry.addData("Shooter target vel", shooter.getTargetVelocity());
+            telemetry.addData("Keep Shooter Running", keepShooterRunning);
+            telemetry.addData("Preshoot", preshoot);
+            telemetry.addData("closeB", Mortar.closeB);
+            telemetry.addData("farB", Mortar.farB);
+            telemetry.addLine();
+            telemetry.addLine("POSE:");
             telemetry.addData("pose x", pose.position.x);
             telemetry.addData("pose y", pose.position.y);
             telemetry.addData("pose heading", pose.heading.toDouble());
+            telemetry.addLine();
+            telemetry.addLine("TURRET:");
             telemetry.addData("Turret Heading relative", turret.getTurretHeadingRelative());
             telemetry.addData("Turret target", turret.getTurretHeading());
-            telemetry.addData("Shooter vel", shooter.getVelocity());
-            telemetry.addData("Shooter target vel", shooter.getTargetVelocity());
-            //telemetry.addData("DISTANCE:", sensor.getDistance());
-            telemetry.addLine();
-            telemetry.addData("Ball Count", ballCount);
             telemetry.addData("Turret Manual Override", turretOverride);
-            telemetry.addData("Keep Shooter Running", keepShooterRunning);
-            telemetry.addData("Preshoot", preshoot);
+            telemetry.addLine();
+            //telemetry.addData("DISTANCE:", sensor.getDistance());
+            telemetry.addLine("MISC:");
+            telemetry.addData("Ball Count", ballCount);
+
+
+
+
             //telemetry.addData("Manual Kicker", manualKicker);
             telemetry.update();
 

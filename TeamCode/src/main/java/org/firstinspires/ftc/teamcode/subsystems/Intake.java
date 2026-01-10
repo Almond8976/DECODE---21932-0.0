@@ -41,6 +41,6 @@ public class Intake {
 
     public void update() {
         intake.setPower(intakePower);
-        rollers.setPower(intakePower);
+        rollers.setPower(rollerPower);
     }
 }

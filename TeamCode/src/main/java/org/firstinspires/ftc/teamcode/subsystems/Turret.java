@@ -105,20 +105,20 @@ public class Turret {
         else if(turretHeading<-Math.PI) {
             turretHeading += 2*Math.PI;
         }
-        if(turretHeading < -3*Math.PI/4) {
-            turretHeading = -3 * Math.PI/4;
+        if(turretHeading < -Math.PI/2) {
+            turretHeading = -Math.PI/2;
         }
-        if(turretHeading > 3*Math.PI/4) {
-            turretHeading = 3 * Math.PI/4;
+        if(turretHeading > Math.PI/2) {
+            turretHeading = Math.PI/2;
         }
 
         if(tracking) {
-            servoTurret.setPosition((-turretHeading / maxRange) + .5);
-            servoTurret2.setPosition((-turretHeading / maxRange) + .5);
+            servoTurret.setPosition((-turretHeading / (Math.PI/2))*.27 + .49);
+            servoTurret2.setPosition((-turretHeading / (Math.PI/2))*.27 + .49);
         }
         else {
-            servoTurret.setPosition((-pos/maxRange) + .5);
-            servoTurret2.setPosition((-pos/maxRange) + .5);
+            servoTurret.setPosition((-pos/maxRange) + .49);
+            servoTurret2.setPosition((-pos/maxRange) + .49);
         }
 
         //for turret with motor
