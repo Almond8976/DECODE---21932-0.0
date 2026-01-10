@@ -57,9 +57,10 @@ public class Blue15BallOverflow extends LinearOpMode{
 
 
         // define startpose, in, in, rad
+        // define startpose, in, in, rad
         Pose2d startPose = new Pose2d(64.5, -16.4, Math.toRadians(-180));
         drive = new MecanumDrive(hardwareMap, startPose);
-        turret.setBasketPos(Turret.redBasket);
+        turret.setBasketPos(Turret.blueBasket);
         kicker.setPosition(Kicker.DOWN);
 
         TrajectoryActionBuilder trajPreload = drive.actionBuilder(startPose)
