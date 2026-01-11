@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 
 @Config
-@Autonomous(name = "BlueAutoSync2")
-public class AutoSyncBlue extends LinearOpMode{
+@Autonomous(name = "Blue15BallClose")
+public class Blue15BallClose extends LinearOpMode{
 
     Util util;
     Kicker kicker;
@@ -65,40 +65,60 @@ public class AutoSyncBlue extends LinearOpMode{
         TrajectoryActionBuilder trajPreload = drive.actionBuilder(startPose)
                 .strafeToSplineHeading(new Vector2d(-12, -16), Math.toRadians(-90));
 
+        TrajectoryActionBuilder trajIntakeSpikeOne = drive.actionBuilder(new Pose2d(new Vector2d(-12, -16), Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(-12, -50));
 
-        TrajectoryActionBuilder trajPickupSpikeOne = drive.actionBuilder(new Pose2d(new Vector2d(-12, -16), Math.toRadians(-90)))
+        TrajectoryActionBuilder trajPickupSpikeOne = drive.actionBuilder(new Pose2d(new Vector2d(-12, -50), Math.toRadians(-90)))
                 .afterTime(0, intakeWr.startIntake())
-                .strafeToConstantHeading(new Vector2d(-12, -50))
+                //.strafeToConstantHeading(new Vector2d(-12, 50)) in intakeSpikeOne
+                .afterTime(1, intakeWr.stopIntake())
+                //.strafeToSplineHeading(new Vector2d(-2, -50), Math.toRadians(-180))
+                //.strafeToConstantHeading(new Vector2d(-2, -58));
+                .strafeToSplineHeading(new Vector2d(-20, -20), Math.toRadians(-90));
+//                .strafeToSplineHeading(new Vector2d(-2, -50), Math.toRadians(-180))
+//                .strafeToConstantHeading(new Vector2d(-2, -58));
+
+        TrajectoryActionBuilder trajSpikeTwoSetUp = drive.actionBuilder(new Pose2d(new Vector2d(-20, -20), Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(12, -29));
+
+        TrajectoryActionBuilder trajIntakeSpikeTwo = drive.actionBuilder(new Pose2d(new Vector2d(12, -29), Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(12, -60));
+
+        TrajectoryActionBuilder trajSpikeTwo = drive.actionBuilder(new Pose2d(new Vector2d(12, -60), Math.toRadians(-90)))
+                .afterTime(0, intakeWr.startIntake())
                 .afterTime(1, intakeWr.stopIntake())
                 .strafeToSplineHeading(new Vector2d(-2, -50), Math.toRadians(0))
                 .strafeToConstantHeading(new Vector2d(-2, -58));
 
-        TrajectoryActionBuilder trajReturnToShoot = drive.actionBuilder(new Pose2d(new Vector2d(-2, -58), Math.toRadians(0)))
+        TrajectoryActionBuilder trajShootTwo = drive.actionBuilder(new Pose2d(new Vector2d(-2, -58), Math.toRadians(0)))
+                /*.strafeToConstantHeading(new Vector2d(-20, 20));*/
                 .strafeToSplineHeading(new Vector2d(-20, -20), Math.toRadians(-90));
 
-        TrajectoryActionBuilder trajSpikeTwo = drive.actionBuilder(new Pose2d(new Vector2d(-20, -20), Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(12, -29))
+        TrajectoryActionBuilder trajSetUpSpikeThree = drive.actionBuilder(new Pose2d(new Vector2d(-20, -20), Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(36, -29));
+
+        TrajectoryActionBuilder trajIntakeSpikeThree = drive.actionBuilder(new Pose2d(new Vector2d(36, -29), Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(36, -60));
+
+        TrajectoryActionBuilder trajSpikeThree = drive.actionBuilder(new Pose2d(new Vector2d(36, -60), Math.toRadians(-90)))
+                //.strafeToConstantHeading(new Vector2d(36, 29))
                 .afterTime(0, intakeWr.startIntake())
-                .strafeToConstantHeading(new Vector2d(12, -60))
+                //.strafeToConstantHeading(new Vector2d(36, 60))
                 .afterTime(1, intakeWr.stopIntake())
-                .strafeToSplineHeading(new Vector2d(-2, -50), Math.toRadians(0))
-                .strafeToConstantHeading(new Vector2d(-2, -58));
+                .strafeToConstantHeading(new Vector2d(36, -40))
+                .strafeToConstantHeading(new Vector2d(-20, -20));
 
-        //TrajectoryActionBuilder trajGate = drive.actionBuilder(new Pose2d(new Vector2d()))
-
-        TrajectoryActionBuilder trajHumanPlayer = drive.actionBuilder(new Pose2d(new Vector2d(-20, -20), Math.toRadians(-90)))
-                .strafeToSplineHeading(new Vector2d(-2, -50), Math.toRadians(0))
-                .strafeToConstantHeading(new Vector2d(-2, -58))
+        TrajectoryActionBuilder trajIntakeHumanPlayer = drive.actionBuilder(new Pose2d(new Vector2d(-20, -20), Math.toRadians(-90)))
                 .strafeToSplineHeading(new Vector2d(36, -64), Math.toRadians(0))
-                .strafeToConstantHeading(new Vector2d(62, -64), new TranslationalVelConstraint(-70))
-                .strafeToConstantHeading(new Vector2d(58, -64))
-                .strafeToConstantHeading(new Vector2d(62, -64), new TranslationalVelConstraint(-70))
+                .strafeToConstantHeading(new Vector2d(62, -64), new TranslationalVelConstraint(70));
+
+        TrajectoryActionBuilder trajHumanPlayer = drive.actionBuilder(new Pose2d(new Vector2d(62, -64), Math.toRadians(0)))
+                //.strafeToSplineHeading(new Vector2d(36, 64), Math.toRadians(0))
+                //.strafeToConstantHeading(new Vector2d(62, 64), new TranslationalVelConstraint(70))
                 .strafeToSplineHeading(new Vector2d(-20, -20), Math.toRadians(-90));
 
         TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-20, -20), Math.toRadians(-90)))
-                .strafeToSplineHeading(new Vector2d(0, -50), Math.toRadians(-180));
-
-
+                .strafeToSplineHeading(new Vector2d(0, -50), Math.toRadians(180));
 
         Thread update = new Thread( ()-> updateAll(turret, shooter, kicker, intake, gate, intakeWr));
 
@@ -119,34 +139,73 @@ public class AutoSyncBlue extends LinearOpMode{
 
         Launch();
 
-
+        intake.setAllPower(1);
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajIntakeSpikeOne.build()
+                )
+        );
+        intake.setAllPower(0);
         Actions.runBlocking(
                 new SequentialAction(
                         trajPickupSpikeOne.build()
                 )
         );
-        sleep(400);
+        Launch();
 
         Actions.runBlocking(
                 new SequentialAction(
-                        trajReturnToShoot.build()
+                        trajSpikeTwoSetUp.build()
                 )
         );
-        Launch();
-
+        intake.setAllPower(1);
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajIntakeSpikeTwo.build()
+                )
+        );
+        intake.setAllPower(0);
         Actions.runBlocking(
                 new SequentialAction(
                         trajSpikeTwo.build()
                 )
         );
         sleep(400);
-
         Actions.runBlocking(
                 new SequentialAction(
-                        trajReturnToShoot.build()
+                        trajShootTwo.build()
                 )
         );
         Launch();
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajSetUpSpikeThree.build()
+                )
+        );
+
+        intake.setAllPower(1);
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajIntakeSpikeThree.build()
+                )
+        );
+        intake.setAllPower(0);
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajSpikeThree.build()
+                )
+        );
+        Launch();
+
+        intake.setAllPower(1);
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajIntakeHumanPlayer.build()
+                )
+        );
+        intake.setAllPower(0);
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -157,7 +216,7 @@ public class AutoSyncBlue extends LinearOpMode{
 
         Turret.tracking = false;
         turret.setPosition(0);
-        intake.setIntakePower(0);
+        intake.setAllPower(0);
         Actions.runBlocking(
                 new SequentialAction(
                         trajLeave.build()
@@ -174,21 +233,21 @@ public class AutoSyncBlue extends LinearOpMode{
                 )
         );
         shooter.setVelocity(shooterTargetSpeed);
-        intake.setIntakePower(0);
+        intake.setAllPower(0);
         do {
             gate.setPosition(Gate.OPEN);
         }
         while (shooter.getVelocity() < shooterTargetSpeed - Mortar.THRESH || shooter.getVelocity()>shooterTargetSpeed);
-        intake.setIntakePower(1);
+        intake.setAllPower(1);
         sleep(KICKER_WAIT_TIME);
         //intake.setIntakePower(0);
-        kicker.setPosition(Kicker.UP);
-        intake.setIntakePower(0);
-        sleep(500);
-        kicker.setPosition(Kicker.DOWN);
+        //kicker.setPosition(Kicker.UP);
+        //intake.setIntakePower(0);
+        //sleep(500);
+        //kicker.setPosition(Kicker.DOWN);
 
         gate.setPosition(Gate.CLOSE);
-        intake.setIntakePower(1);
+        //intake.setIntakePower(1);
     }
 
     public void updateAll(Turret turret, Mortar shooter, Kicker kicker, Intake intake, Gate gate, IntakeWrapper intakeWr){
