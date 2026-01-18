@@ -16,6 +16,8 @@ public class Drivetrain {
     public static double maxLinear = 1, maxRot = 1, slowLin = 1, slowRot = 1, fastLin = 1, fastRot = 1;
 
     public static double speedMult = 1;
+
+    public static boolean test = false;
     public Drivetrain(HardwareMap hwMap, HashMap<String, String> config) {
         frontLeft = hwMap.dcMotor.get(config.get("frontLeftMotor"));
         backLeft = hwMap.dcMotor.get(config.get("backLeftMotor"));

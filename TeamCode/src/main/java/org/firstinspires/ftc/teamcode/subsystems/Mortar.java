@@ -51,6 +51,13 @@ public class Mortar {
         return (int) ( slope*(dist) + b);
     }
 
+    public void setFlyMotorPower(double power) {
+        flyMotor.setPower(power);
+    }
+    public void setFlyMotor2Power(double power) {
+        flyMotor2.setPower(power);
+    }
+
     public double getTargetVelocity() {
         return vel;
     }
