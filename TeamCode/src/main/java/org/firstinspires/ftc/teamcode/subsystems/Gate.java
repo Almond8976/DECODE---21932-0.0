@@ -8,7 +8,7 @@ import java.util.HashMap;
 public class Gate {
     private Servo gate;
 
-    public static double CLOSE = 0.7, OPEN = 0.25;
+    public static double CLOSE = 0, OPEN = 0.4;
     private double position = OPEN;
 
     public Gate(HardwareMap hardwareMap, HashMap<String, String> config) {

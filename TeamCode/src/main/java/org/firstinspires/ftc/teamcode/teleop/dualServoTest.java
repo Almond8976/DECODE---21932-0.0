@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 @TeleOp
 @Config
@@ -14,8 +17,12 @@ public class dualServoTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Servo servo = hardwareMap.get(Servo.class, servoName);
-        Servo servo2 = hardwareMap.get(Servo.class, servoName2);
+        ServoImplEx servo = hardwareMap.get(ServoImplEx.class, servoName);
+        ServoImplEx servo2 = hardwareMap.get(ServoImplEx.class, servoName2);
+
+        servo.setPwmRange(new PwmControl.PwmRange(500, 2500));
+        servo2.setPwmRange(new PwmControl.PwmRange(500, 2500));
+
         waitForStart();
 
         if (isStopRequested()) return;
@@ -45,20 +52,21 @@ public class dualServoTest extends LinearOpMode {
                 servo.setPosition(.5);
                 servo2.setPosition(.5);
             }
-            if (gamepad1.a)
-            {
-                servo.setDirection(Servo.Direction.FORWARD);
-                servo2.setDirection(Servo.Direction.FORWARD);
-            }
-            if (gamepad1.b)
-            {
-                servo.setDirection(Servo.Direction.REVERSE);
-                servo2.setDirection(Servo.Direction.REVERSE);
-            }
+
+//            if (gamepad1.a)
+//            {
+//                servo.setDirection(Servo.Direction.FORWARD);
+//                servo2.setDirection(Servo.Direction.FORWARD);
+//            }
+//            if (gamepad1.b)
+//            {
+//                servo.setDirection(Servo.Direction.REVERSE);
+//                servo2.setDirection(Servo.Direction.REVERSE);
+//            }
             telemetry.addData("Pos", servo.getPosition());
-            telemetry.addData("Dir", servo.getDirection());
+            //telemetry.addData("Dir", servo.getDirection());
             telemetry.addData("Pos", servo2.getPosition());
-            telemetry.addData("Dir", servo2.getDirection());
+            //telemetry.addData("Dir", servo2.getDirection());
 
 
             telemetry.update();

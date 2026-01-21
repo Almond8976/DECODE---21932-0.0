@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp
 @Config
 public class servoTest extends LinearOpMode {
-    public static double change = 0.01;
-    public static String servoName = "gate";
+    public static double change = 0.001;
+    public static String servoName = "hood";
 
     @Override
     public void runOpMode() throws InterruptedException {

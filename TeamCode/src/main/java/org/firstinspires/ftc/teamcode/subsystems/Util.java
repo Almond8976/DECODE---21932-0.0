@@ -26,5 +26,6 @@ public class Util {
         deviceConf.put("gate",              "gate");
         deviceConf.put("turret",            "turret");
         deviceConf.put("turret2",           "turret2");
+        deviceConf.put("hood",              "hood");
     }
 }

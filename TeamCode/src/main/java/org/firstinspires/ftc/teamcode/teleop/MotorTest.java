@@ -62,7 +62,7 @@ public class MotorTest extends LinearOpMode {
         if(gamepad1.aWasPressed()) {
             backLeftMotor = !backLeftMotor;
         }
-        
+
 
         if(intakeMotor) {
             intake.setIntakePower(1);
