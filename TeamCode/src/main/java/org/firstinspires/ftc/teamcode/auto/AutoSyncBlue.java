@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 
 @Config
-@Autonomous(name = "RedAutoSync")
-public class AutoSyncRed extends LinearOpMode{
+@Autonomous(name = "BlueAutoSync2")
+public class AutoSyncBlue extends LinearOpMode{
 
     Util util;
     Kicker kicker;
@@ -49,7 +49,7 @@ public class AutoSyncRed extends LinearOpMode{
         util = new Util();
         kicker = new Kicker(hardwareMap, util.deviceConf);
         shooter = new Mortar(hardwareMap, util.deviceConf);
-        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.78, 45.6439, Math.toRadians(128.188)));
+        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.78, -45.6439, Math.toRadians(-128.188)));
         intakeWr = new IntakeWrapper(hardwareMap, util.deviceConf);
         intake = new Intake(hardwareMap, util.deviceConf);
         gate = new Gate(hardwareMap, util.deviceConf);
@@ -57,35 +57,46 @@ public class AutoSyncRed extends LinearOpMode{
 
 
         // define startpose, in, in, rad
-        Pose2d startPose = new Pose2d(-57.78, 45.6439, Math.toRadians(128.188));
+        Pose2d startPose = new Pose2d(-57.78, -45.6439, Math.toRadians(-128.188));
         drive = new MecanumDrive(hardwareMap, startPose);
-        turret.setBasketPos(Turret.redBasket);
+        turret.setBasketPos(Turret.blueBasket);
         kicker.setPosition(Kicker.DOWN);
 
         TrajectoryActionBuilder trajPreload = drive.actionBuilder(startPose)
-                .strafeToSplineHeading(new Vector2d(-12, 16), Math.toRadians(90));
+                .strafeToSplineHeading(new Vector2d(-12, -16), Math.toRadians(-90));
 
 
-        TrajectoryActionBuilder trajPickupSpikeOne = drive.actionBuilder(new Pose2d(new Vector2d(-12, 16), Math.toRadians(90)))
+        TrajectoryActionBuilder trajPickupSpikeOne = drive.actionBuilder(new Pose2d(new Vector2d(-12, -16), Math.toRadians(-90)))
                 .afterTime(0, intakeWr.startIntake())
-                .strafeToConstantHeading(new Vector2d(-12, 50))
+                .strafeToConstantHeading(new Vector2d(-12, -50))
                 .afterTime(1, intakeWr.stopIntake())
-                .strafeToSplineHeading(new Vector2d(-2, 50), Math.toRadians(0))
-                .strafeToConstantHeading(new Vector2d(-2, 58));
+                .strafeToSplineHeading(new Vector2d(-2, -50), Math.toRadians(0))
+                .strafeToConstantHeading(new Vector2d(-2, -58));
 
-        TrajectoryActionBuilder trajReturnToShoot = drive.actionBuilder(new Pose2d(new Vector2d(-2, 58), Math.toRadians(0)))
-                .strafeToSplineHeading(new Vector2d(-20, 20), Math.toRadians(90));
+        TrajectoryActionBuilder trajReturnToShoot = drive.actionBuilder(new Pose2d(new Vector2d(-2, -58), Math.toRadians(0)))
+                .strafeToSplineHeading(new Vector2d(-20, -20), Math.toRadians(-90));
 
-        TrajectoryActionBuilder trajSpikeTwo = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(12, 29))
+        TrajectoryActionBuilder trajSpikeTwo = drive.actionBuilder(new Pose2d(new Vector2d(-20, -20), Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(12, -29))
                 .afterTime(0, intakeWr.startIntake())
-                .strafeToConstantHeading(new Vector2d(12, 60))
+                .strafeToConstantHeading(new Vector2d(12, -60))
                 .afterTime(1, intakeWr.stopIntake())
-                .strafeToSplineHeading(new Vector2d(-2, 50), Math.toRadians(0))
-                .strafeToConstantHeading(new Vector2d(-2, 58));
+                .strafeToSplineHeading(new Vector2d(-2, -50), Math.toRadians(0))
+                .strafeToConstantHeading(new Vector2d(-2, -58));
 
-        TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-20, 20), Math.toRadians(90)))
-                .strafeToSplineHeading(new Vector2d(0, 50), Math.toRadians(180));
+        //TrajectoryActionBuilder trajGate = drive.actionBuilder(new Pose2d(new Vector2d()))
+
+        TrajectoryActionBuilder trajHumanPlayer = drive.actionBuilder(new Pose2d(new Vector2d(-20, -20), Math.toRadians(-90)))
+                .strafeToSplineHeading(new Vector2d(-2, -50), Math.toRadians(0))
+                .strafeToConstantHeading(new Vector2d(-2, -58))
+                .strafeToSplineHeading(new Vector2d(36, -64), Math.toRadians(0))
+                .strafeToConstantHeading(new Vector2d(62, -64), new TranslationalVelConstraint(-70))
+                .strafeToConstantHeading(new Vector2d(58, -64))
+                .strafeToConstantHeading(new Vector2d(62, -64), new TranslationalVelConstraint(-70))
+                .strafeToSplineHeading(new Vector2d(-20, -20), Math.toRadians(-90));
+
+        TrajectoryActionBuilder trajLeave = drive.actionBuilder(new Pose2d(new Vector2d(-20, -20), Math.toRadians(-90)))
+                .strafeToSplineHeading(new Vector2d(0, -50), Math.toRadians(-180));
 
 
 
@@ -129,9 +140,17 @@ public class AutoSyncRed extends LinearOpMode{
                 )
         );
         sleep(400);
+
         Actions.runBlocking(
                 new SequentialAction(
                         trajReturnToShoot.build()
+                )
+        );
+        Launch();
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajHumanPlayer.build()
                 )
         );
         Launch();

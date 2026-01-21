@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 
 @Config
-@Autonomous(name = "Blue15BallOverflow")
-public class Blue15BallOverflow extends LinearOpMode{
+@Autonomous(name = "Blue15BallClose")
+public class Blue15BallClose extends LinearOpMode{
 
     Util util;
     Kicker kicker;
@@ -49,7 +49,7 @@ public class Blue15BallOverflow extends LinearOpMode{
         util = new Util();
         kicker = new Kicker(hardwareMap, util.deviceConf);
         shooter = new Mortar(hardwareMap, util.deviceConf);
-        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(64.5, -16.4, Math.toRadians(180)));
+        turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(-57.78, -45.6439, Math.toRadians(-128.188)));
         intakeWr = new IntakeWrapper(hardwareMap, util.deviceConf);
         intake = new Intake(hardwareMap, util.deviceConf);
         gate = new Gate(hardwareMap, util.deviceConf);
@@ -57,7 +57,7 @@ public class Blue15BallOverflow extends LinearOpMode{
 
 
         // define startpose, in, in, rad
-        Pose2d startPose = new Pose2d(64.5, -16.4, Math.toRadians(-180));
+        Pose2d startPose = new Pose2d(-57.78, -45.6439, Math.toRadians(-128.188));
         drive = new MecanumDrive(hardwareMap, startPose);
         turret.setBasketPos(Turret.blueBasket);
         kicker.setPosition(Kicker.DOWN);

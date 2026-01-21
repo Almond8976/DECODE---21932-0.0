@@ -17,19 +17,20 @@ public class Mortar {
 
     private double power, vel;
 
-    public static double THRESH = 80;
-    public static double OFF = 0, MAX = 1, NORMAL = 0.6, WAIT = 1200;
-    public static double slope = 4.5, closeB = 710, farB = 790;
+    public static double THRESH = 50;
+    public static double OFF = 0, MAX = 1, NORMAL = 0.6, WAIT = 1050;
+    public static double slope = 4.5, closeB = 670, farB = 810;
+    public static double p = 400, f = 0;
 
 
     public Mortar(HardwareMap hardwareMap, HashMap<String, String> config) {
         flyMotor = hardwareMap.get(DcMotorEx.class, config.get("shooter"));
         flyMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        flyMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 10));
+        flyMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(p, 0, 0, f));
 
         flyMotor2 = hardwareMap.get(DcMotorEx.class, config.get("shooterTwo"));
         flyMotor2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        flyMotor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 10));
+        flyMotor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(p, 0, 0, f));
         flyMotor2.setDirection(Direction.REVERSE);
     }
     public void setPower(double motorPower) {
@@ -41,13 +42,20 @@ public class Mortar {
     }
 
     public double getVelocity() {
-        return flyMotor.getVelocity();
+        return flyMotor2.getVelocity();
     }
 
     public int calcVelocity(double dist) {
         double b = dist>130 ? farB : closeB;
         //b = closeB;
         return (int) ( slope*(dist) + b);
+    }
+
+    public void setFlyMotorPower(double power) {
+        flyMotor.setPower(power);
+    }
+    public void setFlyMotor2Power(double power) {
+        flyMotor2.setPower(power);
     }
 
     public double getTargetVelocity() {
@@ -60,6 +68,8 @@ public class Mortar {
 
     public void update() {
         //flyMotor.setPower(power);
+        flyMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(p, 0, 0, f));
+        flyMotor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(p, 0, 0, f));
         flyMotor.setVelocity(vel);
         flyMotor2.setVelocity(vel);
     }
