@@ -16,7 +16,7 @@ public class Hood {
 
     public static boolean tracking = false;
     private double pos;
-    public static double CLOSE = .67, FAR = .35;
+    public static double minHood = .97, maxHood = .35;
     private Pose2d pose;
 
 
@@ -27,6 +27,26 @@ public class Hood {
     }
 
     public void setHoodPosition(double pos) {
+        this.pos = pos;
+    }
+
+    public double getHoodPosition() {
+        return pos;
+    }
+
+    public void hoodIncrement (double inc, double pos) {
+        if (!(pos + inc > minHood) && !(pos + inc < maxHood)) {
+            this.pos = pos + inc;
+        }
+        else if (pos + inc > minHood) {
+            this.pos = minHood;
+        }
+        else {
+            this.pos = maxHood;
+        }
+    }
+
+    public void update() {
         hood.setPosition(pos);
     }
 }

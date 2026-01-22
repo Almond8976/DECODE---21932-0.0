@@ -6,7 +6,9 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.subsystems.Gate;
 import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Kicker;
@@ -26,54 +28,94 @@ public class TestShooter extends LinearOpMode {
         Mortar shooter = new Mortar(hardwareMap, util.deviceConf);
         Kicker kicker = new Kicker(hardwareMap, util.deviceConf);
         Turret turret = new Turret(hardwareMap, util.deviceConf, new Pose2d(0,0,0));
+        Gate gate = new Gate(hardwareMap, util.deviceConf);
         Intake intake = new Intake(hardwareMap, util.deviceConf);
         Hood hood = new Hood(hardwareMap, util.deviceConf, new Pose2d(0,0,0));
         Turret.tracking = false;
         turret.setBasketPos(Turret.redBasket);
+        boolean color=true;
+        ElapsedTime time1 = new ElapsedTime();
 
+        hood.setHoodPosition(0.80);
         Pose2d pose;
         waitForStart();
 
+
         while(opModeIsActive()) {
             pose = turret.getPose();
-            if (gamepad1.dpad_down) {
+            if (gamepad1.xWasPressed()) {
                 vel = 0;
             }
-            if (gamepad1.rightBumperWasPressed()) {
+            if (gamepad1.dpadUpWasPressed()) {
                 vel += 25;
             }
-            if (gamepad1.leftBumperWasPressed()) {
+            if (gamepad1.dpadDownWasPressed()) {
                 vel -= 25;
             }
 
-            if (gamepad2.x) {
-                kicker.setPosition(Kicker.DOWN);
-            }
-            if (gamepad2.y) {
-                kicker.setPosition(Kicker.UP);
+            if (gamepad1.yWasPressed()) {
+                gate.setPosition(Gate.OPEN);
             }
 
-            if(gamepad1.a) {
-                intake.setAllPower(1);
+            if (gamepad1.bWasPressed()) {
+                gate.setPosition(Gate.CLOSE);
             }
-            if(gamepad1.b) {
+
+
+            if (gamepad1.aWasPressed()) {
+                kicker.setPosition(Kicker.UP);
+                time1.reset();
+            }
+            if(time1.milliseconds() > 500 && kicker.getPosition() > Kicker.DOWN) {
+                kicker.setPosition(Kicker.DOWN);
+            }
+            if(kicker.getPosition() > Kicker.DOWN) {
                 intake.setAllPower(0);
             }
-            if(gamepad1.x) {
+
+
+            if(gamepad1.rightBumperWasPressed()) {
                 intake.setAllPower(1);
             }
-            if(gamepad1.y) {
+
+            if(gamepad1.leftBumperWasPressed()) {
                 intake.setAllPower(0);
+            }
+
+
+
+            if (gamepad2.leftBumperWasPressed()) {
+                hood.hoodIncrement(0.03, hood.getHoodPosition());
+            }
+            if (gamepad2.rightBumperWasPressed()) {
+                hood.hoodIncrement(-0.03, hood.getHoodPosition());
+            }
+
+            if (gamepad2.aWasPressed()) {
+                if (color){
+                    turret.setBasketPos(Turret.blueBasket);
+                    color = false;
+
+                }
+                else {
+                    turret.setBasketPos(Turret.redBasket);
+                    color = true;
+                }
             }
 
             if (gamepad2.bWasPressed()) {
                 turret.tracking = !turret.tracking;
             }
 
+
+
+            /*
             if (gamepad1.dpad_up) {
                 vel = shooter.calcVelocity(Math.sqrt((pose.position.x * pose.position.x) + (pose.position.y * pose.position.y)));
             }
+            */
 
+            /*
             if(gamepad2.rightBumperWasPressed()) {
                 hood.setHoodPosition(Hood.CLOSE);
             }
@@ -92,15 +134,21 @@ public class TestShooter extends LinearOpMode {
             if(gamepad2.dpadLeftWasPressed() && Hood.FAR > .35) {
                 Hood.FAR-=.02;
             }
+            */
+
             
             shooter.setVelocity(vel);
             shooter.update();
             kicker.update();
             turret.update();
             intake.update();
+            gate.update();
+            hood.update();
             telemetry.addData("vel", shooter.getVelocity());
             telemetry.addData("target vel", shooter.getTargetVelocity());
+            telemetry.addData("hood servo", hood.getHoodPosition());
             telemetry.update();
+            c
 
         }
     }

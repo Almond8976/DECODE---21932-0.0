@@ -44,7 +44,6 @@ public class FirstTeleOpRed extends LinearOpMode {
         Kicker kicker = new Kicker(hardwareMap, util.deviceConf);
         //Sparky sensor = new Sparky(hardwareMap);
         Gate gate = new Gate(hardwareMap, util.deviceConf);
-
         ElapsedTime time1 = new ElapsedTime();
         ElapsedTime time2 = new ElapsedTime();
         Pose2d pose;
