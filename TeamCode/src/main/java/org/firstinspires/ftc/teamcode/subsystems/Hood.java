@@ -16,9 +16,11 @@ public class Hood {
 
     public static boolean tracking = false;
     private double pos;
-    public static double minHood = .97, maxHood = .35;
-    private Pose2d pose;
 
+    public static double minHood = .97, maxHood = .35, closeHood = .8, farHood = .4;
+    private static Pose2d pose;
+    public static boolean TEST = false;
+    public static double dist;
 
     public Hood(HardwareMap hardwareMap, HashMap<String, String> config, Pose2d startPos) {
         drive = new MecanumDrive(hardwareMap, startPos);
@@ -28,6 +30,14 @@ public class Hood {
 
     public void setHoodPosition(double pos) {
         this.pos = pos;
+    }
+
+    public void calcHoodPos(double dist) {
+            pos = dist < 115 ? closeHood : farHood;
+    }
+
+    public void testing(boolean t) {
+        TEST = t;
     }
 
     public double getHoodPosition() {

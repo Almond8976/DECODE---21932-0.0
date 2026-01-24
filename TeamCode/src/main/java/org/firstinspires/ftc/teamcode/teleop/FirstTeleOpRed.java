@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Gate;
+import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Kicker;
 import org.firstinspires.ftc.teamcode.subsystems.Mortar;
@@ -31,6 +32,7 @@ public class FirstTeleOpRed extends LinearOpMode {
     public static Pose2d resetPose = new Pose2d(0,-24, -Math.PI/2);
 
 
+
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -46,6 +48,7 @@ public class FirstTeleOpRed extends LinearOpMode {
         Gate gate = new Gate(hardwareMap, util.deviceConf);
         ElapsedTime time1 = new ElapsedTime();
         ElapsedTime time2 = new ElapsedTime();
+        Hood hood = new Hood(hardwareMap, util.deviceConf, new Pose2d(0, 50, Math.PI));
         Pose2d pose;
 
         turret.setBasketPos(Turret.redBasket);
@@ -54,6 +57,7 @@ public class FirstTeleOpRed extends LinearOpMode {
 
         waitForStart();
 
+        hood.setHoodPosition(0.8);
         boolean shooting = false, turretOverride = false, intaking = false, metDistanceSensorThresh = false, keepShooterRunning = true, preshoot = false, manualKicker = false;
 
         int shooterTargetSpeed = 0;
@@ -224,6 +228,10 @@ public class FirstTeleOpRed extends LinearOpMode {
                 ballCount = 0;
             }
 
+            //HOOD
+            hood.calcHoodPos(Math.sqrt(
+                    (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)));
+
 
 
             // update all systems
@@ -232,6 +240,7 @@ public class FirstTeleOpRed extends LinearOpMode {
             turret.update();
             shooter.update();
             kicker.update();
+            hood.update();
             gate.update();
 
             telemetry.addLine("SHOOTER:");
@@ -245,7 +254,7 @@ public class FirstTeleOpRed extends LinearOpMode {
             telemetry.addLine("POSE:");
             telemetry.addData("pose x", pose.position.x);
             telemetry.addData("pose y", pose.position.y);
-            telemetry.addData("pose heading", pose.heading.toDouble());
+            telemetry.addData("pose heading", Math.toDegrees((pose.heading.toDouble())));
             telemetry.addLine();
             telemetry.addLine("TURRET:");
             telemetry.addData("Turret Heading relative", turret.getTurretHeadingRelative());

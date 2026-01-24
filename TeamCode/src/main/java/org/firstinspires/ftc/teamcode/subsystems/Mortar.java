@@ -18,8 +18,8 @@ public class Mortar {
     private double power, vel;
 
     public static double THRESH = 50;
-    public static double OFF = 0, MAX = 1, NORMAL = 0.6, WAIT = 1050;
-    public static double slope = 4.5, closeB = 670, farB = 810;
+    public static double OFF = 0, MAX = 1, NORMAL = 0.6, WAIT = 1200;
+    public static double slope = 5.62627, closeB = 985, farB = 1185;
     public static double p = 400, f = 0;
 
 
