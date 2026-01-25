@@ -149,7 +149,7 @@ public class TestShooter extends LinearOpMode {
             telemetry.addData("hood servo", hood.getHoodPosition());
             telemetry.addData("pose x", pose.position.x);
             telemetry.addData("pose y", pose.position.y);
-            telemetry.addData("pose heading", pose.heading.toDouble());
+            telemetry.addData("pose heading", Math.toDegrees((pose.heading.toDouble())));
             telemetry.update();
 
 
