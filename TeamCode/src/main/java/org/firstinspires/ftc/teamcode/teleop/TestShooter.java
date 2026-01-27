@@ -36,7 +36,7 @@ public class TestShooter extends LinearOpMode {
         boolean color=true;
         ElapsedTime time1 = new ElapsedTime();
 
-        hood.setHoodPosition(0.80);
+        hood.setHoodPosition(0.70);
         Pose2d pose;
         waitForStart();
 
@@ -47,10 +47,10 @@ public class TestShooter extends LinearOpMode {
                 vel = 0;
             }
             if (gamepad1.dpadUpWasPressed()) {
-                vel += 25;
+                vel += 20;
             }
             if (gamepad1.dpadDownWasPressed()) {
-                vel -= 25;
+                vel -= 20;
             }
 
             if (gamepad1.yWasPressed()) {
@@ -85,10 +85,10 @@ public class TestShooter extends LinearOpMode {
 
 
             if (gamepad2.leftBumperWasPressed()) {
-                hood.hoodIncrement(0.03, hood.getHoodPosition());
+                hood.hoodIncrement(0.05, hood.getHoodPosition());
             }
             if (gamepad2.rightBumperWasPressed()) {
-                hood.hoodIncrement(-0.03, hood.getHoodPosition());
+                hood.hoodIncrement(-0.05, hood.getHoodPosition());
             }
 
             if (gamepad2.aWasPressed()) {

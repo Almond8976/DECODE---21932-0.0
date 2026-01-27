@@ -14,13 +14,12 @@ import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Kicker;
 import org.firstinspires.ftc.teamcode.subsystems.Mortar;
-//import org.firstinspires.ftc.teamcode.subsystems.Sparky;
 import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 
 @Config
-@TeleOp(name = "FirstTeleOpRed")
-public class FirstTeleOpRed extends LinearOpMode {
+@TeleOp(name = "SingleTele")
+public class SingleTele extends LinearOpMode {
 
     //SENSOR
     public static int sensorThresh = 20, brightness = 50;
@@ -168,7 +167,10 @@ public class FirstTeleOpRed extends LinearOpMode {
                 intake.setAllPower(0);
             }
 
-
+            if(gamepad1.xWasPressed()) {
+                intaking = false;
+                intake.setAllPower(0);
+            }
 
             // SENSOR
 //            if(intaking && metDistanceSensorThresh && sensor.getDistance() < sensorThresh) {
@@ -220,6 +222,12 @@ public class FirstTeleOpRed extends LinearOpMode {
             if(gamepad2.dpadDownWasPressed()) {
                 ballCount--;
             }
+            if (gamepad1.dpadRightWasPressed()) {
+                hood.hoodIncrement(0.05, hood.getHoodPosition());
+            }
+            if (gamepad1.dpadLeftWasPressed()) {
+                hood.hoodIncrement(-0.05, hood.getHoodPosition());
+            }
 
             if(ballCount>3) {
                 ballCount = 3;
@@ -229,9 +237,10 @@ public class FirstTeleOpRed extends LinearOpMode {
             }
 
             //HOOD
+            /*
             hood.calcHoodPos(Math.sqrt(
                     (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)));
-
+            */
 
 
             // update all systems
@@ -264,6 +273,7 @@ public class FirstTeleOpRed extends LinearOpMode {
             //telemetry.addData("DISTANCE:", sensor.getDistance());
             telemetry.addLine("MISC:");
             telemetry.addData("Ball Count", ballCount);
+            telemetry.addData("hood angle", hood.getHoodPosition());
 
 
 
