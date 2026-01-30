@@ -56,7 +56,7 @@ public class SingleTele extends LinearOpMode {
 
         waitForStart();
 
-        hood.setHoodPosition(0.7);
+        hood.setHoodPosition(0.6);
         boolean shooting = false, turretOverride = false, intaking = false, metDistanceSensorThresh = false, keepShooterRunning = true, preshoot = false, manualKicker = false;
 
         int shooterTargetSpeed = 0;
@@ -118,8 +118,8 @@ public class SingleTele extends LinearOpMode {
             }
 
             if(gamepad1.dpadDownWasPressed()) {
-                Mortar.closeB -= 50;
-                Mortar.farB -= 50;
+                Mortar.closeB -= 30;
+                Mortar.farB -= 30;
             }
 
             if(gamepad1.dpadUpWasPressed()) {
@@ -222,10 +222,11 @@ public class SingleTele extends LinearOpMode {
             if(gamepad2.dpadDownWasPressed()) {
                 ballCount--;
             }
-            if (gamepad1.dpadRightWasPressed()) {
+
+            if (gamepad2.dpadRightWasPressed()) {
                 hood.hoodIncrement(0.05, hood.getHoodPosition());
             }
-            if (gamepad1.dpadLeftWasPressed()) {
+            if (gamepad2.dpadLeftWasPressed()) {
                 hood.hoodIncrement(-0.05, hood.getHoodPosition());
             }
 

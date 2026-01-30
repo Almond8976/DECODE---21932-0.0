@@ -168,6 +168,12 @@ public class FirstTeleOpRed extends LinearOpMode {
                 intake.setAllPower(0);
             }
 
+            if (gamepad2.dpadRightWasPressed()) {
+                hood.hoodIncrement(0.05, hood.getHoodPosition());
+            }
+            if (gamepad2.dpadLeftWasPressed()) {
+                hood.hoodIncrement(-0.05, hood.getHoodPosition());
+            }
 
 
             // SENSOR
@@ -228,10 +234,10 @@ public class FirstTeleOpRed extends LinearOpMode {
                 ballCount = 0;
             }
 
-            //HOOD
+            /*HOOD
             hood.calcHoodPos(Math.sqrt(
                     (turret.distanceToBasket().x * turret.distanceToBasket().x) + (turret.distanceToBasket().y * turret.distanceToBasket().y)));
-
+            */
 
 
             // update all systems
@@ -264,7 +270,7 @@ public class FirstTeleOpRed extends LinearOpMode {
             //telemetry.addData("DISTANCE:", sensor.getDistance());
             telemetry.addLine("MISC:");
             telemetry.addData("Ball Count", ballCount);
-
+            telemetry.addData("hood angle", hood.getHoodPosition());
 
 
 

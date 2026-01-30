@@ -23,6 +23,7 @@ public class Mortar {
     public static double p = 5589, i = 0, d = 0, f = 33.6;
 
 
+
     public Mortar(HardwareMap hardwareMap, HashMap<String, String> config) {
         flyMotor = hardwareMap.get(DcMotorEx.class, config.get("shooter"));
         flyMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
